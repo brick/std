@@ -136,6 +136,20 @@ final class JsonEncoder extends Common
     }
 
     /**
+     * Sets whether to escape multibyte Unicode line terminator characters as `\uXXXX`. Defaults to `true`.
+     *
+     * Note that line terminators will still be escaped if `escapeUnicode()` is set to true (default).
+     *
+     * @param bool $bool
+     *
+     * @return void
+     */
+    public function escapeLineTerminators(bool $bool) : void
+    {
+        $this->setOption(JSON_UNESCAPED_LINE_TERMINATORS, ! $bool);
+    }
+
+    /**
      * Sets whether to always encode float values as float values, even when the fraction is zero. Defaults to `false`.
      *
      * @param bool $bool

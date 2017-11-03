@@ -314,6 +314,37 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
+     * @dataProvider providerEscapeLineTerminators
+     *
+     * @param mixed  $value
+     * @param bool   $escapeLineTerminators
+     * @param string $expected
+     *
+     * @return void
+     */
+    public function testEscapeLineTerminators($value, bool $escapeLineTerminators, string $expected) : void
+    {
+        $encoder = new JsonEncoder();
+        $encoder->escapeUnicode(false);
+        $encoder->escapeLineTerminators($escapeLineTerminators);
+
+        $this->assertSame($expected, $encoder->encode($value));
+    }
+
+    /**
+     * @return array
+     */
+    public function providerEscapeLineTerminators() : array
+    {
+        return [
+            ["\r\n", false, '"\r\n"'],
+            ["\r\n", true, '"\r\n"'],
+            ["\xe2\x80\xa8\xe2\x80\xa9", false, "\"\xe2\x80\xa8\xe2\x80\xa9\""],
+            ["\xe2\x80\xa8\xe2\x80\xa9", true, '"\u2028\u2029"']
+        ];
+    }
+
+    /**
      * @dataProvider providerPreserveZeroFraction
      *
      * @param mixed  $value
