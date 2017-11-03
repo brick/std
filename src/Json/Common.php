@@ -10,11 +10,6 @@ use Brick\Std\ErrorCatcher;
 abstract class Common
 {
     /**
-     * @var \Brick\Std\ErrorCatcher
-     */
-    protected $errorCatcher;
-
-    /**
      * The maximum encoding depth.
      *
      * @var int
@@ -27,16 +22,6 @@ abstract class Common
      * @var int
      */
     protected $options = 0;
-
-    /**
-     * Class constructor.
-     */
-    public function __construct()
-    {
-        $this->errorCatcher = new ErrorCatcher(function(\ErrorException $e) {
-            throw JsonException::wrap($e);
-        });
-    }
 
     /**
      * Sets the max depth. Defaults to `512`.
@@ -61,7 +46,11 @@ abstract class Common
      */
     protected function execute(\Closure $function)
     {
-        $result = $this->errorCatcher->swallow(E_ALL, $function);
+        try {
+            $result = ErrorCatcher::tryCatch($function);
+        } catch (\ErrorException $e) {
+            throw JsonException::wrap($e);
+        }
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new JsonException(json_last_error_msg(), json_last_error());

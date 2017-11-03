@@ -14,6 +14,6 @@ class JsonException extends \RuntimeException
      */
     public static function wrap(\Exception $e) : JsonException
     {
-        return new static($e->getMessage(), $e->getCode(), $e);
+        return new self($e->getMessage(), 0, $e);
     }
 }
