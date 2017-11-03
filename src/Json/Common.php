@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brick\Std\Json;
 
 use Brick\Std\ErrorCatcher;
