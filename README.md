@@ -35,3 +35,34 @@ Requirements
 ------------
 
 This library requires PHP 7.1 or later.
+
+Overview
+--------
+
+### JSON
+
+JSON functionality is provided by [JsonEncoder](https://github.com/brick/std/blob/master/src/Json/JsonEncoder.php) and [JsonDecoder](https://github.com/brick/std/blob/master/src/Json/JsonDecoder.php). Options are set on the encoder/decoder instance, via explicit methods. If an error occurs, a [JsonException](https://github.com/brick/std/blob/master/src/Json/JsonException.php) is thrown.
+
+Encoding:
+
+```php
+use Brick\Std\Json\JsonEncoder;
+
+$encoder = new JsonEncoder();
+$encoder->forceObject(true);
+
+$encoder->encode(['Hello World']); // '{"0":"Hello World"}'
+$encoder->encode(tmpfile()); // Brick\Std\Json\JsonException: Type is not supported
+```
+
+Decoding:
+
+```php
+use Brick\Std\Json\JsonDecoder;
+
+$decoder = new JsonDecoder();
+$decoder->decodeObjectsAsArrays(true);
+
+$decoder->decode('{"hello":"world"}'); // ['hello' => 'world']
+$decoder->decode('{hello}'); // Brick\Std\Json\JsonException: Syntax error
+```
