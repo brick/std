@@ -79,4 +79,26 @@ class ErrorCatcher
 
         return $result;
     }
+
+    /**
+     * @param callable $function The function to execute.
+     *
+     * @return mixed The return value of the function.
+     *
+     * @throws \ErrorException If a PHP error occurs.
+     */
+    public static function tryCatch(callable $function)
+    {
+        set_error_handler(function($severity, $message, $file, $line) {
+            throw new \ErrorException($message, 0, $severity, $file, $line);
+        });
+
+        try {
+            $result = $function();
+        } finally {
+            restore_error_handler();
+        }
+
+        return $result;
+    }
 }
