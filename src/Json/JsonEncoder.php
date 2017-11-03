@@ -130,7 +130,7 @@ final class JsonEncoder extends Common
      *
      * @return void
      */
-    public function escapeMultibyteUnicode(bool $bool) : void
+    public function escapeUnicode(bool $bool) : void
     {
         $this->setOption(JSON_UNESCAPED_UNICODE, ! $bool);
     }
