@@ -54,7 +54,7 @@ class ErrorCatcher
     }
 
     /**
-     * Executes the given function with the given parameters, while swallowing errors of the given severity.
+     * Executes the given function, while swallowing errors of the given severity.
      *
      * Errors caught matching the given severity will be swallowed (the current/default error handler
      * will not be triggered), and converted to an ErrorException which will then be passed to the
@@ -64,18 +64,17 @@ class ErrorCatcher
      * or the default error handler if none is set. This is what would happen if the code was
      * executed outside of the swallow() method.
      *
-     * @param integer  $severity   The severity of the errors to catch.
-     * @param callable $function   The function to call.
-     * @param array    $parameters Any parameters to pass to the function.
+     * @param integer  $severity The severity of the errors to catch.
+     * @param callable $function The function to call. Must not have parameters.
      *
      * @return mixed
      */
-    public function swallow($severity, callable $function, array $parameters = [])
+    public function swallow($severity, callable $function)
     {
         $this->severity = $severity;
         $this->previousErrorHandler = set_error_handler($this->transientErrorHandler);
 
-        $result = call_user_func_array($function, $parameters);
+        $result = $function();
         restore_error_handler();
 
         return $result;
