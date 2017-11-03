@@ -134,4 +134,16 @@ final class JsonEncoder extends Common
     {
         $this->setOption(JSON_UNESCAPED_UNICODE, ! $bool);
     }
+
+    /**
+     * Sets whether to always encode float values as float values, even when the fraction is zero. Defaults to `false`.
+     *
+     * @param bool $bool
+     *
+     * @return void
+     */
+    public function preserveZeroFraction(bool $bool) : void
+    {
+        $this->setOption(JSON_PRESERVE_ZERO_FRACTION, $bool);
+    }
 }

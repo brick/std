@@ -314,6 +314,34 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
+     * @dataProvider providerPreserveZeroFraction
+     *
+     * @param mixed  $value
+     * @param bool   $preserveZero
+     * @param string $expected
+     *
+     * @return void
+     */
+    public function testPreserveZeroFraction($value, bool $preserveZero, string $expected) : void
+    {
+        $encoder = new JsonEncoder();
+        $encoder->preserveZeroFraction($preserveZero);
+
+        $this->assertSame($expected, $encoder->encode($value));
+    }
+
+    /**
+     * @return array
+     */
+    public function providerPreserveZeroFraction() : array
+    {
+        return [
+            [1.0, false, '1'],
+            [1.0, true, '1.0']
+        ];
+    }
+
+    /**
      * @expectedException \Brick\Std\Json\JsonException
      * @expectedExceptionMessage Maximum stack depth exceeded
      *
