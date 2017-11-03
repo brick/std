@@ -39,6 +39,28 @@ This library requires PHP 7.1 or later.
 Overview
 --------
 
+### IO
+
+File I/O functionality is provided via static methods in the [FileSystem](https://github.com/brick/std/blob/master/src/Io/FileSystem.php) class. All methods throw an [IoException](https://github.com/brick/std/blob/master/src/Io/IoException.php) on failure.
+
+Method list:
+
+- `copy()` Copies a file.
+- `move()` Moves a file or a directory.
+- `delete()` Deletes a file.
+- `createDirectory()` Creates a directory.
+- `createDirectories()` Creates a directory by creating all nonexistent parent directories first.
+- `exists()` Checks whether a file or directory exists.
+- `isFile()` Checks whether the path points to a regular file.
+- `isDirectory()` Checks whether the path points to a directory.
+- `isSymbolicLink()` Checks whether the path points to a symbolic link.
+- `createSymbolicLink()` Creates a symbolic link to a target.
+- `createLink()` Creates a hard link to an existing file.
+- `readSymbolicLink()` Returns the target of a symbolic link.
+- `getRealPath()` Returns the canonicalized absolute pathname.
+- `write()` Writes data to a file.
+- `read()` Reads data from a file.
+
 ### JSON
 
 JSON functionality is provided by [JsonEncoder](https://github.com/brick/std/blob/master/src/Json/JsonEncoder.php) and [JsonDecoder](https://github.com/brick/std/blob/master/src/Json/JsonDecoder.php). Options are set on the encoder/decoder instance, via explicit methods. If an error occurs, a [JsonException](https://github.com/brick/std/blob/master/src/Json/JsonException.php) is thrown.
