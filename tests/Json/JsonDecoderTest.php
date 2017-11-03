@@ -131,6 +131,8 @@ class JsonDecoderTest extends TestCase
     /**
      * @expectedException \Brick\Std\Json\JsonException
      * @expectedExceptionMessage Maximum stack depth exceeded
+     *
+     * @return void
      */
     public function testMaxDepth() : void
     {
