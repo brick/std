@@ -85,7 +85,7 @@ Decoding:
 use Brick\Std\Json\JsonDecoder;
 
 $decoder = new JsonDecoder();
-$decoder->decodeObjectsAsArrays(true);
+$decoder->decodeObjectAsArray(true);
 
 $decoder->decode('{"hello":"world"}'); // ['hello' => 'world']
 $decoder->decode('{hello}'); // Brick\Std\Json\JsonException: Syntax error

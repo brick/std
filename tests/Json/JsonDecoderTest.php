@@ -86,10 +86,10 @@ class JsonDecoderTest extends TestCase
     /**
      * @return void
      */
-    public function testDecodeObjectsAsArrays() : void
+    public function testDecodeObjectAsArray() : void
     {
         $decoder = new JsonDecoder();
-        $decoder->decodeObjectsAsArrays(true);
+        $decoder->decodeObjectAsArray(true);
 
         $json = '{"a": "b", "c": "d"}';
 

@@ -14,7 +14,7 @@ final class JsonDecoder extends Common
      *
      * @var bool
      */
-    private $decodeObjectsAsArrays = false;
+    private $decodeObjectAsArray = false;
 
     /**
      * Decodes data in JSON format.
@@ -28,7 +28,7 @@ final class JsonDecoder extends Common
     public function decode(string $json)
     {
         return $this->execute(function() use ($json) {
-            return json_decode($json, $this->decodeObjectsAsArrays, $this->maxDepth, $this->options);
+            return json_decode($json, $this->decodeObjectAsArray, $this->maxDepth, $this->options);
         });
     }
 
@@ -39,9 +39,9 @@ final class JsonDecoder extends Common
      *
      * @return void
      */
-    public function decodeObjectsAsArrays(bool $bool) : void
+    public function decodeObjectAsArray(bool $bool) : void
     {
-        $this->decodeObjectsAsArrays = $bool;
+        $this->decodeObjectAsArray = $bool;
     }
 
     /**
