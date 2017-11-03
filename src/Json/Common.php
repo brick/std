@@ -17,14 +17,14 @@ abstract class Common
     /**
      * The maximum encoding depth.
      *
-     * @var integer
+     * @var int
      */
     protected $maxDepth = 512;
 
     /**
      * The encoding options bitmask.
      *
-     * @var integer
+     * @var int
      */
     protected $options = 0;
 
@@ -41,15 +41,13 @@ abstract class Common
     /**
      * Sets the max depth. Defaults to `512`.
      *
-     * @param integer $depth
+     * @param int $depth
      *
-     * @return static
+     * @return void
      */
-    public function setMaxDepth($depth)
+    public function setMaxDepth(int $depth) : void
     {
-        $this->maxDepth = (int) $depth;
-
-        return $this;
+        $this->maxDepth = $depth;
     }
 
     /**
@@ -75,19 +73,17 @@ abstract class Common
     /**
      * Sets or resets a bitmask option.
      *
-     * @param integer $option
-     * @param boolean $boolean
+     * @param int  $option A JSON_* constant.
+     * @param bool $bool   The boolean value.
      *
-     * @return static
+     * @return void
      */
-    protected function setOption($option, $boolean)
+    protected function setOption(int $option, bool $bool) : void
     {
-        if ($boolean) {
+        if ($bool) {
             $this->options |= $option;
         } else {
             $this->options &= ~ $option;
         }
-
-        return $this;
     }
 }

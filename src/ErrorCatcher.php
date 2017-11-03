@@ -26,7 +26,7 @@ class ErrorCatcher
     /**
      * The severity of the errors to be swallowed.
      *
-     * @var integer
+     * @var int
      */
     private $severity = 0;
 
@@ -64,12 +64,12 @@ class ErrorCatcher
      * or the default error handler if none is set. This is what would happen if the code was
      * executed outside of the swallow() method.
      *
-     * @param integer  $severity The severity of the errors to catch.
+     * @param int      $severity The severity of the errors to catch.
      * @param callable $function The function to call. Must not have parameters.
      *
      * @return mixed
      */
-    public function swallow($severity, callable $function)
+    public function swallow(int $severity, callable $function)
     {
         $this->severity = $severity;
         $this->previousErrorHandler = set_error_handler($this->transientErrorHandler);

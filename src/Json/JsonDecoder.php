@@ -10,7 +10,7 @@ final class JsonDecoder extends Common
     /**
      * Whether to decode objects as associative arrays.
      *
-     * @var boolean
+     * @var bool
      */
     private $decodeObjectsAsArrays = false;
 
@@ -23,7 +23,7 @@ final class JsonDecoder extends Common
      *
      * @throws JsonException If the data cannot be decoded.
      */
-    public function decode($json)
+    public function decode(string $json)
     {
         return $this->execute(function() use ($json) {
             return json_decode($json, $this->decodeObjectsAsArrays, $this->maxDepth, $this->options);
@@ -33,15 +33,13 @@ final class JsonDecoder extends Common
     /**
      * Sets whether to decode objects as associative arrays. Defaults to `false`.
      *
-     * @param boolean $bool
+     * @param bool $bool
      *
-     * @return static
+     * @return void
      */
-    public function decodeObjectsAsArrays($bool)
+    public function decodeObjectsAsArrays(bool $bool) : void
     {
-        $this->decodeObjectsAsArrays = (bool) $bool;
-
-        return $this;
+        $this->decodeObjectsAsArrays = $bool;
     }
 
     /**
@@ -50,12 +48,12 @@ final class JsonDecoder extends Common
      * * `true` decodes large integers as strings
      * * `false` decodes large integers as floats
      *
-     * @param boolean $bool
+     * @param bool $bool
      *
-     * @return static
+     * @return void
      */
-    public function decodeBigIntAsString($bool)
+    public function decodeBigIntAsString(bool $bool) : void
     {
-        return $this->setOption(JSON_BIGINT_AS_STRING, $bool);
+        $this->setOption(JSON_BIGINT_AS_STRING, $bool);
     }
 }
