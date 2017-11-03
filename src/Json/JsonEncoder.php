@@ -100,18 +100,6 @@ final class JsonEncoder extends Common
     }
 
     /**
-     * Sets whether to encode large integers as their original string value. Defaults to `false`.
-     *
-     * @param bool $bool
-     *
-     * @return void
-     */
-    public function encodeBigIntAsString(bool $bool) : void
-    {
-        $this->setOption(JSON_BIGINT_AS_STRING, $bool);
-    }
-
-    /**
      * Sets whether to use whitespace in returned data to format it. Defaults to `false`.
      *
      * @param bool $bool
