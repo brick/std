@@ -12,7 +12,7 @@ Introduction
 ------------
 
 The PHP internal functions are notoriously known for their inconsistency: inconsistent naming, inconsistent parameter order, inconsistent error handling: sometimes returning `false`, sometimes triggering an error, sometimes throwing an exception, and sometimes a mix of these.
-The aim of this library is mainly to provide a consistent, OOP wrapper around PHP native functions, that deals with inconsistencies internally to expose a cleaner API externally.
+The aim of this library is mainly to provide a consistent, OO wrapper around PHP native functions, that deals with inconsistencies internally to expose a cleaner API externally.
 Hopefully PHP will do this job one day; in the meantime, this project is a humble attempt to fill the gap.
 
 The library will start small. Functionality will be added as needs arise. Contributions are welcome.
@@ -42,6 +42,8 @@ Overview
 ### IO
 
 File I/O functionality is provided via static methods in the [FileSystem](https://github.com/brick/std/blob/master/src/Io/FileSystem.php) class. All methods throw an [IoException](https://github.com/brick/std/blob/master/src/Io/IoException.php) on failure.
+
+*The ultimate aim of this class would be to throw fine-grained exceptions for specific cases (file already exists, destination is a directory, etc.) but this would require to analyze PHP error messages, making the library fragile to changes, and/or call several internal filesystem functions in a row, making most of the operations non-atomic. Both approaches have potentially serious drawbacks. Ideas and comments welcome.*
 
 Method list:
 
