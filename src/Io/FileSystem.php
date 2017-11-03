@@ -275,7 +275,7 @@ final class FileSystem
         });
 
         if ($result === false) {
-            throw new IoException('The getRealPath operation failed for an unknown reason.');
+            throw new IoException('The getRealPath operation failed, probably because the path does not exist.');
         }
 
         return $result;
