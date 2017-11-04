@@ -57,7 +57,9 @@ final class FileSystem
     }
 
     /**
-     * Deletes a file.
+     * Deletes a file or a directory.
+     *
+     * If the target is a directory, it must be empty.
      *
      * @param string $path
      *
@@ -68,6 +70,10 @@ final class FileSystem
     public static function delete(string $path) : void
     {
         $success = self::tryCatch(function() use ($path) {
+            if (is_dir($path)) {
+                return rmdir($path);
+            }
+
             return unlink($path);
         });
 

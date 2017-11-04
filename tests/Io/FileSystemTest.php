@@ -63,9 +63,18 @@ class FileSystemTest extends FileSystemTestCase
         $this->assertFileContains('b', 'Hello World');
     }
 
-    public function testDelete()
+    public function testDeleteFile()
     {
         $this->touch('a');
+
+        FileSystem::delete('a');
+
+        $this->assertFileNotExists('a');
+    }
+
+    public function testDeleteDirectory()
+    {
+        $this->mkdir('a');
 
         FileSystem::delete('a');
 
