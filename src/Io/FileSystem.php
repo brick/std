@@ -322,18 +322,22 @@ final class FileSystem
      *
      * Always be careful when reading a file in memory, as it may exceed the memory limit.
      *
-     * @param string $path      The path to the file.
-     * @param int    $offset    The offset where the reading starts on the original stream.
-     *                          Negative offsets count from the end of the stream.
-     * @param int    $maxLength Maximum length of data read. The default is to read until end of file is reached.
+     * @param string   $path      The path to the file.
+     * @param int      $offset    The offset where the reading starts on the original stream.
+     *                            Negative offsets count from the end of the stream.
+     * @param int|null $maxLength Maximum length of data read. The default is to read until end of file is reached.
      *
      * @return string The file contents.
      *
      * @throws IoException If an error occurs.
      */
-    public static function read(string $path, int $offset = 0, int $maxLength = PHP_INT_MAX) : string
+    public static function read(string $path, int $offset = 0, int $maxLength = null) : string
     {
         $result = self::tryCatch(function() use ($path, $offset, $maxLength) {
+            if ($maxLength === null) {
+                return file_get_contents($path, false, null, $offset);
+            }
+
             return file_get_contents($path, false, null, $offset, $maxLength);
         });
 
