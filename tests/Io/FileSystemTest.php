@@ -165,9 +165,9 @@ class FileSystemTest extends FileSystemTestCase
     public function testReadSymbolicLink()
     {
         $this->touch('a');
-        $this->symlink('a', 'link');
+        $this->symlink($target = $this->tmp . DIRECTORY_SEPARATOR . 'a', 'link');
 
-        $this->assertSame('a', FileSystem::readSymbolicLink('link'));
+        $this->assertSame($target, FileSystem::readSymbolicLink($this->tmp . DIRECTORY_SEPARATOR . 'link'));
     }
 
     public function testWrite()
