@@ -20,9 +20,11 @@ final class JsonEncoder extends Common
      */
     public function encode($data) : string
     {
-        return $this->run(function() use ($data) {
-            return json_encode($data, $this->options, $this->maxDepth);
-        });
+        $result = json_encode($data, $this->options, $this->maxDepth);
+
+        $this->checkLastError();
+
+        return $result;
     }
 
     /**

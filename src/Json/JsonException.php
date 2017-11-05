@@ -9,13 +9,4 @@ namespace Brick\Std\Json;
  */
 class JsonException extends \RuntimeException
 {
-    /**
-     * @param \Exception $e
-     *
-     * @return JsonException
-     */
-    public static function wrap(\Exception $e) : JsonException
-    {
-        return new self($e->getMessage(), 0, $e);
-    }
 }

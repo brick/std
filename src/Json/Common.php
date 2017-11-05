@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Brick\Std\Json;
 
-use Brick\Std\ErrorCatcher;
-
 /**
  * Common functionality for JsonEncoder and JsonDecoder.
  */
@@ -46,27 +44,17 @@ abstract class Common
     }
 
     /**
-     * Executes the given function and throws an exception if an error has occurred.
+     * Throws an exception if a JSON error has occurred.
      *
-     * @param \Closure $function The function to execute.
+     * @return void
      *
-     * @return mixed The value returned by the function.
-     *
-     * @throws JsonException If an error occurs.
+     * @throws JsonException
      */
-    protected function run(\Closure $function)
+    protected function checkLastError(): void
     {
-        try {
-            $result = ErrorCatcher::run($function);
-        } catch (\ErrorException $e) {
-            throw JsonException::wrap($e);
-        }
-
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new JsonException(json_last_error_msg(), json_last_error());
         }
-
-        return $result;
     }
 
     /**

@@ -27,10 +27,12 @@ final class JsonDecoder extends Common
      */
     public function decode(string $json)
     {
-        return $this->run(function() use ($json) {
-            // max depth is 0+ for json_encode(), and 1+ for json_decode()
-            return json_decode($json, $this->decodeObjectAsArray, $this->maxDepth + 1, $this->options);
-        });
+        // max depth is 0+ for json_encode(), and 1+ for json_decode()
+        $result = json_decode($json, $this->decodeObjectAsArray, $this->maxDepth + 1, $this->options);
+
+        $this->checkLastError();
+
+        return $result;
     }
 
     /**
