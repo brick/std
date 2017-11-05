@@ -12,29 +12,37 @@ use Brick\Std\ErrorCatcher;
 abstract class Common
 {
     /**
-     * The maximum encoding depth.
+     * The maximum encoding/decoding depth.
      *
      * @var int
      */
     protected $maxDepth = 512;
 
     /**
-     * The encoding options bitmask.
+     * The options bitmask.
      *
      * @var int
      */
     protected $options = 0;
 
     /**
-     * Sets the max depth. Defaults to `512`.
+     * Sets the max recursion depth. Defaults to `512`.
      *
-     * @param int $depth
+     * If the max depth is zero, only scalars can be encoded/decoded.
+     *
+     * @param int $maxDepth
      *
      * @return void
+     *
+     * @throws \InvalidArgumentException If the max depth is out of range.
      */
-    public function setMaxDepth(int $depth) : void
+    public function setMaxDepth(int $maxDepth) : void
     {
-        $this->maxDepth = $depth;
+        if ($maxDepth < 0 || $maxDepth >= 0x7fffffff) { // max depth + 1 must not be greater than this limit
+            throw new \InvalidArgumentException('Invalid max depth.');
+        }
+
+        $this->maxDepth = $maxDepth;
     }
 
     /**

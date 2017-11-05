@@ -137,7 +137,7 @@ class JsonDecoderTest extends TestCase
     public function testMaxDepth() : void
     {
         $decoder = new JsonDecoder();
-        $decoder->setMaxDepth(1);
+        $decoder->setMaxDepth(0);
 
         $decoder->decode('{"a": "b"}');
     }
