@@ -23,13 +23,21 @@ final class FileSystem
      */
     public static function copy(string $source, string $destination) : void
     {
-        $success = self::tryCatch(function() use ($source, $destination) {
-            return copy($source, $destination);
-        });
+        $exception = null;
 
-        if ($success !== true) {
-            throw new IoException('The copy operation failed for an unknown reason.');
+        try {
+            $success = ErrorCatcher::tryCatch(function() use ($source, $destination) {
+                return copy($source, $destination);
+            });
+
+            if ($success === true) {
+                return;
+            }
+        } catch (\ErrorException $e) {
+            $exception = $e;
         }
+
+        throw new IoException('Error copying ' . $source . ' to ' . $destination, 0, $exception);
     }
 
     /**
@@ -47,13 +55,21 @@ final class FileSystem
      */
     public static function move(string $source, string $destination) : void
     {
-        $success = self::tryCatch(function() use ($source, $destination) {
-            return rename($source, $destination);
-        });
+        $exception = null;
 
-        if ($success !== true) {
-            throw new IoException('The move operation failed for an unknown reason.');
+        try {
+            $success = ErrorCatcher::tryCatch(function() use ($source, $destination) {
+                return rename($source, $destination);
+            });
+
+            if ($success === true) {
+                return;
+            }
+        } catch (\ErrorException $e) {
+            $exception = $e;
         }
+
+        throw new IoException('Error moving ' . $source . ' to ' . $destination, 0, $exception);
     }
 
     /**
@@ -69,17 +85,25 @@ final class FileSystem
      */
     public static function delete(string $path) : void
     {
-        $success = self::tryCatch(function() use ($path) {
-            if (is_dir($path)) {
-                return rmdir($path);
+        $exception = null;
+
+        try {
+            $success = ErrorCatcher::tryCatch(function() use ($path) {
+                if (is_dir($path)) {
+                    return rmdir($path);
+                }
+
+                return unlink($path);
+            });
+
+            if ($success === true) {
+                return;
             }
-
-            return unlink($path);
-        });
-
-        if ($success !== true) {
-            throw new IoException('The delete operation failed for an unknown reason.');
+        } catch (\ErrorException $e) {
+            $exception = $e;
         }
+
+        throw new IoException('Error deleting ' . $path, 0, $exception);
     }
 
     /**
@@ -96,13 +120,21 @@ final class FileSystem
      */
     public static function createDirectory(string $path, int $mode = 0777) : void
     {
-        $success = self::tryCatch(function() use ($path, $mode) {
-            return mkdir($path, $mode);
-        });
+        $exception = null;
 
-        if ($success !== true) {
-            throw new IoException('The createDirectory operation failed for an unknown reason.');
+        try {
+            $success = ErrorCatcher::tryCatch(function() use ($path, $mode) {
+                return mkdir($path, $mode);
+            });
+
+            if ($success === true) {
+                return;
+            }
+        } catch (\ErrorException $e) {
+            $exception = $e;
         }
+
+        throw new IoException('Error creating directory ' . $path, 0, $exception);
     }
 
     /**
@@ -120,21 +152,25 @@ final class FileSystem
      */
     public static function createDirectories(string $path, int $mode = 0777) : void
     {
+        $exception = null;
+
         try {
-            $success = self::tryCatch(function() use ($path, $mode) {
+            $success = ErrorCatcher::tryCatch(function() use ($path, $mode) {
                 return mkdir($path, $mode, true);
             });
 
-            if ($success !== true) {
-                throw new IoException('The createDirectories operation failed for an unknown reason.');
-            }
-        } catch (IoException $e) {
-            if (self::isDirectory($path)) {
+            if ($success === true) {
                 return;
             }
-
-            throw $e;
+        } catch (\ErrorException $e) {
+            $exception = $e;
         }
+
+        if (self::isDirectory($path)) {
+            return;
+        }
+
+        throw new IoException('Error creating directories ' . $path, 0, $exception);
     }
 
     /**
@@ -148,9 +184,13 @@ final class FileSystem
      */
     public static function exists(string $path) : bool
     {
-        return self::tryCatch(function() use ($path) {
-            return file_exists($path);
-        });
+        try {
+            return ErrorCatcher::tryCatch(function() use ($path) {
+                return file_exists($path);
+            });
+        } catch (\ErrorException $e) {
+            throw new IoException('Error checking if ' . $path . ' exists', 0, $e);
+        }
     }
 
     /**
@@ -164,9 +204,13 @@ final class FileSystem
      */
     public static function isFile(string $path) : bool
     {
-        return self::tryCatch(function() use ($path) {
-            return is_file($path);
-        });
+        try {
+            return ErrorCatcher::tryCatch(function() use ($path) {
+                return is_file($path);
+            });
+        } catch (\ErrorException $e) {
+            throw new IoException('Error checking if ' . $path . ' is a file', 0, $e);
+        }
     }
 
     /**
@@ -180,9 +224,13 @@ final class FileSystem
      */
     public static function isDirectory(string $path) : bool
     {
-        return self::tryCatch(function() use ($path) {
-            return is_dir($path);
-        });
+        try {
+            return ErrorCatcher::tryCatch(function() use ($path) {
+                return is_dir($path);
+            });
+        } catch (\ErrorException $e) {
+            throw new IoException('Error checking if ' . $path . ' is a directory', 0, $e);
+        }
     }
 
     /**
@@ -196,9 +244,13 @@ final class FileSystem
      */
     public static function isSymbolicLink(string $path) : bool
     {
-        return self::tryCatch(function() use ($path) {
-            return is_link($path);
-        });
+        try {
+            return ErrorCatcher::tryCatch(function() use ($path) {
+                return is_link($path);
+            });
+        } catch (\ErrorException $e) {
+            throw new IoException('Error checking if ' . $path . ' is a symbolic link', 0, $e);
+        }
     }
 
     /**
@@ -213,13 +265,21 @@ final class FileSystem
      */
     public static function createSymbolicLink(string $link, string $target) : void
     {
-        $success = self::tryCatch(function() use ($link, $target) {
-            return symlink($target, $link);
-        });
+        $exception = null;
 
-        if ($success !== true) {
-            throw new IoException('The createSymbolicLink operation failed for an unknown reason.');
+        try {
+            $success = ErrorCatcher::tryCatch(function() use ($link, $target) {
+                return symlink($target, $link);
+            });
+
+            if ($success === true) {
+                return;
+            }
+        } catch (\ErrorException $e) {
+            $exception = $e;
         }
+
+        throw new IoException('Error creating symbolic link ' . $link . ' to ' . $target, 0, $exception);
     }
 
     /**
@@ -234,13 +294,21 @@ final class FileSystem
      */
     public static function createLink(string $link, string $target) : void
     {
-        $success = self::tryCatch(function() use ($link, $target) {
-            return link($target, $link);
-        });
+        $exception = null;
 
-        if ($success !== true) {
-            throw new IoException('The createLink operation failed for an unknown reason.');
+        try {
+            $success = ErrorCatcher::tryCatch(function() use ($link, $target) {
+                return link($target, $link);
+            });
+
+            if ($success === true) {
+                return;
+            }
+        } catch (\ErrorException $e) {
+            $exception = $e;
         }
+
+        throw new IoException('Error creating link ' . $link . ' to ' . $target, 0, $exception);
     }
 
     /**
@@ -254,15 +322,21 @@ final class FileSystem
      */
     public static function readSymbolicLink(string $path) : string
     {
-        $result = self::tryCatch(function() use ($path) {
-            return readlink($path);
-        });
+        $exception = null;
 
-        if ($result === false) {
-            throw new IoException('The readSymbolicLink operation failed for an unknown reason.');
+        try {
+            $result = ErrorCatcher::tryCatch(function() use ($path) {
+                return readlink($path);
+            });
+
+            if ($result !== false) {
+                return $result;
+            }
+        } catch (\ErrorException $e) {
+            $exception = $e;
         }
 
-        return $result;
+        throw new IoException('Error reading symbolic link ' . $path, 0, $exception);
     }
 
     /**
@@ -276,15 +350,21 @@ final class FileSystem
      */
     public static function getRealPath(string $path) : string
     {
-        $result = self::tryCatch(function() use ($path) {
-            return realpath($path);
-        });
+        $exception = null;
 
-        if ($result === false) {
-            throw new IoException('The getRealPath operation failed, probably because the path does not exist.');
+        try {
+            $result = ErrorCatcher::tryCatch(function() use ($path) {
+                return realpath($path);
+            });
+
+            if ($result !== false) {
+                return $result;
+            }
+        } catch (\ErrorException $e) {
+            $exception = $e;
         }
 
-        return $result;
+        throw new IoException('Error getting real path of ' . $path . ', check that the path exists', 0, $exception);
     }
 
     /**
@@ -312,15 +392,21 @@ final class FileSystem
             $flags |= LOCK_EX;
         }
 
-        $result = self::tryCatch(function() use ($path, $data, $flags) {
-            return file_put_contents($path, $data, $flags);
-        });
+        $exception = null;
 
-        if ($result === false) {
-            throw new IoException('The write operation failed for an unknown reason.');
+        try {
+            $result = ErrorCatcher::tryCatch(function() use ($path, $data, $flags) {
+                return file_put_contents($path, $data, $flags);
+            });
+
+            if ($result !== false) {
+                return $result;
+            }
+        } catch (\ErrorException $e) {
+            $exception = $e;
         }
 
-        return $result;
+        throw new IoException('Error writing to ' . $path, 0, $exception);
     }
 
     /**
@@ -339,34 +425,24 @@ final class FileSystem
      */
     public static function read(string $path, int $offset = 0, int $maxLength = null) : string
     {
-        $result = self::tryCatch(function() use ($path, $offset, $maxLength) {
-            if ($maxLength === null) {
-                return file_get_contents($path, false, null, $offset);
-            }
+        $exception = null;
 
-            return file_get_contents($path, false, null, $offset, $maxLength);
-        });
-
-        if ($result === false) {
-            throw new IoException('The read operation failed for an unknown reason.');
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param callable $function The function to execute.
-     *
-     * @return mixed The return value of the function.
-     *
-     * @throws IoException
-     */
-    private static function tryCatch(callable $function)
-    {
         try {
-            return ErrorCatcher::tryCatch($function);
+            $result = ErrorCatcher::tryCatch(function() use ($path, $offset, $maxLength) {
+                if ($maxLength === null) {
+                    return file_get_contents($path, false, null, $offset);
+                }
+
+                return file_get_contents($path, false, null, $offset, $maxLength);
+            });
+
+            if ($result !== false) {
+                return $result;
+            }
         } catch (\ErrorException $e) {
-            throw IoException::wrap($e);
+            $exception = $e;
         }
+
+        throw new IoException('Error reading from ' . $path, 0, $exception);
     }
 }
