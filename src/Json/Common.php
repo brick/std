@@ -46,7 +46,7 @@ abstract class Common
      *
      * @throws JsonException If an error occurs.
      */
-    protected function execute(\Closure $function)
+    protected function run(\Closure $function)
     {
         try {
             $result = ErrorCatcher::run($function);

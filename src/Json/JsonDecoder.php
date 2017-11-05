@@ -27,7 +27,7 @@ final class JsonDecoder extends Common
      */
     public function decode(string $json)
     {
-        return $this->execute(function() use ($json) {
+        return $this->run(function() use ($json) {
             return json_decode($json, $this->decodeObjectAsArray, $this->maxDepth, $this->options);
         });
     }
