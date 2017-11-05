@@ -12,13 +12,15 @@ namespace Brick\Std;
 final class ErrorCatcher
 {
     /**
+     * Runs the given function, catching PHP errors and throwing exceptions.
+     *
      * @param callable $function The function to execute.
      *
      * @return mixed The return value of the function.
      *
      * @throws \ErrorException If a PHP error occurs.
      */
-    public static function tryCatch(callable $function)
+    public static function run(callable $function)
     {
         set_error_handler(function($severity, $message, $file, $line) {
             throw new \ErrorException($message, 0, $severity, $file, $line);

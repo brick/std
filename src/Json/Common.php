@@ -49,7 +49,7 @@ abstract class Common
     protected function execute(\Closure $function)
     {
         try {
-            $result = ErrorCatcher::tryCatch($function);
+            $result = ErrorCatcher::run($function);
         } catch (\ErrorException $e) {
             throw JsonException::wrap($e);
         }

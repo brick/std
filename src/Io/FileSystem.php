@@ -26,7 +26,7 @@ final class FileSystem
         $exception = null;
 
         try {
-            $success = ErrorCatcher::tryCatch(function() use ($source, $destination) {
+            $success = ErrorCatcher::run(function() use ($source, $destination) {
                 return copy($source, $destination);
             });
 
@@ -58,7 +58,7 @@ final class FileSystem
         $exception = null;
 
         try {
-            $success = ErrorCatcher::tryCatch(function() use ($source, $destination) {
+            $success = ErrorCatcher::run(function() use ($source, $destination) {
                 return rename($source, $destination);
             });
 
@@ -88,7 +88,7 @@ final class FileSystem
         $exception = null;
 
         try {
-            $success = ErrorCatcher::tryCatch(function() use ($path) {
+            $success = ErrorCatcher::run(function() use ($path) {
                 if (is_dir($path)) {
                     return rmdir($path);
                 }
@@ -123,7 +123,7 @@ final class FileSystem
         $exception = null;
 
         try {
-            $success = ErrorCatcher::tryCatch(function() use ($path, $mode) {
+            $success = ErrorCatcher::run(function() use ($path, $mode) {
                 return mkdir($path, $mode);
             });
 
@@ -155,7 +155,7 @@ final class FileSystem
         $exception = null;
 
         try {
-            $success = ErrorCatcher::tryCatch(function() use ($path, $mode) {
+            $success = ErrorCatcher::run(function() use ($path, $mode) {
                 return mkdir($path, $mode, true);
             });
 
@@ -185,7 +185,7 @@ final class FileSystem
     public static function exists(string $path) : bool
     {
         try {
-            return ErrorCatcher::tryCatch(function() use ($path) {
+            return ErrorCatcher::run(function() use ($path) {
                 return file_exists($path);
             });
         } catch (\ErrorException $e) {
@@ -205,7 +205,7 @@ final class FileSystem
     public static function isFile(string $path) : bool
     {
         try {
-            return ErrorCatcher::tryCatch(function() use ($path) {
+            return ErrorCatcher::run(function() use ($path) {
                 return is_file($path);
             });
         } catch (\ErrorException $e) {
@@ -225,7 +225,7 @@ final class FileSystem
     public static function isDirectory(string $path) : bool
     {
         try {
-            return ErrorCatcher::tryCatch(function() use ($path) {
+            return ErrorCatcher::run(function() use ($path) {
                 return is_dir($path);
             });
         } catch (\ErrorException $e) {
@@ -245,7 +245,7 @@ final class FileSystem
     public static function isSymbolicLink(string $path) : bool
     {
         try {
-            return ErrorCatcher::tryCatch(function() use ($path) {
+            return ErrorCatcher::run(function() use ($path) {
                 return is_link($path);
             });
         } catch (\ErrorException $e) {
@@ -268,7 +268,7 @@ final class FileSystem
         $exception = null;
 
         try {
-            $success = ErrorCatcher::tryCatch(function() use ($link, $target) {
+            $success = ErrorCatcher::run(function() use ($link, $target) {
                 return symlink($target, $link);
             });
 
@@ -297,7 +297,7 @@ final class FileSystem
         $exception = null;
 
         try {
-            $success = ErrorCatcher::tryCatch(function() use ($link, $target) {
+            $success = ErrorCatcher::run(function() use ($link, $target) {
                 return link($target, $link);
             });
 
@@ -325,7 +325,7 @@ final class FileSystem
         $exception = null;
 
         try {
-            $result = ErrorCatcher::tryCatch(function() use ($path) {
+            $result = ErrorCatcher::run(function() use ($path) {
                 return readlink($path);
             });
 
@@ -353,7 +353,7 @@ final class FileSystem
         $exception = null;
 
         try {
-            $result = ErrorCatcher::tryCatch(function() use ($path) {
+            $result = ErrorCatcher::run(function() use ($path) {
                 return realpath($path);
             });
 
@@ -395,7 +395,7 @@ final class FileSystem
         $exception = null;
 
         try {
-            $result = ErrorCatcher::tryCatch(function() use ($path, $data, $flags) {
+            $result = ErrorCatcher::run(function() use ($path, $data, $flags) {
                 return file_put_contents($path, $data, $flags);
             });
 
@@ -428,7 +428,7 @@ final class FileSystem
         $exception = null;
 
         try {
-            $result = ErrorCatcher::tryCatch(function() use ($path, $offset, $maxLength) {
+            $result = ErrorCatcher::run(function() use ($path, $offset, $maxLength) {
                 if ($maxLength === null) {
                     return file_get_contents($path, false, null, $offset);
                 }
