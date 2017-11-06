@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Brick\Std;
+namespace Brick\Std\Internal;
 
 /**
  * Catches PHP errors in a specific code block, and throws exceptions.
  *
  * This works regardless of the error_reporting option and the registered error handler.
+ *
+ * @internal
  */
 final class ErrorCatcher
 {
