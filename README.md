@@ -65,6 +65,63 @@ Method list:
 - `write()` Writes data to a file.
 - `read()` Reads data from a file.
 
+### Iterator
+
+The library ships with two handy iterator for CSV files:
+
+#### CsvFileIterator
+
+This iterator iterates over a CSV file, and returns an indexed array by default:
+
+```php
+use Brick\Std\Iterator\CsvFileIterator;
+
+// 1,Bob,New York
+// 2,John,Los Angeles
+$users = new CsvFileIterator('users.csv');
+
+foreach ($users as [$id, $name, $city]) {
+    // ...
+}
+```
+
+It can also read the first line of the file that contains column names, and use them to return an associative array:
+
+```php
+use Brick\Std\Iterator\CsvFileIterator;
+
+// id,name,city
+// 1,Bob,New York
+// 2,John,Los Angeles
+$users = new CsvFileIterator('users.csv', true);
+
+foreach ($users as $user) {
+    // $user['id'], $user['name'], $user['city']
+}
+```
+
+Delimiter, enclosure and escape characters can be provided to the constructor.
+
+#### CsvJsonFileIterator
+
+This iterator iterates over a CSV file whose fields are JSON-encoded:
+
+```php
+use Brick\Std\Iterator\CsvJsonFileIterator;
+
+// 1,"Bob",["John","Mike"]
+// 2,"John",["Bob","Brad"]
+$users = new CsvJsonFileIterator('users.csv');
+
+foreach ($users as [$id, $name, $friends]) {
+    // $id is an int
+    // $name is a string
+    // $friends is an array
+}
+```
+
+The JSON-encoded fields must not contain newline characters.
+
 ### JSON
 
 JSON functionality is provided by [JsonEncoder](https://github.com/brick/std/blob/master/src/Json/JsonEncoder.php) and [JsonDecoder](https://github.com/brick/std/blob/master/src/Json/JsonDecoder.php). Options are set on the encoder/decoder instance, via explicit methods. If an error occurs, a [JsonException](https://github.com/brick/std/blob/master/src/Json/JsonException.php) is thrown.
