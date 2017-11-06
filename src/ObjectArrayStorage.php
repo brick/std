@@ -27,9 +27,9 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      *
      * @param object $object The object to test.
      *
-     * @return boolean True if this storage contains the object, false otherwise.
+     * @return bool True if this storage contains the object, false otherwise.
      */
-    public function has($object)
+    public function has($object) : bool
     {
         return $this->storage->has($object);
     }
@@ -43,7 +43,7 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      *
      * @return array The values associated with the object.
      */
-    public function get($object)
+    public function get($object) : array
     {
         $values = $this->storage->get($object);
 
@@ -58,7 +58,7 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      *
      * @return void
      */
-    public function add($object, $value)
+    public function add($object, $value) : void
     {
         $values = $this->get($object);
         $values[] = $value;
@@ -74,7 +74,7 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      *
      * @return void
      */
-    public function remove($object)
+    public function remove($object) : void
     {
         $this->storage->remove($object);
     }
@@ -84,9 +84,9 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      *
      * This method is part of the Countable interface.
      *
-     * @return integer
+     * @return int
      */
-    public function count()
+    public function count() : int
     {
         return $this->storage->count();
     }
@@ -96,9 +96,9 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      *
      * This method is part of the IteratorAggregate interface.
      *
-     * @return \Generator
+     * @return \Traversable
      */
-    public function getIterator()
+    public function getIterator() : \Traversable
     {
         return $this->storage->getIterator();
     }

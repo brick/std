@@ -15,7 +15,7 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * The objects contained in the storage, indexed by object hash.
      *
-     * @var array<string, object>
+     * @var array
      */
     private $objects = [];
 
@@ -31,9 +31,9 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @param object $object The object to test.
      *
-     * @return boolean True if this storage contains the object, false otherwise.
+     * @return bool True if this storage contains the object, false otherwise.
      */
-    public function has($object)
+    public function has($object) : bool
     {
         $hash = spl_object_hash($object);
 
@@ -68,7 +68,7 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return void
      */
-    public function set($object, $data = null)
+    public function set($object, $data = null) : void
     {
         $hash = spl_object_hash($object);
 
@@ -85,7 +85,7 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return void
      */
-    public function remove($object)
+    public function remove($object) : void
     {
         $hash = spl_object_hash($object);
 
@@ -98,9 +98,9 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * This method is part of the Countable interface.
      *
-     * @return integer
+     * @return int
      */
-    public function count()
+    public function count() : int
     {
         return count($this->objects);
     }
@@ -108,9 +108,9 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * Returns the objects contained in this storage.
      *
-     * @return array<integer, object>
+     * @return object[]
      */
-    public function getObjects()
+    public function getObjects() : array
     {
         return array_values($this->objects);
     }
@@ -120,9 +120,9 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * This method is part of the IteratorAggregate interface.
      *
-     * @return \Generator
+     * @return \Traversable
      */
-    public function getIterator()
+    public function getIterator() : \Traversable
     {
         foreach ($this->objects as $hash => $object) {
             yield $object => $this->data[$hash];
@@ -153,7 +153,7 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return void
      */
-    public function offsetSet($object, $value)
+    public function offsetSet($object, $value) : void
     {
         $hash = spl_object_hash($object);
 
@@ -166,7 +166,7 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return void
      */
-    public function offsetUnset($object)
+    public function offsetUnset($object) : void
     {
         $hash = spl_object_hash($object);
 
@@ -179,7 +179,7 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return bool
      */
-    public function offsetExists($object)
+    public function offsetExists($object) : bool
     {
         $hash = spl_object_hash($object);
 

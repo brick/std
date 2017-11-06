@@ -24,18 +24,20 @@ class ObjectArrayStorageTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         self::$a = new \StdClass();
         self::$b = new \StdClass();
     }
 
     /**
-     * @param ObjectArrayStorage $storage  The storage to test.
-     * @param integer            $count    The expected count.
-     * @param array              $tests    An array of arrays as [object, isContained, expectedValue] tests.
+     * @param ObjectArrayStorage $storage The storage to test.
+     * @param int                $count   The expected count.
+     * @param array              $tests   An array of arrays as [object, isContained, expectedValue] tests.
+     *
+     * @return void
      */
-    private function assertStorage(ObjectArrayStorage $storage, $count, array $tests)
+    private function assertStorage(ObjectArrayStorage $storage, int $count, array $tests) : void
     {
         $this->assertCount($count, $storage);
 
@@ -48,7 +50,7 @@ class ObjectArrayStorageTest extends TestCase
     /**
      * @return ObjectArrayStorage
      */
-    public function testEmptyStorage()
+    public function testEmptyStorage() : ObjectArrayStorage
     {
         $storage = new ObjectArrayStorage();
 
@@ -67,7 +69,7 @@ class ObjectArrayStorageTest extends TestCase
      *
      * @return ObjectArrayStorage
      */
-    public function testAddFirstObject(ObjectArrayStorage $storage)
+    public function testAddFirstObject(ObjectArrayStorage $storage) : ObjectArrayStorage
     {
         $storage->add(self::$a, 'x');
 
@@ -86,7 +88,7 @@ class ObjectArrayStorageTest extends TestCase
      *
      * @return ObjectArrayStorage
      */
-    public function testAddSecondObject(ObjectArrayStorage $storage)
+    public function testAddSecondObject(ObjectArrayStorage $storage) : ObjectArrayStorage
     {
         $storage->add(self::$b, 'y');
 
@@ -105,7 +107,7 @@ class ObjectArrayStorageTest extends TestCase
      *
      * @return ObjectArrayStorage
      */
-    public function testRemoveUnknownObjectDoesNothing(ObjectArrayStorage $storage)
+    public function testRemoveUnknownObjectDoesNothing(ObjectArrayStorage $storage) : ObjectArrayStorage
     {
         $storage->remove(new \StdClass());
 
@@ -124,7 +126,7 @@ class ObjectArrayStorageTest extends TestCase
      *
      * @return ObjectArrayStorage
      */
-    public function testAddValueToFirstObject (ObjectArrayStorage $storage)
+    public function testAddValueToFirstObject (ObjectArrayStorage $storage) : ObjectArrayStorage
     {
         $storage->add(self::$a, 'z');
 
@@ -143,7 +145,7 @@ class ObjectArrayStorageTest extends TestCase
      *
      * @return ObjectArrayStorage
      */
-    public function testRemoveSecondObject (ObjectArrayStorage $storage)
+    public function testRemoveSecondObject (ObjectArrayStorage $storage) : ObjectArrayStorage
     {
         $storage->remove(self::$b);
 
@@ -159,8 +161,10 @@ class ObjectArrayStorageTest extends TestCase
      * @depends testRemoveSecondObject
      *
      * @param ObjectArrayStorage $storage
+     *
+     * @return void
      */
-    public function testRemoveFirstObject (ObjectArrayStorage $storage)
+    public function testRemoveFirstObject (ObjectArrayStorage $storage) : void
     {
         $storage->remove(self::$a);
 
@@ -170,7 +174,10 @@ class ObjectArrayStorageTest extends TestCase
         ]);
     }
 
-    public function testIterator()
+    /**
+     * @return void
+     */
+    public function testIterator() : void
     {
         $storage = new ObjectArrayStorage();
 

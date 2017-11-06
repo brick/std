@@ -24,18 +24,20 @@ class ObjectStorageTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         self::$a = new \StdClass();
         self::$b = new \StdClass();
     }
 
     /**
-     * @param ObjectStorage $storage  The storage to test.
-     * @param integer       $count    The expected count.
-     * @param array         $tests    An array of arrays as [object, isContained, expectedValue] tests.
+     * @param ObjectStorage $storage The storage to test.
+     * @param int           $count   The expected count.
+     * @param array         $tests   An array of arrays as [object, isContained, expectedValue] tests.
+     *
+     * @return void
      */
-    private function assertStorage(ObjectStorage $storage, $count, array $tests)
+    private function assertStorage(ObjectStorage $storage, int $count, array $tests) : void
     {
         $this->assertCount($count, $storage);
 
@@ -58,7 +60,7 @@ class ObjectStorageTest extends TestCase
     /**
      * @return ObjectStorage
      */
-    public function testEmptyStorage()
+    public function testEmptyStorage() : ObjectStorage
     {
         $storage = new ObjectStorage();
 
@@ -77,7 +79,7 @@ class ObjectStorageTest extends TestCase
      *
      * @return ObjectStorage
      */
-    public function testSetFirstObject(ObjectStorage $storage)
+    public function testSetFirstObject(ObjectStorage $storage) : ObjectStorage
     {
         $storage->set(self::$a, 'x');
 
@@ -96,7 +98,7 @@ class ObjectStorageTest extends TestCase
      *
      * @return ObjectStorage
      */
-    public function testSetSecondObject(ObjectStorage $storage)
+    public function testSetSecondObject(ObjectStorage $storage) : ObjectStorage
     {
         $storage[self::$b] = 'y';
 
@@ -115,7 +117,7 @@ class ObjectStorageTest extends TestCase
      *
      * @return ObjectStorage
      */
-    public function testRemoveUnknownObjectDoesNothing(ObjectStorage $storage)
+    public function testRemoveUnknownObjectDoesNothing(ObjectStorage $storage) : ObjectStorage
     {
         $storage->remove(new \StdClass());
 
@@ -134,7 +136,7 @@ class ObjectStorageTest extends TestCase
      *
      * @return ObjectStorage
      */
-    public function testOverwriteFirstObjectWithNull (ObjectStorage $storage)
+    public function testOverwriteFirstObjectWithNull (ObjectStorage $storage) : ObjectStorage
     {
         $storage->set(self::$a, null);
 
@@ -153,7 +155,7 @@ class ObjectStorageTest extends TestCase
      *
      * @return ObjectStorage
      */
-    public function testRemoveSecondObject (ObjectStorage $storage)
+    public function testRemoveSecondObject (ObjectStorage $storage) : ObjectStorage
     {
         unset($storage[self::$b]);
 
@@ -169,8 +171,10 @@ class ObjectStorageTest extends TestCase
      * @depends testRemoveSecondObject
      *
      * @param ObjectStorage $storage
+     *
+     * @return void
      */
-    public function testRemoveFirstObject (ObjectStorage $storage)
+    public function testRemoveFirstObject (ObjectStorage $storage) : void
     {
         $storage->remove(self::$a);
 
@@ -180,7 +184,10 @@ class ObjectStorageTest extends TestCase
         ]);
     }
 
-    public function testIterator()
+    /**
+     * @return void
+     */
+    public function testIterator() : void
     {
         $storage = new ObjectStorage();
 

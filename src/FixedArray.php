@@ -39,12 +39,12 @@ class FixedArray extends \SplFixedArray
     /**
      * Swaps two entries in this FixedArray.
      *
-     * @param integer $index1 The index of the first entry.
-     * @param integer $index2 The index of the second entry.
+     * @param int $index1 The index of the first entry.
+     * @param int $index2 The index of the second entry.
      *
      * @return void
      */
-    public function swap($index1, $index2)
+    public function swap(int $index1, int $index2) : void
     {
         if ($index1 != $index2) {
             $value = $this[$index1];
@@ -59,11 +59,11 @@ class FixedArray extends \SplFixedArray
      * This will effectively swap this entry with the next entry.
      * If this entry is the last one in the array, this method will do nothing.
      *
-     * @param integer $index
+     * @param int $index
      *
      * @return void
      */
-    public function shiftUp($index)
+    public function shiftUp(int $index) : void
     {
         if ($index + 1 == $this->count()) {
             return;
@@ -78,11 +78,11 @@ class FixedArray extends \SplFixedArray
      * This will effectively swap this entry with the previous entry.
      * If the entry is the first one in the array, this method will do nothing.
      *
-     * @param integer $index
+     * @param int $index
      *
      * @return void
      */
-    public function shiftDown($index)
+    public function shiftDown(int $index) : void
     {
         if ($index == 0) {
             return;
@@ -94,12 +94,12 @@ class FixedArray extends \SplFixedArray
     /**
      * Shifts an entry to an arbitrary index, shifting all the entries between those indexes.
      *
-     * @param integer $index    The index of the entry.
-     * @param integer $newIndex The index to shift the entry to.
+     * @param int $index    The index of the entry.
+     * @param int $newIndex The index to shift the entry to.
      *
      * @return void
      */
-    public function shiftTo($index, $newIndex)
+    public function shiftTo(int $index, int $newIndex) : void
     {
         while ($index > $newIndex) {
             $this->shiftDown($index);

@@ -14,11 +14,13 @@ class FixedArrayTest extends TestCase
     /**
      * @dataProvider providerFromArray
      *
-     * @param array   $source      The source array.
-     * @param boolean $saveIndexes Whether to use the save indexes functionality.
-     * @param array   $expected    The expected result array.
+     * @param array $source      The source array.
+     * @param bool  $saveIndexes Whether to use the save indexes functionality.
+     * @param array $expected    The expected result array.
+     *
+     * @return void
      */
-    public function testFromArray(array $source, $saveIndexes, array $expected)
+    public function testFromArray(array $source, bool $saveIndexes, array $expected) : void
     {
         $fixedArray = FixedArray::fromArray($source, $saveIndexes);
 
@@ -29,7 +31,7 @@ class FixedArrayTest extends TestCase
     /**
      * @return array
      */
-    public function providerFromArray()
+    public function providerFromArray() : array
     {
         return [
             [['2' => 'x', 4 => 'y'], false, ['x', 'y']],
@@ -41,10 +43,12 @@ class FixedArrayTest extends TestCase
      * @dataProvider providerFromInvalidArrayThrowsException
      * @expectedException \InvalidArgumentException
      *
-     * @param array   $source      The source array.
-     * @param boolean $saveIndexes Whether to use the save indexes functionality.
+     * @param array $source      The source array.
+     * @param bool  $saveIndexes Whether to use the save indexes functionality.
+     *
+     * @return void
      */
-    public function testFromInvalidArrayThrowsException(array $source, $saveIndexes)
+    public function testFromInvalidArrayThrowsException(array $source, bool $saveIndexes) : void
     {
         FixedArray::fromArray($source);
     }
@@ -52,7 +56,7 @@ class FixedArrayTest extends TestCase
     /**
      * @return array
      */
-    public function providerFromInvalidArrayThrowsException()
+    public function providerFromInvalidArrayThrowsException() : array
     {
         return [
             [['x' => 'y'], false],
@@ -65,12 +69,14 @@ class FixedArrayTest extends TestCase
     /**
      * @dataProvider providerSwap
      *
-     * @param array   $source   The source array.
-     * @param integer $index1   The index of the first entry.
-     * @param integer $index2   The index of the second entry.
-     * @param array   $expected The expected result array.
+     * @param array $source   The source array.
+     * @param int   $index1   The index of the first entry.
+     * @param int   $index2   The index of the second entry.
+     * @param array $expected The expected result array.
+     *
+     * @return void
      */
-    public function testSwap(array $source, $index1, $index2, array $expected)
+    public function testSwap(array $source, int $index1, int $index2, array $expected) : void
     {
         $fixedArray = FixedArray::fromArray($source);
 
@@ -81,7 +87,7 @@ class FixedArrayTest extends TestCase
     /**
      * @return array
      */
-    public function providerSwap()
+    public function providerSwap() : array
     {
         return [
             [['a', 'b', 'c'], 0, 0, ['a', 'b', 'c']],
@@ -99,11 +105,13 @@ class FixedArrayTest extends TestCase
     /**
      * @dataProvider providerShiftUp
      *
-     * @param array   $source   The source array.
-     * @param integer $index    The index of the entry to shift.
-     * @param array   $expected The expected result array.
+     * @param array $source   The source array.
+     * @param int   $index    The index of the entry to shift.
+     * @param array $expected The expected result array.
+     *
+     * @return void
      */
-    public function testShiftUp(array $source, $index, array $expected)
+    public function testShiftUp(array $source, int $index, array $expected) : void
     {
         $fixedArray = FixedArray::fromArray($source);
 
@@ -114,7 +122,7 @@ class FixedArrayTest extends TestCase
     /**
      * @return array
      */
-    public function providerShiftUp()
+    public function providerShiftUp() : array
     {
         return [
             [['a', 'b', 'c', 'd', 'e'], 0, ['b', 'a', 'c', 'd', 'e']],
@@ -128,11 +136,13 @@ class FixedArrayTest extends TestCase
     /**
      * @dataProvider providerShiftDown
      *
-     * @param array   $source   The source array.
-     * @param integer $index    The index of the entry to shift.
-     * @param array   $expected The expected result array.
+     * @param array $source   The source array.
+     * @param int   $index    The index of the entry to shift.
+     * @param array $expected The expected result array.
+     *
+     * @return void
      */
-    public function testShiftDown(array $source, $index, array $expected)
+    public function testShiftDown(array $source, int $index, array $expected) : void
     {
         $fixedArray = FixedArray::fromArray($source);
 
@@ -143,7 +153,7 @@ class FixedArrayTest extends TestCase
     /**
      * @return array
      */
-    public function providerShiftDown()
+    public function providerShiftDown() : array
     {
         return [
             [['a', 'b', 'c', 'd', 'e'], 0, ['a', 'b', 'c', 'd', 'e']],
@@ -157,12 +167,14 @@ class FixedArrayTest extends TestCase
     /**
      * @dataProvider providerShiftTo
      *
-     * @param array   $source   The source array.
-     * @param integer $index    The index of the entry.
-     * @param integer $newIndex The index to shift the entry to.
-     * @param array   $expected The expected result array.
+     * @param array $source   The source array.
+     * @param int   $index    The index of the entry.
+     * @param int   $newIndex The index to shift the entry to.
+     * @param array $expected The expected result array.
+     *
+     * @return void
      */
-    public function testShiftTo(array $source, $index, $newIndex, array $expected)
+    public function testShiftTo(array $source, int $index, int $newIndex, array $expected) : void
     {
         $fixedArray = FixedArray::fromArray($source);
 
@@ -173,7 +185,7 @@ class FixedArrayTest extends TestCase
     /**
      * @return array
      */
-    public function providerShiftTo()
+    public function providerShiftTo() : array
     {
         return [
             [['a', 'b', 'c', 'd', 'e'], 0, 0, ['a', 'b', 'c', 'd', 'e']],
