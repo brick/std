@@ -51,8 +51,8 @@ class Curl
      */
     public function execute() : string
     {
-        // This must always be set.
-        $this->setOption(CURLOPT_RETURNTRANSFER, true);
+        // This option must always be set.
+        curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
 
         $result = curl_exec($this->curl);
 
@@ -64,21 +64,22 @@ class Curl
     }
 
     /**
-     * @param int $opt
+     * Returns information about the last transfer.
+     *
+     * If opt is given, its value is returned. If opt is not recognized, false is returned.
+     * Otherwise, an associative array of values is returned.
+     *
+     * @param int $opt One of the CURLINFO_* constants.
      *
      * @return mixed
      */
-    public function getInfo(int $opt)
+    public function getInfo(int $opt = null)
     {
-        return curl_getinfo($this->curl, $opt);
-    }
+        if ($opt === null) {
+            return curl_getinfo($this->curl);
+        }
 
-    /**
-     * @return mixed
-     */
-    public function getInfos() : array
-    {
-        return curl_getinfo($this->curl);
+        return curl_getinfo($this->curl, $opt);
     }
 
     /**
