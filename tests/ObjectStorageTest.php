@@ -28,8 +28,8 @@ class ObjectStorageTest extends TestCase
      */
     public static function setUpBeforeClass() : void
     {
-        self::$a = new \StdClass();
-        self::$b = new \StdClass();
+        self::$a = new \stdClass();
+        self::$b = new \stdClass();
     }
 
     /**
@@ -121,7 +121,7 @@ class ObjectStorageTest extends TestCase
      */
     public function testRemoveUnknownObjectDoesNothing(ObjectStorage $storage) : ObjectStorage
     {
-        $storage->remove(new \StdClass());
+        $storage->remove(new \stdClass());
 
         $this->assertStorage($storage, 2, [
             [self::$a, true, 'x'],
@@ -193,9 +193,9 @@ class ObjectStorageTest extends TestCase
     {
         $storage = new ObjectStorage();
 
-        $a = new \StdClass();
-        $b = new \StdClass();
-        $c = new \StdClass();
+        $a = new \stdClass();
+        $b = new \stdClass();
+        $c = new \stdClass();
 
         $objects = [$a, $b, $c];
         $values = ['x', 'y', 'z'];
@@ -205,7 +205,7 @@ class ObjectStorageTest extends TestCase
         }
 
         foreach ($storage as $object => $value) {
-            $this->assertInstanceOf(\StdClass::class, $object);
+            $this->assertInstanceOf(\stdClass::class, $object);
 
             $key = array_search($object, $objects, true);
             $this->assertNotSame(false, $key);

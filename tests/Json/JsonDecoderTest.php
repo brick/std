@@ -79,7 +79,7 @@ class JsonDecoderTest extends TestCase
 
         $json = '{"a": "b", "c": "d"}';
 
-        $expected = new \StdClass;
+        $expected = new \stdClass;
         $expected->a = 'b';
         $expected->c = 'd';
 

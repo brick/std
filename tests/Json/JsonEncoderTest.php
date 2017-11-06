@@ -430,18 +430,18 @@ class JsonEncoderTest extends TestCase
      */
     public function providerMaxDepth() : array
     {
-        $a = new \StdClass(); // depth 1
+        $a = new \stdClass(); // depth 1
 
-        $b = new \StdClass(); // depth 1
+        $b = new \stdClass(); // depth 1
         $b->x = 1;
 
-        $c = new \StdClass(); // depth 2
+        $c = new \stdClass(); // depth 2
         $c->x = $a;
 
-        $d = new \StdClass(); // depth 2
+        $d = new \stdClass(); // depth 2
         $d->x = [];
 
-        $e = new \StdClass(); // depth 3
+        $e = new \stdClass(); // depth 3
         $e->x = [$a];
 
         return [
