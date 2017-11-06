@@ -32,18 +32,6 @@ class Curl
     }
 
     /**
-     * @param string     $url
-     * @param array|null $params
-     *
-     * @return void
-     */
-    public function setUrl(string $url, array $params = null) : void
-    {
-        $url .= ($params === null) ? '' : '?' . http_build_query($params);
-        $this->setOption(CURLOPT_URL, $url);
-    }
-
-    /**
      * Class destructor.
      */
     public function __destruct()
@@ -59,6 +47,18 @@ class Curl
     public function __clone()
     {
         $this->curl = curl_copy_handle($this->curl);
+    }
+
+    /**
+     * @param string     $url
+     * @param array|null $params
+     *
+     * @return void
+     */
+    public function setUrl(string $url, array $params = null) : void
+    {
+        $url .= ($params === null) ? '' : '?' . http_build_query($params);
+        $this->setOption(CURLOPT_URL, $url);
     }
 
     /**
