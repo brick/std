@@ -14,7 +14,7 @@ class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * @var \SplFixedArray
      */
-    private $fixedArray;
+    private $splFixedArray;
 
     /**
      * Class constructor.
@@ -23,7 +23,7 @@ class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function __construct(\SplFixedArray $fixedArray)
     {
-        $this->fixedArray = $fixedArray;
+        $this->splFixedArray = $fixedArray;
     }
 
     /**
@@ -52,15 +52,43 @@ class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
     }
 
     /**
+     * @return array
+     */
+    public function toArray() : array
+    {
+        return $this->splFixedArray->toArray();
+    }
+
+    /**
      * Returns the size of the array.
      *
-     * Required by interface Countable.
+     * @return int
+     */
+    public function getSize() : int
+    {
+        return $this->splFixedArray->getSize();
+    }
+
+    /**
+     * @param int $size
+     *
+     * @return void
+     */
+    public function setSize(int $size) : void
+    {
+        $this->splFixedArray->setSize($size);
+    }
+
+    /**
+     * Returns the size of the array.
+     *
+     * This is an alias of getSize(), required by interface Countable.
      *
      * @return int
      */
     public function count() : int
     {
-        return $this->fixedArray->count();
+        return $this->splFixedArray->count();
     }
 
     /**
@@ -74,7 +102,7 @@ class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function offsetExists($offset) : bool
     {
-        return $this->fixedArray->offsetExists($offset);
+        return $this->splFixedArray->offsetExists($offset);
     }
 
     /**
@@ -88,7 +116,7 @@ class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function offsetGet($offset)
     {
-        return $this->fixedArray->offsetGet($offset);
+        return $this->splFixedArray->offsetGet($offset);
     }
 
     /**
@@ -103,7 +131,7 @@ class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function offsetSet($offset, $value) : void
     {
-        $this->fixedArray->offsetSet($offset, $value);
+        $this->splFixedArray->offsetSet($offset, $value);
     }
 
     /**
@@ -117,7 +145,7 @@ class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function offsetUnset($offset) : void
     {
-        $this->fixedArray->offsetUnset($offset);
+        $this->splFixedArray->offsetUnset($offset);
     }
 
     /**
@@ -129,7 +157,7 @@ class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function getIterator() : \Traversable
     {
-        return $this->fixedArray;
+        return $this->splFixedArray;
     }
 
     /**
