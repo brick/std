@@ -23,7 +23,7 @@ class CsvJsonFileIteratorTest extends TestCase
      */
     public function testIterator(string $csv, array $expected) : void
     {
-        $fp = fopen('php://memory', 'r+');
+        $fp = fopen('php://memory', 'rb+');
         fwrite($fp, $csv);
         fseek($fp, 0);
 

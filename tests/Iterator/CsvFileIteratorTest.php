@@ -24,7 +24,7 @@ class CsvFileIteratorTest extends TestCase
      */
     public function testIterator(string $csv, bool $headerRow, array $expected) : void
     {
-        $fp = fopen('php://memory', 'r+');
+        $fp = fopen('php://memory', 'rb+');
         fwrite($fp, $csv);
         fseek($fp, 0);
 
