@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brick\Std\Curl;
 
 /**
@@ -20,7 +22,7 @@ class Curl
      * @param string|null $url
      * @param array|null  $params
      */
-    public function __construct($url = null, array $params = null)
+    public function __construct(string $url = null, array $params = null)
     {
         $this->curl = curl_init();
 
@@ -32,8 +34,10 @@ class Curl
     /**
      * @param string     $url
      * @param array|null $params
+     *
+     * @return void
      */
-    public function setUrl($url, array $params = null)
+    public function setUrl(string $url, array $params = null) : void
     {
         $url .= ($params === null) ? '' : '?' . http_build_query($params);
         $this->setOption(CURLOPT_URL, $url);
@@ -62,7 +66,7 @@ class Curl
      *
      * @throws CurlException
      */
-    public function execute()
+    public function execute() : string
     {
         // This must always be set.
         $this->setOption(CURLOPT_RETURNTRANSFER, true);
@@ -77,10 +81,11 @@ class Curl
     }
 
     /**
-     * @param  integer $opt
+     * @param int $opt
+     *
      * @return mixed
      */
-    public function getInfo($opt)
+    public function getInfo(int $opt)
     {
         return curl_getinfo($this->curl, $opt);
     }
@@ -88,38 +93,36 @@ class Curl
     /**
      * @return mixed
      */
-    public function getInfos()
+    public function getInfos() : array
     {
         return curl_getinfo($this->curl);
     }
 
     /**
-     * @param  integer $option
-     * @param  mixed   $value
-     * @return Curl
+     * @param int   $option
+     * @param mixed $value
+     *
+     * @return void
      */
-    public function setOption($option, $value)
+    public function setOption(int $option, $value) : void
     {
         curl_setopt($this->curl, $option, $value);
-
-        return $this;
     }
 
     /**
-     * @param  array $options
-     * @return Curl
+     * @param array $options
+     *
+     * @return void
      */
-    public function setOptions(array $options)
+    public function setOptions(array $options) : void
     {
         curl_setopt_array($this->curl, $options);
-
-        return $this;
     }
 
     /**
      * @return array
      */
-    public function getVersion()
+    public function getVersion() : array
     {
         return curl_version();
     }

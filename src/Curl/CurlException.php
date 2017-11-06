@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brick\Std\Curl;
 
 /**
@@ -12,7 +14,7 @@ class CurlException extends \RuntimeException
      *
      * @return CurlException
      */
-    public static function error($error)
+    public static function error(string $error) : CurlException
     {
         return new self(sprintf('cURL request failed: %s.', $error));
     }
