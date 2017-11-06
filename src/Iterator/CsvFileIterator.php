@@ -50,7 +50,7 @@ class CsvFileIterator implements \Iterator
     private $current;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $headerRow;
 
@@ -65,14 +65,14 @@ class CsvFileIterator implements \Iterator
      * Class constructor.
      *
      * @param string|resource $file      The CSV file path, or an open file pointer.
-     * @param boolean         $headerRow Whether the first row contains the column names.
+     * @param bool            $headerRow Whether the first row contains the column names.
      * @param string          $delimiter The field delimiter character.
      * @param string          $enclosure The field enclosure character.
      * @param string          $escape    The escape character.
      *
      * @throws \InvalidArgumentException If the file cannot be opened.
      */
-    public function __construct($file, $headerRow = false, $delimiter = ',', $enclosure = '"', $escape = '\\')
+    public function __construct($file, bool $headerRow = false, string $delimiter = ',', string $enclosure = '"', string $escape = '\\')
     {
         if (is_resource($file)) {
             $this->handle = $file;
@@ -95,7 +95,7 @@ class CsvFileIterator implements \Iterator
     /**
      * @return void
      */
-    private function init()
+    private function init() : void
     {
         if ($this->headerRow) {
             $this->columns = $this->readRow();
@@ -117,7 +117,7 @@ class CsvFileIterator implements \Iterator
      *
      * @return array|null
      */
-    private function readRow()
+    private function readRow() : ?array
     {
         $row = @ fgetcsv($this->handle, 0, $this->delimiter, $this->enclosure, $this->escape);
 
@@ -137,7 +137,7 @@ class CsvFileIterator implements \Iterator
      *
      * @return void
      */
-    private function readCurrent()
+    private function readCurrent() : void
     {
         $row = $this->readRow();
 
@@ -159,7 +159,7 @@ class CsvFileIterator implements \Iterator
      *
      * @return void
      */
-    public function rewind()
+    public function rewind() : void
     {
         if ($this->key !== 0 && fseek($this->handle, 0) === 0) {
             $this->init();
@@ -169,9 +169,9 @@ class CsvFileIterator implements \Iterator
     /**
      * Returns whether the current position is valid.
      *
-     * @return boolean
+     * @return bool
      */
-    public function valid()
+    public function valid() : bool
     {
         return $this->current !== null;
     }
@@ -179,9 +179,9 @@ class CsvFileIterator implements \Iterator
     /**
      * Returns the key of the current element (0-based).
      *
-     * @return integer
+     * @return int
      */
-    public function key()
+    public function key() : int
     {
         return $this->key;
     }
@@ -191,7 +191,7 @@ class CsvFileIterator implements \Iterator
      *
      * @return array|null
      */
-    public function current()
+    public function current() : ?array
     {
         return $this->current;
     }
@@ -201,7 +201,7 @@ class CsvFileIterator implements \Iterator
      *
      * @return void
      */
-    public function next()
+    public function next() : void
     {
         $this->readCurrent();
         $this->key++;

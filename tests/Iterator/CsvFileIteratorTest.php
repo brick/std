@@ -14,11 +14,13 @@ class CsvFileIteratorTest extends TestCase
     /**
      * @dataProvider providerIterator
      *
-     * @param string  $csv       The CSV input.
-     * @param boolean $headerRow Whether to use the first row as column headers.
-     * @param array   $expected  The expected output.
+     * @param string $csv       The CSV input.
+     * @param bool   $headerRow Whether to use the first row as column headers.
+     * @param array  $expected  The expected output.
+     *
+     * @return void
      */
-    public function testIterator($csv, $headerRow, array $expected)
+    public function testIterator(string $csv, bool $headerRow, array $expected) : void
     {
         $fp = fopen('php://memory', 'r+');
         fwrite($fp, $csv);
@@ -33,7 +35,7 @@ class CsvFileIteratorTest extends TestCase
     /**
      * @return array
      */
-    public function providerIterator()
+    public function providerIterator() : array
     {
         return [
             ["", false, []],

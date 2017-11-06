@@ -16,8 +16,10 @@ class CsvJsonFileIteratorTest extends TestCase
      *
      * @param string $csv      The CSV input.
      * @param array  $expected The expected output.
+     *
+     * @return void
      */
-    public function testIterator($csv, array $expected)
+    public function testIterator(string $csv, array $expected) : void
     {
         $fp = fopen('php://memory', 'r+');
         fwrite($fp, $csv);
@@ -32,7 +34,7 @@ class CsvJsonFileIteratorTest extends TestCase
     /**
      * @return array
      */
-    public function providerIterator()
+    public function providerIterator() : array
     {
         return [
             ['', []],

@@ -61,7 +61,7 @@ class CsvJsonFileIterator implements \Iterator
      *
      * @return array|null
      */
-    private function readRow()
+    private function readRow() : ?array
     {
         $line = @ fgets($this->handle);
 
@@ -85,7 +85,7 @@ class CsvJsonFileIterator implements \Iterator
      *
      * @return void
      */
-    public function rewind()
+    public function rewind() : void
     {
         if ($this->line !== 1 && fseek($this->handle, 0) === 0) {
             $this->line = 1;
@@ -95,9 +95,9 @@ class CsvJsonFileIterator implements \Iterator
     /**
      * Returns whether the current position is valid.
      *
-     * @return boolean
+     * @return bool
      */
-    public function valid()
+    public function valid() : bool
     {
         return $this->current !== null;
     }
@@ -105,9 +105,9 @@ class CsvJsonFileIterator implements \Iterator
     /**
      * Returns the key of the current element (line number).
      *
-     * @return integer
+     * @return int
      */
-    public function key()
+    public function key() : int
     {
         return $this->line;
     }
@@ -117,7 +117,7 @@ class CsvJsonFileIterator implements \Iterator
      *
      * @return array|null
      */
-    public function current()
+    public function current() : ?array
     {
         return $this->current;
     }
@@ -127,7 +127,7 @@ class CsvJsonFileIterator implements \Iterator
      *
      * @return void
      */
-    public function next()
+    public function next() : void
     {
         $this->current = $this->readRow();
         $this->line++;
