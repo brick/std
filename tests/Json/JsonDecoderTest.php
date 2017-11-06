@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brick\Std\Tests\Json;
 
 use Brick\Std\Json\JsonDecoder;
