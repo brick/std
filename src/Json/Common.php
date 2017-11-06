@@ -26,6 +26,7 @@ abstract class Common
     /**
      * Sets the max recursion depth. Defaults to `512`.
      *
+     * Every nested array or object adds one level of recursion.
      * If the max depth is zero, only scalars can be encoded/decoded.
      *
      * @param int $maxDepth
