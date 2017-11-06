@@ -5,37 +5,131 @@ declare(strict_types=1);
 namespace Brick\Std;
 
 /**
- * Extends SplFixedArray with convenient methods to move entries.
+ * An array of fixed length.
+ *
+ * This class internally wraps SplFixedArray.
  */
-class FixedArray extends \SplFixedArray
+class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
 {
     /**
-     * Imports a PHP array in a FixedArray instance.
+     * @var \SplFixedArray
+     */
+    private $fixedArray;
+
+    /**
+     * Class constructor.
      *
-     * This method needs to be reimplemented as SplFixedArray does not return `new static`.
-     * @see https://bugs.php.net/bug.php?id=55128
+     * @param \SplFixedArray $fixedArray
+     */
+    public function __construct(\SplFixedArray $fixedArray)
+    {
+        $this->fixedArray = $fixedArray;
+    }
+
+    /**
+     * @param int $size
      *
-     * Subclasses of FixedArray do not need to reimplement this method.
+     * @return FixedArray
+     */
+    public function create(int $size = 0) : FixedArray
+    {
+        return new FixedArray(new \SplFixedArray($size));
+    }
+
+    /**
+     * Creates a FixedArray from a PHP array.
      *
-     * @param array   $array
-     * @param boolean $saveIndexes
+     * @param array $array
+     * @param bool  $saveIndexes
      *
      * @return FixedArray
      *
      * @throws \InvalidArgumentException If the array contains non-numeric or negative indexes.
      */
-    public static function fromArray($array, $saveIndexes = true)
+    public static function fromArray(array $array, bool $saveIndexes = true) : FixedArray
     {
-        $splFixedArray = \SplFixedArray::fromArray($array, $saveIndexes);
+        return new FixedArray(\SplFixedArray::fromArray($array, $saveIndexes));
+    }
 
-        $result = new static($splFixedArray->count());
-        $source = $saveIndexes ? $array : $splFixedArray;
+    /**
+     * Returns the size of the array.
+     *
+     * Required by interface Countable.
+     *
+     * @return int
+     */
+    public function count() : int
+    {
+        return $this->fixedArray->count();
+    }
 
-        foreach ($source as $key => $value) {
-            $result[$key] = $value;
-        }
+    /**
+     * Returns whether or not an offset exists.
+     *
+     * Required by interface ArrayAccess.
+     *
+     * @param int $offset
+     *
+     * @return bool
+     */
+    public function offsetExists($offset) : bool
+    {
+        return $this->fixedArray->offsetExists($offset);
+    }
 
-        return $result;
+    /**
+     * Returns the value at specified offset.
+     *
+     * Required by interface ArrayAccess.
+     *
+     * @param int $offset
+     *
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        return $this->fixedArray->offsetGet($offset);
+    }
+
+    /**
+     * Assigns a value to the specified offset.
+     *
+     * Required by interface ArrayAccess.
+     *
+     * @param int   $offset
+     * @param mixed $value
+     *
+     * @return void
+     */
+    public function offsetSet($offset, $value) : void
+    {
+        $this->fixedArray->offsetSet($offset, $value);
+    }
+
+    /**
+     * Unsets an offset.
+     *
+     * Required by interface ArrayAccess.
+     *
+     * @param int $offset
+     *
+     * @return void
+     */
+    public function offsetUnset($offset) : void
+    {
+        $this->fixedArray->offsetUnset($offset);
+    }
+
+    /**
+     * Returns an iterator for this fixed array.
+     *
+     * Required by interface IteratorAggregate.
+     *
+     * @return \Traversable
+     */
+    public function getIterator() : \Traversable
+    {
+        return $this->fixedArray;
     }
 
     /**
