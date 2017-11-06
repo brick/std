@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brick\Std\Tests\Iterator;
 
 use Brick\Std\Iterator\CsvFileIterator;
