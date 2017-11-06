@@ -106,7 +106,7 @@ class Curl
     /**
      * @return array
      */
-    public function getVersion() : array
+    public static function getVersion() : array
     {
         return curl_version();
     }
