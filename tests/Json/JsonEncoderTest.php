@@ -3,6 +3,7 @@
 namespace Brick\Std\Tests\Json;
 
 use Brick\Std\Json\JsonEncoder;
+use Brick\Std\Json\JsonException;
 
 use PHPUnit\Framework\TestCase;
 
@@ -373,16 +374,106 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
-     * @expectedException \Brick\Std\Json\JsonException
-     * @expectedExceptionMessage Maximum stack depth exceeded
+     * @dataProvider providerInvalidMaxDepth
+     * @expectedException \InvalidArgumentException
+     *
+     * @param int $maxDepth
      *
      * @return void
      */
-    public function testMaxDepth() : void
+    public function testInvalidMaxDepth(int $maxDepth) : void
     {
-        $encoder = new JsonEncoder();
-        $encoder->setMaxDepth(1);
+        $decoder = new JsonEncoder();
+        $decoder->setMaxDepth($maxDepth);
+    }
 
-        $encoder->encode(['a' => ['b' => 'c']]);
+    /**
+     * @return array
+     */
+    public function providerInvalidMaxDepth() : array
+    {
+        return [
+            [-1],
+            [0x7fffffff]
+        ];
+    }
+
+    /**
+     * @dataProvider providerMaxDepth
+     *
+     * @param mixed $value            The value to encode.
+     * @param int    $maxDepth        The max depth to configure.
+     * @param bool   $expectException Whether encode() should throw an exception.
+     *
+     * @return void
+     */
+    public function testMaxDepth($value, int $maxDepth, bool $expectException) : void
+    {
+        $decoder = new JsonEncoder();
+        $decoder->setMaxDepth($maxDepth);
+
+        if ($expectException) {
+            $this->expectException(JsonException::class);
+        }
+
+        $decoder->encode($value);
+
+        if (! $expectException) {
+            $this->addToAssertionCount(1); // no assertion here
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function providerMaxDepth() : array
+    {
+        $a = new \StdClass(); // depth 1
+
+        $b = new \StdClass(); // depth 1
+        $b->x = 1;
+
+        $c = new \StdClass(); // depth 2
+        $c->x = $a;
+
+        $d = new \StdClass(); // depth 2
+        $d->x = [];
+
+        $e = new \StdClass(); // depth 3
+        $e->x = [$a];
+
+        return [
+            [123, 0, false],
+            [123, 1, false],
+            [[], 0, true],
+            [[], 1, false],
+            [[], 2, false],
+            [['a'], 0, true],
+            [['a'], 1, false],
+            [['a'], 2, false],
+            [['a' => []], 0, true],
+            [['a' => []], 1, true],
+            [['a' => []], 2, false],
+            [['a' => []], 3, false],
+            [$a, 0, true],
+            [$a, 1, false],
+            [$a, 2, false],
+            [$b, 0, true],
+            [$b, 1, false],
+            [$b, 2, false],
+            [$c, 0, true],
+            [$c, 1, true],
+            [$c, 2, false],
+            [$c, 3, false],
+            [$d, 0, true],
+            [$d, 1, true],
+            [$d, 2, false],
+            [$d, 3, false],
+            [$e, 0, true],
+            [$e, 1, true],
+            [$e, 2, true],
+            [$e, 3, false],
+            [$e, 4, false],
+        ];
     }
 }

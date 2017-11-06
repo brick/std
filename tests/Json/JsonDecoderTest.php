@@ -3,6 +3,7 @@
 namespace Brick\Std\Tests\Json;
 
 use Brick\Std\Json\JsonDecoder;
+use Brick\Std\Json\JsonException;
 
 use PHPUnit\Framework\TestCase;
 
@@ -129,16 +130,92 @@ class JsonDecoderTest extends TestCase
     }
 
     /**
-     * @expectedException \Brick\Std\Json\JsonException
-     * @expectedExceptionMessage Maximum stack depth exceeded
+     * @dataProvider providerInvalidMaxDepth
+     * @expectedException \InvalidArgumentException
+     *
+     * @param int $maxDepth
      *
      * @return void
      */
-    public function testMaxDepth() : void
+    public function testInvalidMaxDepth(int $maxDepth) : void
     {
         $decoder = new JsonDecoder();
-        $decoder->setMaxDepth(0);
+        $decoder->setMaxDepth($maxDepth);
+    }
 
-        $decoder->decode('{"a": "b"}');
+    /**
+     * @return array
+     */
+    public function providerInvalidMaxDepth() : array
+    {
+        return [
+            [-1],
+            [0x7fffffff]
+        ];
+    }
+
+    /**
+     * @dataProvider providerMaxDepth
+     *
+     * @param string $json            The JSON string to encode.
+     * @param int    $maxDepth        The max depth to configure.
+     * @param bool   $expectException Whether decode() should throw an exception.
+     *
+     * @return void
+     */
+    public function testMaxDepth(string $json, int $maxDepth, bool $expectException) : void
+    {
+        $decoder = new JsonDecoder();
+        $decoder->setMaxDepth($maxDepth);
+
+        if ($expectException) {
+            $this->expectException(JsonException::class);
+        }
+
+        $decoder->decode($json);
+
+        if (! $expectException) {
+            $this->addToAssertionCount(1); // no assertion here
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function providerMaxDepth() : array
+    {
+        return [
+            ['123', 0, false],
+            ['123', 1, false],
+            ['[]', 0, true],
+            ['[]', 1, false],
+            ['[]', 2, false],
+            ['["a"]', 0, true],
+            ['["a"]', 1, false],
+            ['["a"]', 2, false],
+            ['{"a":[]}', 0, true],
+            ['{"a":[]}', 1, true],
+            ['{"a":[]}', 2, false],
+            ['{"a":[]}', 3, false],
+            ['{}', 0, true],
+            ['{}', 1, false],
+            ['{}', 2, false],
+            ['{"x":1}', 0, true],
+            ['{"x":1}', 1, false],
+            ['{"x":1}', 2, false],
+            ['{"x":{}}', 0, true],
+            ['{"x":{}}', 1, true],
+            ['{"x":{}}', 2, false],
+            ['{"x":{}}', 3, false],
+            ['{"x":[]}', 0, true],
+            ['{"x":[]}', 1, true],
+            ['{"x":[]}', 2, false],
+            ['{"x":[]}', 3, false],
+            ['{"x":[{}]}', 0, true],
+            ['{"x":[{}]}', 1, true],
+            ['{"x":[{}]}', 2, true],
+            ['{"x":[{}]}', 3, false],
+            ['{"x":[{}]}', 4, false],
+        ];
     }
 }
