@@ -79,7 +79,7 @@ class ObjectStorageTest extends TestCase
      */
     public function testSetFirstObject(ObjectStorage $storage)
     {
-        $this->assertSame($storage, $storage->set(self::$a, 'x'));
+        $storage->set(self::$a, 'x');
 
         $this->assertStorage($storage, 1, [
             [self::$a, true, 'x'],
@@ -117,7 +117,7 @@ class ObjectStorageTest extends TestCase
      */
     public function testRemoveUnknownObjectDoesNothing(ObjectStorage $storage)
     {
-        $this->assertSame($storage, $storage->remove(new \StdClass()));
+        $storage->remove(new \StdClass());
 
         $this->assertStorage($storage, 2, [
             [self::$a, true, 'x'],
@@ -136,7 +136,7 @@ class ObjectStorageTest extends TestCase
      */
     public function testOverwriteFirstObjectWithNull (ObjectStorage $storage)
     {
-        $this->assertSame($storage, $storage->set(self::$a, null));
+        $storage->set(self::$a, null);
 
         $this->assertStorage($storage, 2, [
             [self::$a, true, null],
@@ -172,7 +172,7 @@ class ObjectStorageTest extends TestCase
      */
     public function testRemoveFirstObject (ObjectStorage $storage)
     {
-        $this->assertSame($storage, $storage->remove(self::$a));
+        $storage->remove(self::$a);
 
         $this->assertStorage($storage, 0, [
             [self::$a, false, null],

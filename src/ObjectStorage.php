@@ -66,7 +66,7 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      * @param object $object The object.
      * @param mixed  $data   The data to store.
      *
-     * @return static This ObjectStorage instance.
+     * @return void
      */
     public function set($object, $data = null)
     {
@@ -74,8 +74,6 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
 
         $this->objects[$hash] = $object;
         $this->data[$hash] = $data;
-
-        return $this;
     }
 
     /**
@@ -85,7 +83,7 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @param object $object The object to remove.
      *
-     * @return static This ObjectStorage instance.
+     * @return void
      */
     public function remove($object)
     {
@@ -93,8 +91,6 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
 
         unset($this->objects[$hash]);
         unset($this->data[$hash]);
-
-        return $this;
     }
 
     /**

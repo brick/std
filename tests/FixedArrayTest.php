@@ -74,7 +74,7 @@ class FixedArrayTest extends TestCase
     {
         $fixedArray = FixedArray::fromArray($source);
 
-        $this->assertSame($fixedArray, $fixedArray->swap($index1, $index2));
+        $fixedArray->swap($index1, $index2);
         $this->assertSame($expected, iterator_to_array($fixedArray));
     }
 
@@ -107,7 +107,7 @@ class FixedArrayTest extends TestCase
     {
         $fixedArray = FixedArray::fromArray($source);
 
-        $this->assertSame($fixedArray, $fixedArray->shiftUp($index));
+        $fixedArray->shiftUp($index);
         $this->assertSame($expected, iterator_to_array($fixedArray));
     }
 
@@ -136,7 +136,7 @@ class FixedArrayTest extends TestCase
     {
         $fixedArray = FixedArray::fromArray($source);
 
-        $this->assertSame($fixedArray, $fixedArray->shiftDown($index));
+        $fixedArray->shiftDown($index);
         $this->assertSame($expected, iterator_to_array($fixedArray));
     }
 
@@ -166,7 +166,7 @@ class FixedArrayTest extends TestCase
     {
         $fixedArray = FixedArray::fromArray($source);
 
-        $this->assertSame($fixedArray, $fixedArray->shiftTo($index, $newIndex));
+        $fixedArray->shiftTo($index, $newIndex);
         $this->assertSame($expected, iterator_to_array($fixedArray));
     }
 

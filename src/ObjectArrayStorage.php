@@ -56,15 +56,13 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      * @param object $object The object.
      * @param mixed  $value  The value to add.
      *
-     * @return static This ObjectArrayStorage instance.
+     * @return void
      */
     public function add($object, $value)
     {
         $values = $this->get($object);
         $values[] = $value;
         $this->storage->set($object, $values);
-
-        return $this;
     }
 
     /**
@@ -74,13 +72,11 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      *
      * @param object $object The object to remove.
      *
-     * @return static This ObjectStorage instance.
+     * @return void
      */
     public function remove($object)
     {
         $this->storage->remove($object);
-
-        return $this;
     }
 
     /**

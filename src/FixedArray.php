@@ -42,7 +42,7 @@ class FixedArray extends \SplFixedArray
      * @param integer $index1 The index of the first entry.
      * @param integer $index2 The index of the second entry.
      *
-     * @return static This FixedArray instance.
+     * @return void
      */
     public function swap($index1, $index2)
     {
@@ -51,8 +51,6 @@ class FixedArray extends \SplFixedArray
             $this[$index1] = $this[$index2];
             $this[$index2] = $value;
         }
-
-        return $this;
     }
 
     /**
@@ -63,15 +61,15 @@ class FixedArray extends \SplFixedArray
      *
      * @param integer $index
      *
-     * @return static
+     * @return void
      */
     public function shiftUp($index)
     {
         if ($index + 1 == $this->count()) {
-            return $this;
+            return;
         }
 
-        return $this->swap($index, $index + 1);
+        $this->swap($index, $index + 1);
     }
 
     /**
@@ -82,15 +80,15 @@ class FixedArray extends \SplFixedArray
      *
      * @param integer $index
      *
-     * @return static
+     * @return void
      */
     public function shiftDown($index)
     {
         if ($index == 0) {
-            return $this;
+            return;
         }
 
-        return $this->swap($index, $index - 1);
+        $this->swap($index, $index - 1);
     }
 
     /**
@@ -99,7 +97,7 @@ class FixedArray extends \SplFixedArray
      * @param integer $index    The index of the entry.
      * @param integer $newIndex The index to shift the entry to.
      *
-     * @return static
+     * @return void
      */
     public function shiftTo($index, $newIndex)
     {
@@ -111,7 +109,5 @@ class FixedArray extends \SplFixedArray
             $this->shiftUp($index);
             $index++;
         }
-
-        return $this;
     }
 }

@@ -69,7 +69,7 @@ class ObjectArrayStorageTest extends TestCase
      */
     public function testAddFirstObject(ObjectArrayStorage $storage)
     {
-        $this->assertSame($storage, $storage->add(self::$a, 'x'));
+        $storage->add(self::$a, 'x');
 
         $this->assertStorage($storage, 1, [
             [self::$a, true, ['x']],
@@ -88,7 +88,7 @@ class ObjectArrayStorageTest extends TestCase
      */
     public function testAddSecondObject(ObjectArrayStorage $storage)
     {
-        $this->assertSame($storage, $storage->add(self::$b, 'y'));
+        $storage->add(self::$b, 'y');
 
         $this->assertStorage($storage, 2, [
             [self::$a, true, ['x']],
@@ -107,7 +107,7 @@ class ObjectArrayStorageTest extends TestCase
      */
     public function testRemoveUnknownObjectDoesNothing(ObjectArrayStorage $storage)
     {
-        $this->assertSame($storage, $storage->remove(new \StdClass()));
+        $storage->remove(new \StdClass());
 
         $this->assertStorage($storage, 2, [
             [self::$a, true, ['x']],
@@ -126,7 +126,7 @@ class ObjectArrayStorageTest extends TestCase
      */
     public function testAddValueToFirstObject (ObjectArrayStorage $storage)
     {
-        $this->assertSame($storage, $storage->add(self::$a, 'z'));
+        $storage->add(self::$a, 'z');
 
         $this->assertStorage($storage, 2, [
             [self::$a, true, ['x', 'z']],
@@ -145,7 +145,7 @@ class ObjectArrayStorageTest extends TestCase
      */
     public function testRemoveSecondObject (ObjectArrayStorage $storage)
     {
-        $this->assertSame($storage, $storage->remove(self::$b));
+        $storage->remove(self::$b);
 
         $this->assertStorage($storage, 1, [
             [self::$a, true, ['x', 'z']],
@@ -162,7 +162,7 @@ class ObjectArrayStorageTest extends TestCase
      */
     public function testRemoveFirstObject (ObjectArrayStorage $storage)
     {
-        $this->assertSame($storage, $storage->remove(self::$a));
+        $storage->remove(self::$a);
 
         $this->assertStorage($storage, 0, [
             [self::$a, false, []],
