@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Brick\Std\Curl;
 
 /**
- * cURL object wrapper
+ * An object wrapper for cURL.
  */
 class Curl
 {
@@ -20,15 +20,10 @@ class Curl
      * Class constructor.
      *
      * @param string|null $url
-     * @param array|null  $params
      */
-    public function __construct(string $url = null, array $params = null)
+    public function __construct(string $url = null)
     {
-        $this->curl = curl_init();
-
-        if ($url !== null) {
-            $this->setUrl($url, $params);
-        }
+        $this->curl = ($url === null) ? curl_init() : curl_init($url);
     }
 
     /**
@@ -47,18 +42,6 @@ class Curl
     public function __clone()
     {
         $this->curl = curl_copy_handle($this->curl);
-    }
-
-    /**
-     * @param string     $url
-     * @param array|null $params
-     *
-     * @return void
-     */
-    public function setUrl(string $url, array $params = null) : void
-    {
-        $url .= ($params === null) ? '' : '?' . http_build_query($params);
-        $this->setOption(CURLOPT_URL, $url);
     }
 
     /**
