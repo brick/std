@@ -142,7 +142,7 @@ class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function swap(int $index1, int $index2) : void
     {
-        if ($index1 != $index2) {
+        if ($index1 !== $index2) {
             $value = $this[$index1];
             $this[$index1] = $this[$index2];
             $this[$index2] = $value;
@@ -161,7 +161,7 @@ class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function shiftUp(int $index) : void
     {
-        if ($index + 1 == $this->count()) {
+        if ($index + 1 === $this->count()) {
             return;
         }
 
@@ -180,7 +180,7 @@ class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function shiftDown(int $index) : void
     {
-        if ($index == 0) {
+        if ($index === 0) {
             return;
         }
 
