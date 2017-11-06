@@ -27,14 +27,6 @@ class Curl
         if ($url !== null) {
             $this->setUrl($url, $params);
         }
-
-        /**
-         * Automatically converted CA Certs from mozilla.org.
-         *
-         * @see http://curl.haxx.se/docs/caextract.html
-         * @see http://curl.haxx.se/ca/cacert.pem
-         */
-        $this->setOption(CURLOPT_CAINFO, __DIR__ . '/cacert.pem');
     }
 
     /**
