@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Brick\Std\Tests\Curl;
 
-use Brick\Std\Io\FileSystem;
 use Brick\Std\Curl\Curl;
 use PHPUnit\Framework\TestCase;
 
