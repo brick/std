@@ -42,6 +42,130 @@ class FileSystemTest extends FileSystemTestCase
         $this->exec('rm -rf ' . $this->tmp);
     }
 
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error getting real path of invalid_path, check that the path exists
+     */
+    public function testGetRealPathWithInvalidPath()
+    {
+        FileSystem::getRealPath('invalid_path');
+    }
+
+    public function testGetRealPath()
+    {
+        $filePath = __DIR__ . '/../../composer.json';
+        $expectedRealPath = realpath($filePath);
+
+        $this->assertSame($expectedRealPath, FileSystem::getRealPath($filePath));
+    }
+
+    public function testWriteWithAppendFlag()
+    {
+        $this->assertSame(4, FileSystem::write('./temp_file', 'data', true));
+    }
+
+    public function testWriteWithLockFlag()
+    {
+        $this->assertSame(0, FileSystem::write('./temp_lock_file', '', false, true));
+    }
+
+    public function testReadWithMaxLength()
+    {
+        FileSystem::write('./temp_lock_file', 'data');
+
+        $this->assertSame('dat', FileSystem::read('./temp_lock_file', 0, 3));
+    }
+
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error copying ./temp_lock_file to /temp_lock_file
+     */
+    public function testCopyShouldReturnIOException()
+    {
+        FileSystem::write('./temp_lock_file', 'data');        
+        FileSystem::copy('./temp_lock_file', '/temp_lock_file');
+    }
+
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error moving ./temp_lock_file to /temp_lock_file
+     */
+    public function testMoveShouldReturnIOException()
+    {
+        FileSystem::write('./temp_lock_file', 'data');        
+        FileSystem::move('./temp_lock_file', '/temp_lock_file');
+    }
+
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error deleting /temp_lock_file
+     */
+    public function testDeleteShouldReturnIOException()
+    {
+        FileSystem::delete('/temp_lock_file');
+    }
+
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error creating directory /temp_directory
+     */
+    public function testCreateDirectoryShouldReturnIOException()
+    {
+        FileSystem::createDirectory('/temp_directory');
+    }
+
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error creating directories /temp_directory
+     */
+    public function testCreateDirectoriesShouldReturnIOException()
+    {
+        FileSystem::createDirectories('/temp_directory');
+    }
+
+    public function testCreateDirectoriesShouldReturnNull()
+    {
+        FileSystem::createDirectories('./temp_directory');
+
+        $this->assertNull(FileSystem::createDirectories('./temp_directory'));
+    }
+
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error creating link ./invalid_link to /invalid_target
+     */
+    public function testCreateLinkWithInvalidFileLink()
+    {
+        FileSystem::createLink('./invalid_link', '/invalid_target');
+    }
+
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error reading symbolic link ./invalid_path
+     */
+    public function testReadSymbolicLinkWithInvalidFileLink()
+    {
+        FileSystem::readSymbolicLink('./invalid_path');
+    }
+
+   /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error writing to /invalid_path
+     */
+    public function testWriteWithInvalidFilePath()
+    {
+        FileSystem::write('/invalid_path', 'data');
+    }
+
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error reading from /invalid_path
+     */
+    public function testReadWithInvalidFilePath()
+    {
+        FileSystem::read('/invalid_path');
+    }
+
     public function testCopy()
     {
         $this->file_put_contents('a', 'Hello World');

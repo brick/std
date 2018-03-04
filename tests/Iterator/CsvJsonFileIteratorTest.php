@@ -14,6 +14,30 @@ use PHPUnit\Framework\TestCase;
 class CsvJsonFileIteratorTest extends TestCase
 {
     /**
+     * @expectedException        \InvalidArgumentException
+     * @expectedExceptionMessage Cannot open file for reading: this_file_is_not_existed
+     */
+    public function testConstructorWithFileIsNotExisted()
+    {
+        $iterator = new CsvJsonFileIterator('this_file_is_not_existed');
+    }
+
+    /**
+     * @expectedException        \RuntimeException
+     * @expectedExceptionMessage Syntax error
+     */
+    public function testReadRowShouldReturnRuntimeException()
+    {
+        $fp = fopen('php://memory', 'rb+');
+        fwrite($fp, 'this,is,');
+        fseek($fp, 0);
+
+        $iterator = new CsvJsonFileIterator($fp);
+
+        fclose($fp);
+    }
+
+    /**
      * @dataProvider providerIterator
      *
      * @param string $csv      The CSV input.

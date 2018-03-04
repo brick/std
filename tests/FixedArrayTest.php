@@ -166,6 +166,64 @@ class FixedArrayTest extends TestCase
         ];
     }
 
+    public function testCreate()
+    {
+        $fixedArray = FixedArray::fromArray([1, 2, 3, 4]);
+        $result = $fixedArray->create();
+
+        $this->assertSame(0, $result->getSize());
+        $this->assertInstanceOf(FixedArray::class, $result);
+    }
+
+    public function testToArray()
+    {
+        $expectedArray = [1, 2, 3, 4];
+        $fixedArray = FixedArray::fromArray($expectedArray);
+        $result = $fixedArray->toArray();
+
+        $this->assertCount(4, $result);
+        foreach($result as $key => $value) {
+            $this->assertSame($expectedArray[$key], $value);
+        }
+    }
+
+    public function testGetSize()
+    {
+        $fixedArray = FixedArray::fromArray([1, 2, 3, 4]);
+
+        $this->assertSame(4, $fixedArray->getSize());
+    }
+
+    public function testSetSize()
+    {
+        $fixedArray = FixedArray::fromArray([1, 2, 3, 4]);
+        $fixedArray->setSize(5);
+
+        $this->assertSame(5, $fixedArray->getSize());
+    }
+
+    public function testOffsetExistsShouldReturnTrue()
+    {
+        $fixedArray = FixedArray::fromArray([1, 2, 3, 4]);
+
+        $this->assertTrue($fixedArray->offsetExists(0));
+    }
+
+    public function testOffsetExistsShouldReturnFalse()
+    {
+        $fixedArray = FixedArray::fromArray([1, 2, 3, 4]);
+
+        $this->assertFalse($fixedArray->offsetExists(5));
+    }
+
+    public function testOffsetUnset()
+    {
+        $fixedArray = FixedArray::fromArray([1, 2, 3, 4]);
+
+        $this->assertNull($fixedArray->offsetUnset(3));
+        $this->assertFalse($fixedArray->offsetExists(3));
+    }
+
     /**
      * @dataProvider providerShiftTo
      *
