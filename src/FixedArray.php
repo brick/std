@@ -31,7 +31,7 @@ class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return FixedArray
      */
-    public function create(int $size = 0) : FixedArray
+    public static function create(int $size = 0) : FixedArray
     {
         return new FixedArray(new \SplFixedArray($size));
     }
