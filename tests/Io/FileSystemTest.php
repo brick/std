@@ -126,11 +126,10 @@ class FileSystemTest extends FileSystemTestCase
         FileSystem::createDirectories('/temp_directory');
     }
 
-    public function testCreateDirectoriesShouldReturnNull()
+    public function testCreateDirectoryTwice()
     {
         FileSystem::createDirectories('./temp_directory');
-
-        $this->assertNull(FileSystem::createDirectories('./temp_directory'));
+        FileSystem::createDirectories('./temp_directory');
     }
 
     /**
