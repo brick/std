@@ -121,8 +121,8 @@ class ObjectStorageTest extends TestCase
         $c = new \stdClass();
 
         $objects = [$a, $b, $c];
-        foreach($objects as $key => $value) {
-            $storage->set($objects[$key], $value);
+        foreach($objects as $value) {
+            $storage->set($value, null);
         }
 
         $result = $storage->getObjects();

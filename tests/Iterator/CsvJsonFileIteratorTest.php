@@ -17,16 +17,16 @@ class CsvJsonFileIteratorTest extends TestCase
      * @expectedException        \InvalidArgumentException
      * @expectedExceptionMessage Cannot open file for reading: this_file_is_not_existed
      */
-    public function testConstructorWithFileIsNotExisted()
+    public function testConstructorWithNonExistentFile()
     {
-        $iterator = new CsvJsonFileIterator('this_file_is_not_existed');
+        $iterator = new CsvJsonFileIterator('NonExistentFile');
     }
 
     /**
      * @expectedException        \RuntimeException
      * @expectedExceptionMessage Syntax error
      */
-    public function testReadRowShouldReturnRuntimeException()
+    public function testReadRowShouldThrowRuntimeException()
     {
         $fp = fopen('php://memory', 'rb+');
         fwrite($fp, 'this,is,');

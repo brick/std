@@ -61,7 +61,10 @@ class FileSystemTest extends FileSystemTestCase
 
     public function testWriteWithAppendFlag()
     {
-        $this->assertSame(4, FileSystem::write('./temp_file', 'data', true));
+        FileSystem::write('./temp_file', 'data1' . PHP_EOL);
+        FileSystem::write('./temp_file', 'data2', true);
+
+        $this->assertSame('data1' . PHP_EOL . 'data2', FileSystem::read('./temp_file'));
     }
 
     public function testWriteWithLockFlag()
@@ -80,7 +83,7 @@ class FileSystemTest extends FileSystemTestCase
      * @expectedException        Brick\Std\Io\IoException
      * @expectedExceptionMessage Error copying ./temp_lock_file to /temp_lock_file
      */
-    public function testCopyShouldReturnIOException()
+    public function testCopyShouldThrowIOException()
     {
         FileSystem::write('./temp_lock_file', 'data');        
         FileSystem::copy('./temp_lock_file', '/temp_lock_file');
