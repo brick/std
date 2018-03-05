@@ -9,21 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 class CurlTest extends TestCase
 {
-    public function testConstructorShouldInitialCurl()
-    {
-        $curl = new Curl();
-
-        $this->assertInternalType('object', $curl);
-    }
-
-    public function testCurlClassCanBeCloned()
-    {
-        $curl = new Curl();
-        $newCurl = clone $curl;
-
-        $this->assertInstanceOf(Curl::class, $newCurl);
-    }
-
     public function testGetInfoWithSpecificOption()
     {
         $curl = new Curl();
@@ -69,19 +54,20 @@ class CurlTest extends TestCase
     public function testSetOptionShouldBeSet()
     {
         $curl = new Curl();
+        $curl->setOption(CURLOPT_URL, 'http://example.com');
 
-        $this->assertNull($curl->setOption(CURLOPT_URL, 'http://exampl.ecom'));
+        $this->assertSame('http://example.com', $curl->getInfo(CURLINFO_EFFECTIVE_URL));
     }
 
     public function testSetOptionsShouldBeSet()
     {
         $curlOpts = [
-            CURLOPT_URL => 'http://exampl.ecom',
-            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_URL => 'http://example.com',
         ];
         $curl = new Curl();
+        $curl->setOptions($curlOpts);
 
-        $this->assertNull($curl->setOptions($curlOpts));
+        $this->assertSame('http://example.com', $curl->getInfo(CURLINFO_EFFECTIVE_URL));
     }
 
     public function testGetVersion()
@@ -94,9 +80,9 @@ class CurlTest extends TestCase
 
     public function testExecute()
     {
-        $curl = new Curl('http://api.waqi.info/feed/taipei/?token=demo');
+        $curl = new Curl('file://' . __FILE__);
 
-        $this->assertSame('ok', json_decode($curl->execute(), true)['status']);
+        $this->assertSame('<?php', substr($curl->execute(),0, 5));
     }
 
     /**

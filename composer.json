@@ -8,12 +8,12 @@
   ],
   "license": "MIT",
   "require": {
-    "php": ">=7.1",
-    "ext-curl": "*"
+    "php": ">=7.1"
   },
   "require-dev": {
     "phpunit/phpunit": "7.*",
-    "satooshi/php-coveralls": "2.*"
+    "satooshi/php-coveralls": "2.*",
+    "ext-curl": "*"
   },
   "autoload": {
     "psr-4": {
