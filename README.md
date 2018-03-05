@@ -13,8 +13,8 @@ An attempt at a standard library for PHP.
 Introduction
 ------------
 
-The PHP internal functions are notoriously known for their inconsistency: inconsistent naming, inconsistent parameter order, inconsistent error handling: sometimes returning `false`, sometimes triggering an error, sometimes throwing an exception, and sometimes a mix of these.
-The aim of this library is mainly to provide a consistent, OO wrapper around PHP native functions, that deals with inconsistencies internally to expose a cleaner API externally.
+The PHP internal functions are notorious for their inconsistency: inconsistent naming, inconsistent parameter order, inconsistent error handling: sometimes returning `false`, sometimes triggering an error, sometimes throwing an exception, and sometimes a mix of these.
+The aim of this library is mainly to provide a consistent, object-oriented wrapper around PHP native functions, that deals with inconsistencies internally to expose a cleaner API externally.
 Hopefully PHP will do this job one day; in the meantime, this project is a humble attempt to fill the gap.
 
 The library will start small. Functionality will be added as needs arise. Contributions are welcome.
