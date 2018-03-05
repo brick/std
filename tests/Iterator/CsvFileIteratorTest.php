@@ -15,7 +15,7 @@ class CsvFileIteratorTest extends TestCase
 {
     /**
      * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage Cannot open file for reading: this_file_is_not_existed
+     * @expectedExceptionMessage Cannot open file for reading: NonExistentFile
      */
     public function testConstructorWithNonExistentFile()
     {
