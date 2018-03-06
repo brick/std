@@ -127,10 +127,7 @@ class ObjectStorageTest extends TestCase
 
         $result = $storage->getObjects();
 
-        $this->assertCount(3, $result);
-        $this->assertSame($a, $result[0]);
-        $this->assertSame($b, $result[1]);
-        $this->assertSame($c, $result[2]);
+        $this->assertSame($objects, $result);
     }
 
     /**

@@ -93,7 +93,7 @@ class FileSystemTest extends FileSystemTestCase
      * @expectedException        Brick\Std\Io\IoException
      * @expectedExceptionMessage Error moving ./temp_lock_file to /temp_lock_file
      */
-    public function testMoveShouldReturnIOException()
+    public function testMoveShouldThrowIOException()
     {
         FileSystem::write('./temp_lock_file', 'data');        
         FileSystem::move('./temp_lock_file', '/temp_lock_file');
@@ -103,7 +103,7 @@ class FileSystemTest extends FileSystemTestCase
      * @expectedException        Brick\Std\Io\IoException
      * @expectedExceptionMessage Error deleting /temp_lock_file
      */
-    public function testDeleteShouldReturnIOException()
+    public function testDeleteShouldThrowIOException()
     {
         FileSystem::delete('/temp_lock_file');
     }
@@ -112,7 +112,7 @@ class FileSystemTest extends FileSystemTestCase
      * @expectedException        Brick\Std\Io\IoException
      * @expectedExceptionMessage Error creating directory /temp_directory
      */
-    public function testCreateDirectoryShouldReturnIOException()
+    public function testCreateDirectoryShouldThrowIOException()
     {
         FileSystem::createDirectory('/temp_directory');
     }
@@ -121,7 +121,7 @@ class FileSystemTest extends FileSystemTestCase
      * @expectedException        Brick\Std\Io\IoException
      * @expectedExceptionMessage Error creating directories /temp_directory
      */
-    public function testCreateDirectoriesShouldReturnIOException()
+    public function testCreateDirectoriesShouldThrowIOException()
     {
         FileSystem::createDirectories('/temp_directory');
     }

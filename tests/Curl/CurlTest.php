@@ -82,14 +82,14 @@ class CurlTest extends TestCase
     {
         $curl = new Curl('file://' . __FILE__);
 
-        $this->assertSame('<?php', substr($curl->execute(),0, 5));
+        $this->assertSame('<?php', substr($curl->execute(), 0, 5));
     }
 
     /**
      * @expectedException        Brick\Std\Curl\CurlException
      * @expectedExceptionMessage cURL request failed: No URL set!.
      */
-    public function testExecuteShouldReturnCurlException()
+    public function testExecuteShouldThrowCurlException()
     {
         $curl = new Curl();
         $curl->execute();
