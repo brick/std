@@ -168,8 +168,7 @@ class FixedArrayTest extends TestCase
 
     public function testCreate()
     {
-        $fixedArray = FixedArray::fromArray([1, 2, 3, 4]);
-        FixedArray::create();
+        $fixedArray = FixedArray::create(4);
 
         $this->assertSame(4, $fixedArray->getSize());
         $this->assertInstanceOf(FixedArray::class, $fixedArray);
@@ -182,10 +181,7 @@ class FixedArrayTest extends TestCase
         $result = $fixedArray->toArray();
 
         $this->assertCount(4, $result);
-        $this->assertSame($expectedArray[0], 1);
-        $this->assertSame($expectedArray[1], 2);
-        $this->assertSame($expectedArray[2], 3);
-        $this->assertSame($expectedArray[3], 4);
+        $this->assertSame($expectedArray, $fixedArray->toArray());
     }
 
     public function testGetSize()

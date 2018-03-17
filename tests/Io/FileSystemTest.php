@@ -69,7 +69,7 @@ class FileSystemTest extends FileSystemTestCase
 
     public function testWriteWithLockFlag()
     {
-        $this->assertSame(0, FileSystem::write('./temp_lock_file', '', false, true));
+        $this->assertSame(5, FileSystem::write('./temp_lock_file', '12345', false, true));
     }
 
     public function testReadWithMaxLength()
