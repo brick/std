@@ -12,7 +12,8 @@
   },
   "require-dev": {
     "phpunit/phpunit": "7.*",
-    "php-coveralls/php-coveralls": "2.*"
+    "php-coveralls/php-coveralls": "2.*",
+    "ext-curl": "*"
   },
   "autoload": {
     "psr-4": {
