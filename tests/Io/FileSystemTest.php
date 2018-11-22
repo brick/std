@@ -81,52 +81,53 @@ class FileSystemTest extends FileSystemTestCase
 
     /**
      * @expectedException        Brick\Std\Io\IoException
-     * @expectedExceptionMessage Error copying ./temp_lock_file to /temp_lock_file
+     * @expectedExceptionMessage Error copying ./temp_lock_file to ./non_existed_dir/temp_lock_file
      */
     public function testCopyShouldThrowIOException()
     {
-        FileSystem::write('./temp_lock_file', 'data');        
-        FileSystem::copy('./temp_lock_file', '/temp_lock_file');
+        FileSystem::write('./temp_lock_file', 'data');
+        FileSystem::copy('./temp_lock_file', './non_existed_dir/temp_lock_file');
     }
 
     /**
      * @expectedException        Brick\Std\Io\IoException
-     * @expectedExceptionMessage Error moving ./temp_lock_file to /temp_lock_file
+     * @expectedExceptionMessage Error moving ./temp_lock_file to ./non_existed_dir/temp_lock_file
      */
     public function testMoveShouldThrowIOException()
     {
-        FileSystem::write('./temp_lock_file', 'data');        
-        FileSystem::move('./temp_lock_file', '/temp_lock_file');
+        FileSystem::write('./temp_lock_file', 'data');
+        FileSystem::move('./temp_lock_file', './non_existed_dir/temp_lock_file');
     }
 
     /**
      * @expectedException        Brick\Std\Io\IoException
-     * @expectedExceptionMessage Error deleting /temp_lock_file
+     * @expectedExceptionMessage Error deleting ./non_existed_dir/temp_lock_file
      */
     public function testDeleteShouldThrowIOException()
     {
-        FileSystem::delete('/temp_lock_file');
+        FileSystem::delete('./non_existed_dir/temp_lock_file');
     }
 
     /**
      * @expectedException        Brick\Std\Io\IoException
-     * @expectedExceptionMessage Error creating directory /temp_directory
+     * @expectedExceptionMessage Error creating directory ./non_existed_dir/temp_lock_file
      */
     public function testCreateDirectoryShouldThrowIOException()
     {
-        FileSystem::createDirectory('/temp_directory');
+        FileSystem::createDirectory('./non_existed_dir/temp_lock_file');
     }
 
     /**
      * @expectedException        Brick\Std\Io\IoException
-     * @expectedExceptionMessage Error creating directories /temp_directory
+     * @expectedExceptionMessage Error creating directories ./new_file/temp_directory
      */
     public function testCreateDirectoriesShouldThrowIOException()
     {
-        FileSystem::createDirectories('/temp_directory');
+        FileSystem::write('./new_file', '');
+        FileSystem::createDirectories('./new_file/temp_directory');
     }
 
-    public function testCreateDirectoryTwice()
+    public function testCreateDirectoriesTwice()
     {
         FileSystem::createDirectories('./temp_directory');
         FileSystem::createDirectories('./temp_directory');
@@ -134,11 +135,11 @@ class FileSystemTest extends FileSystemTestCase
 
     /**
      * @expectedException        Brick\Std\Io\IoException
-     * @expectedExceptionMessage Error creating link ./invalid_link to /invalid_target
+     * @expectedExceptionMessage Error creating link ./invalid_link to ./non_existed_dir/invalid_target
      */
     public function testCreateLinkWithInvalidFileLink()
     {
-        FileSystem::createLink('./invalid_link', '/invalid_target');
+        FileSystem::createLink('./invalid_link', './non_existed_dir/invalid_target');
     }
 
     /**
@@ -152,20 +153,20 @@ class FileSystemTest extends FileSystemTestCase
 
    /**
      * @expectedException        Brick\Std\Io\IoException
-     * @expectedExceptionMessage Error writing to /invalid_path
+     * @expectedExceptionMessage Error writing to ./non_existed_dir/invalid_path
      */
     public function testWriteWithInvalidFilePath()
     {
-        FileSystem::write('/invalid_path', 'data');
+        FileSystem::write('./non_existed_dir/invalid_path', 'data');
     }
 
     /**
      * @expectedException        Brick\Std\Io\IoException
-     * @expectedExceptionMessage Error reading from /invalid_path
+     * @expectedExceptionMessage Error reading from ./non_existed_dir/invalid_path
      */
     public function testReadWithInvalidFilePath()
     {
-        FileSystem::read('/invalid_path');
+        FileSystem::read('./non_existed_dir/invalid_path');
     }
 
     public function testCopy()

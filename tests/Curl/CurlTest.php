@@ -51,7 +51,7 @@ class CurlTest extends TestCase
         $this->assertSame($expectedArray, $curl->getInfo());
     }
 
-    public function testSetOptionShouldBeSet()
+    public function testSetOption()
     {
         $curl = new Curl();
         $curl->setOption(CURLOPT_URL, 'http://example.com');
@@ -59,7 +59,7 @@ class CurlTest extends TestCase
         $this->assertSame('http://example.com', $curl->getInfo(CURLINFO_EFFECTIVE_URL));
     }
 
-    public function testSetOptionsShouldBeSet()
+    public function testSetOptions()
     {
         $curlOpts = [
             CURLOPT_URL => 'http://example.com',

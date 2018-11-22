@@ -19,7 +19,7 @@ class CsvFileIteratorTest extends TestCase
      */
     public function testConstructorWithNonExistentFile()
     {
-        $iterator = new CsvFileIterator('NonExistentFile');
+        new CsvFileIterator('NonExistentFile');
     }
 
     /**
