@@ -180,7 +180,6 @@ class FixedArrayTest extends TestCase
         $fixedArray = FixedArray::fromArray($expectedArray);
         $result = $fixedArray->toArray();
 
-        $this->assertCount(4, $result);
         $this->assertSame($expectedArray, $result);
     }
 
@@ -199,18 +198,26 @@ class FixedArrayTest extends TestCase
         $this->assertSame(5, $fixedArray->getSize());
     }
 
-    public function testOffsetExistsShouldReturnTrue()
+    public function offsetExistsProvider()
     {
-        $fixedArray = FixedArray::fromArray([1, 2, 3, 4]);
-
-        $this->assertTrue($fixedArray->offsetExists(0));
+        return [
+            [
+                [1, 2, 3, 4], 0, true
+            ],
+            [
+                [1, 2, 3, 4], 5, false
+            ],
+        ];
     }
 
-    public function testOffsetExistsShouldReturnFalse()
+    /**
+     * @dataProvider offsetExistsProvider
+     */
+    public function testOffsetExists($array, $index, $expected)
     {
-        $fixedArray = FixedArray::fromArray([1, 2, 3, 4]);
+        $fixedArray = FixedArray::fromArray($array);
 
-        $this->assertFalse($fixedArray->offsetExists(5));
+        $this->assertSame($expected, $fixedArray->offsetExists($index));
     }
 
     public function testOffsetUnset()
