@@ -34,22 +34,10 @@ for a list of changes introduced by each further `0.x.0` version.
 Installation
 ------------
 
-This library is installable via [Composer](https://getcomposer.org/).
-
-Just run:
+This library is installable via [Composer](https://getcomposer.org/):
 
 ```bash
 composer require brick/std
-```
-
-or manually define the following requirement in your `composer.json` file:
-
-```json
-{
-    "require": {
-        "brick/std": "0.1.*"
-    }
-}
 ```
 
 Requirements
