@@ -35,14 +35,11 @@ class FileSystemTest extends FileSystemTestCase
         $this->exec('mkdir ' . $this->tmp);
 
         chdir($this->tmp);
-
-        mkdir('./tmp');
     }
 
     public function tearDown()
     {
         $this->exec('rm -rf ' . $this->tmp);
-        $this->exec('rm -rf ' . './tmp');
     }
 
     /**
@@ -64,42 +61,42 @@ class FileSystemTest extends FileSystemTestCase
 
     public function testWriteWithAppendFlag()
     {
-        FileSystem::write('./tmp/temp_file', 'data1' . PHP_EOL);
-        FileSystem::write('./tmp/temp_file', 'data2', true);
+        FileSystem::write('./temp_file', 'data1' . PHP_EOL);
+        FileSystem::write('./temp_file', 'data2', true);
 
-        $this->assertSame('data1' . PHP_EOL . 'data2', FileSystem::read('./tmp/temp_file'));
+        $this->assertSame('data1' . PHP_EOL . 'data2', FileSystem::read('./temp_file'));
     }
 
     public function testWriteWithLockFlag()
     {
-        $this->assertSame(5, FileSystem::write('./tmp/temp_lock_file', '12345', false, true));
+        $this->assertSame(5, FileSystem::write('./temp_lock_file', '12345', false, true));
     }
 
     public function testReadWithMaxLength()
     {
-        FileSystem::write('./tmp/temp_lock_file', 'data');
+        FileSystem::write('./temp_lock_file', 'data');
 
-        $this->assertSame('dat', FileSystem::read('./tmp/temp_lock_file', 0, 3));
+        $this->assertSame('dat', FileSystem::read('./temp_lock_file', 0, 3));
     }
 
     /**
      * @expectedException        Brick\Std\Io\IoException
-     * @expectedExceptionMessage Error copying ./tmp/temp_lock_file to ./non_existing_dir/temp_lock_file
+     * @expectedExceptionMessage Error copying ./temp_lock_file to ./non_existing_dir/temp_lock_file
      */
     public function testCopyShouldThrowIOException()
     {
-        FileSystem::write('./tmp/temp_lock_file', 'data');
-        FileSystem::copy('./tmp/temp_lock_file', './non_existing_dir/temp_lock_file');
+        FileSystem::write('./temp_lock_file', 'data');
+        FileSystem::copy('./temp_lock_file', './non_existing_dir/temp_lock_file');
     }
 
     /**
      * @expectedException        Brick\Std\Io\IoException
-     * @expectedExceptionMessage Error moving ./tmp/temp_lock_file to ./non_existing_dir/temp_lock_file
+     * @expectedExceptionMessage Error moving ./temp_lock_file to ./non_existing_dir/temp_lock_file
      */
     public function testMoveShouldThrowIOException()
     {
-        FileSystem::write('./tmp/temp_lock_file', 'data');
-        FileSystem::move('./tmp/temp_lock_file', './non_existing_dir/temp_lock_file');
+        FileSystem::write('./temp_lock_file', 'data');
+        FileSystem::move('./temp_lock_file', './non_existing_dir/temp_lock_file');
     }
 
     /**
@@ -122,18 +119,18 @@ class FileSystemTest extends FileSystemTestCase
 
     /**
      * @expectedException        Brick\Std\Io\IoException
-     * @expectedExceptionMessage Error creating directories ./tmp/new_file/temp_directory
+     * @expectedExceptionMessage Error creating directories ./new_file/temp_directory
      */
     public function testCreateDirectoriesShouldThrowIOException()
     {
-        FileSystem::write('./tmp/new_file', '');
-        FileSystem::createDirectories('./tmp/new_file/temp_directory');
+        FileSystem::write('./new_file', '');
+        FileSystem::createDirectories('./new_file/temp_directory');
     }
 
     public function testCreateDirectoriesTwice()
     {
-        FileSystem::createDirectories('./tmp/temp_directory');
-        FileSystem::createDirectories('./tmp/temp_directory');
+        FileSystem::createDirectories('./temp_directory');
+        FileSystem::createDirectories('./temp_directory');
     }
 
     /**
@@ -174,110 +171,110 @@ class FileSystemTest extends FileSystemTestCase
 
     public function testCopy()
     {
-        $this->file_put_contents('./tmp/a.txt', 'Hello World');
+        $this->file_put_contents('./a.txt', 'Hello World');
 
-        FileSystem::copy('./tmp/a.txt', './tmp/b.txt');
+        FileSystem::copy('./a.txt', './b.txt');
 
-        $this->assertFileExists('./tmp/a.txt');
-        $this->assertFileExists('./tmp/b.txt');
-        $this->assertFileContains('./tmp/a.txt', 'Hello World');
-        $this->assertFileContains('./tmp/b.txt', 'Hello World');
+        $this->assertFileExists('./a.txt');
+        $this->assertFileExists('./b.txt');
+        $this->assertFileContains('./a.txt', 'Hello World');
+        $this->assertFileContains('./b.txt', 'Hello World');
     }
 
     public function testMove()
     {
-        $this->file_put_contents('./tmp/a.txt', 'Hello World');
+        $this->file_put_contents('./a.txt', 'Hello World');
 
-        FileSystem::move('./tmp/a.txt', './tmp/b.txt');
+        FileSystem::move('./a.txt', './b.txt');
 
-        $this->assertFileNotExists('./tmp/a.txt');
-        $this->assertFileExists('./tmp/b.txt');
-        $this->assertFileContains('./tmp/b.txt', 'Hello World');
+        $this->assertFileNotExists('./a.txt');
+        $this->assertFileExists('./b.txt');
+        $this->assertFileContains('./b.txt', 'Hello World');
     }
 
     public function testDeleteFile()
     {
-        $this->touch('./tmp/a.txt');
+        $this->touch('./a.txt');
 
-        FileSystem::delete('./tmp/a.txt');
+        FileSystem::delete('./a.txt');
 
-        $this->assertFileNotExists('./tmp/a.txt');
+        $this->assertFileNotExists('./a.txt');
     }
 
     public function testDeleteDirectory()
     {
-        $this->mkdir('./tmp/a');
+        $this->mkdir('./a');
 
-        FileSystem::delete('./tmp/a');
+        FileSystem::delete('./a');
 
-        $this->assertFileNotExists('./tmp/a');
+        $this->assertFileNotExists('./a');
     }
 
     public function testCreateDirectory()
     {
-        FileSystem::createDirectory('./tmp/a');
+        FileSystem::createDirectory('./a');
 
-        $this->assertIsDirectory('./tmp/a');
+        $this->assertIsDirectory('./a');
     }
 
     public function testCreateDirectories()
     {
-        FileSystem::createDirectories('./tmp/a/b/c');
+        FileSystem::createDirectories('./a/b/c');
 
-        $this->assertIsDirectory('./tmp/a');
-        $this->assertIsDirectory('./tmp/a/b');
-        $this->assertIsDirectory('./tmp/a/b/c');
+        $this->assertIsDirectory('./a');
+        $this->assertIsDirectory('./a/b');
+        $this->assertIsDirectory('./a/b/c');
     }
 
     public function testExists()
     {
-        $this->assertFalse(FileSystem::exists('./tmp/a'));
-        $this->assertFalse(FileSystem::exists('./tmp/b'));
+        $this->assertFalse(FileSystem::exists('./a'));
+        $this->assertFalse(FileSystem::exists('./b'));
 
-        $this->touch('./tmp/a.txt');
-        $this->mkdir('./tmp/b');
+        $this->touch('./a.txt');
+        $this->mkdir('./b');
 
-        $this->assertTrue(FileSystem::exists('./tmp/a.txt'));
-        $this->assertTrue(FileSystem::exists('./tmp/b'));
+        $this->assertTrue(FileSystem::exists('./a.txt'));
+        $this->assertTrue(FileSystem::exists('./b'));
     }
 
     public function testIsFile()
     {
-        $this->assertFalse(FileSystem::isFile('./tmp/a.txt'));
-        $this->assertFalse(FileSystem::isFile('./tmp/b.txt'));
+        $this->assertFalse(FileSystem::isFile('./a.txt'));
+        $this->assertFalse(FileSystem::isFile('./b.txt'));
 
-        $this->touch('./tmp/a.txt');
-        $this->mkdir('./tmp/b');
+        $this->touch('./a.txt');
+        $this->mkdir('./b');
 
-        $this->assertTrue(FileSystem::isFile('./tmp/a.txt'));
-        $this->assertFalse(FileSystem::isFile('./tmp/b'));
+        $this->assertTrue(FileSystem::isFile('./a.txt'));
+        $this->assertFalse(FileSystem::isFile('./b'));
     }
 
     public function testIsDirectory()
     {
-        $this->assertFalse(FileSystem::isDirectory('./tmp/a'));
-        $this->assertFalse(FileSystem::isDirectory('./tmp/b'));
+        $this->assertFalse(FileSystem::isDirectory('./a'));
+        $this->assertFalse(FileSystem::isDirectory('./b'));
 
-        $this->touch('./tmp/a');
-        $this->mkdir('./tmp/b');
+        $this->touch('./a');
+        $this->mkdir('./b');
 
-        $this->assertFalse(FileSystem::isDirectory('./tmp/a'));
-        $this->assertTrue(FileSystem::isDirectory('./tmp/b'));
+        $this->assertFalse(FileSystem::isDirectory('./a'));
+        $this->assertTrue(FileSystem::isDirectory('./b'));
     }
 
     public function testIsSymbolicLink()
     {
-        $this->assertFalse(FileSystem::isSymbolicLink('./tmp/a'));
-        $this->assertFalse(FileSystem::isSymbolicLink('./tmp/b'));
-        $this->assertFalse(FileSystem::isSymbolicLink('./tmp/c'));
+        $this->assertFalse(FileSystem::isSymbolicLink('./a'));
+        $this->assertFalse(FileSystem::isSymbolicLink('./b'));
+        $this->assertFalse(FileSystem::isSymbolicLink('./c'));
 
-        $this->touch('./tmp/a');
-        $this->mkdir('./tmp/b');
-        $this->symlink('./tmp/a', './tmp/c');
+        $this->touch('./a');
+        $this->mkdir('./b');
+        $this->symlink('./a', './c');
 
-        $this->assertFalse(FileSystem::isSymbolicLink('./tmp/a'));
-        $this->assertFalse(FileSystem::isSymbolicLink('./tmp/b'));
-        $this->assertTrue(FileSystem::isSymbolicLink('./tmp/c'));
+        $this->assertFalse(FileSystem::isSymbolicLink('./a'));
+        $this->assertFalse(FileSystem::isSymbolicLink('./b'));
+        $this->assertTrue(FileSystem::isSymbolicLink('./c'));
     }
 
     public function testCreateSymbolicLink()
@@ -295,33 +292,33 @@ class FileSystemTest extends FileSystemTestCase
 
     public function testCreateLink()
     {
-        $this->file_put_contents('./tmp/a', 'World');
+        $this->file_put_contents('./a', 'World');
 
-        FileSystem::createLink('./tmp/b', './tmp/a');
+        FileSystem::createLink('./b', './a');
 
-        $this->assertFileContains('./tmp/a', 'World');
-        $this->assertFileContains('./tmp/b', 'World');
+        $this->assertFileContains('./a', 'World');
+        $this->assertFileContains('./b', 'World');
     }
 
     public function testReadSymbolicLink()
     {
         $this->touch('a');
-        $this->symlink($target = $this->tmp . DIRECTORY_SEPARATOR . 'a', './tmp/link');
+        $this->symlink($target = $this->tmp . DIRECTORY_SEPARATOR . 'a', './link');
 
-        $this->assertSame($target, FileSystem::readSymbolicLink($this->tmp . DIRECTORY_SEPARATOR . './tmp/link'));
+        $this->assertSame($target, FileSystem::readSymbolicLink($this->tmp . DIRECTORY_SEPARATOR . './link'));
     }
 
     public function testWrite()
     {
-        FileSystem::write('./tmp/write.txt', 'write content');
+        FileSystem::write('./write.txt', 'write content');
 
-        $this->assertFileContains('./tmp/write.txt', 'write content');
+        $this->assertFileContains('./write.txt', 'write content');
     }
 
     public function testRead()
     {
-        $this->file_put_contents('./tmp/read.txt', 'read content');
+        $this->file_put_contents('./read.txt', 'read content');
 
-        $this->assertSame('read content', FileSystem::read('./tmp/read.txt'));
+        $this->assertSame('read content', FileSystem::read('./read.txt'));
     }
 }
