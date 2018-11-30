@@ -171,34 +171,34 @@ class FileSystemTest extends FileSystemTestCase
 
     public function testCopy()
     {
-        $this->file_put_contents('a.txt', 'Hello World');
+        $this->file_put_contents('a', 'Hello World');
 
-        FileSystem::copy('a.txt', 'b.txt');
+        FileSystem::copy('a', 'b');
 
-        $this->assertFileExists('a.txt');
-        $this->assertFileExists('b.txt');
-        $this->assertFileContains('a.txt', 'Hello World');
-        $this->assertFileContains('b.txt', 'Hello World');
+        $this->assertFileExists('a');
+        $this->assertFileExists('b');
+        $this->assertFileContains('a', 'Hello World');
+        $this->assertFileContains('b', 'Hello World');
     }
 
     public function testMove()
     {
-        $this->file_put_contents('a.txt', 'Hello World');
+        $this->file_put_contents('a', 'Hello World');
 
-        FileSystem::move('a.txt', 'b.txt');
+        FileSystem::move('a', 'b');
 
-        $this->assertFileNotExists('a.txt');
-        $this->assertFileExists('b.txt');
-        $this->assertFileContains('b.txt', 'Hello World');
+        $this->assertFileNotExists('a');
+        $this->assertFileExists('b');
+        $this->assertFileContains('b', 'Hello World');
     }
 
     public function testDeleteFile()
     {
-        $this->touch('a.txt');
+        $this->touch('a');
 
-        FileSystem::delete('a.txt');
+        FileSystem::delete('a');
 
-        $this->assertFileNotExists('a.txt');
+        $this->assertFileNotExists('a');
     }
 
     public function testDeleteDirectory()
@@ -231,22 +231,22 @@ class FileSystemTest extends FileSystemTestCase
         $this->assertFalse(FileSystem::exists('a'));
         $this->assertFalse(FileSystem::exists('b'));
 
-        $this->touch('a.txt');
+        $this->touch('a');
         $this->mkdir('b');
 
-        $this->assertTrue(FileSystem::exists('a.txt'));
+        $this->assertTrue(FileSystem::exists('a'));
         $this->assertTrue(FileSystem::exists('b'));
     }
 
     public function testIsFile()
     {
-        $this->assertFalse(FileSystem::isFile('a.txt'));
-        $this->assertFalse(FileSystem::isFile('b.txt'));
+        $this->assertFalse(FileSystem::isFile('a'));
+        $this->assertFalse(FileSystem::isFile('b'));
 
-        $this->touch('a.txt');
+        $this->touch('a');
         $this->mkdir('b');
 
-        $this->assertTrue(FileSystem::isFile('a.txt'));
+        $this->assertTrue(FileSystem::isFile('a'));
         $this->assertFalse(FileSystem::isFile('b'));
     }
 
@@ -310,15 +310,15 @@ class FileSystemTest extends FileSystemTestCase
 
     public function testWrite()
     {
-        FileSystem::write('write.txt', 'write content');
+        FileSystem::write('write', 'write content');
 
-        $this->assertFileContains('write.txt', 'write content');
+        $this->assertFileContains('write', 'write content');
     }
 
     public function testRead()
     {
-        $this->file_put_contents('read.txt', 'read content');
+        $this->file_put_contents('read', 'read content');
 
-        $this->assertSame('read content', FileSystem::read('read.txt'));
+        $this->assertSame('read content', FileSystem::read('read'));
     }
 }
