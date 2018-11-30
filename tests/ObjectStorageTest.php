@@ -112,6 +112,24 @@ class ObjectStorageTest extends TestCase
         return $storage;
     }
 
+    public function testGetObjects()
+    {
+        $storage = new ObjectStorage();
+
+        $a = new \stdClass();
+        $b = new \stdClass();
+        $c = new \stdClass();
+
+        $objects = [$a, $b, $c];
+        foreach($objects as $value) {
+            $storage->set($value, null);
+        }
+
+        $result = $storage->getObjects();
+
+        $this->assertSame($objects, $result);
+    }
+
     /**
      * @depends testSetSecondObject
      *

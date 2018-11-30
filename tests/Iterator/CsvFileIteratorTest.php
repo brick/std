@@ -14,6 +14,15 @@ use PHPUnit\Framework\TestCase;
 class CsvFileIteratorTest extends TestCase
 {
     /**
+     * @expectedException        \InvalidArgumentException
+     * @expectedExceptionMessage Cannot open file for reading: NonExistentFile
+     */
+    public function testConstructorWithNonExistentFile()
+    {
+        new CsvFileIterator('NonExistentFile');
+    }
+
+    /**
      * @dataProvider providerIterator
      *
      * @param string $csv       The CSV input.

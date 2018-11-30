@@ -42,6 +42,133 @@ class FileSystemTest extends FileSystemTestCase
         $this->exec('rm -rf ' . $this->tmp);
     }
 
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error getting real path of invalid_path, check that the path exists
+     */
+    public function testGetRealPathWithInvalidPath()
+    {
+        FileSystem::getRealPath('invalid_path');
+    }
+
+    public function testGetRealPath()
+    {
+        $filePath = __DIR__ . '/../../composer.json';
+        $expectedRealPath = realpath($filePath);
+
+        $this->assertSame($expectedRealPath, FileSystem::getRealPath($filePath));
+    }
+
+    public function testWriteWithAppendFlag()
+    {
+        FileSystem::write('temp_file', 'data1' . PHP_EOL);
+        FileSystem::write('temp_file', 'data2', true);
+
+        $this->assertSame('data1' . PHP_EOL . 'data2', FileSystem::read('temp_file'));
+    }
+
+    public function testWriteWithLockFlag()
+    {
+        $this->assertSame(5, FileSystem::write('temp_lock_file', '12345', false, true));
+    }
+
+    public function testReadWithMaxLength()
+    {
+        FileSystem::write('temp_lock_file', 'data');
+
+        $this->assertSame('dat', FileSystem::read('temp_lock_file', 0, 3));
+    }
+
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error copying temp_lock_file to non_existing_dir/temp_lock_file
+     */
+    public function testCopyShouldThrowIOException()
+    {
+        FileSystem::write('temp_lock_file', 'data');
+        FileSystem::copy('temp_lock_file', 'non_existing_dir/temp_lock_file');
+    }
+
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error moving temp_lock_file to non_existing_dir/temp_lock_file
+     */
+    public function testMoveShouldThrowIOException()
+    {
+        FileSystem::write('temp_lock_file', 'data');
+        FileSystem::move('temp_lock_file', 'non_existing_dir/temp_lock_file');
+    }
+
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error deleting non_existing_dir/temp_lock_file
+     */
+    public function testDeleteShouldThrowIOException()
+    {
+        FileSystem::delete('non_existing_dir/temp_lock_file');
+    }
+
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error creating directory non_existing_dir/temp_lock_file
+     */
+    public function testCreateDirectoryShouldThrowIOException()
+    {
+        FileSystem::createDirectory('non_existing_dir/temp_lock_file');
+    }
+
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error creating directories new_file/temp_directory
+     */
+    public function testCreateDirectoriesShouldThrowIOException()
+    {
+        FileSystem::write('new_file', '');
+        FileSystem::createDirectories('new_file/temp_directory');
+    }
+
+    public function testCreateDirectoriesTwice()
+    {
+        FileSystem::createDirectories('temp_directory');
+        FileSystem::createDirectories('temp_directory');
+    }
+
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error creating link invalid_link to non_existing_dir/invalid_target
+     */
+    public function testCreateLinkWithInvalidFileLink()
+    {
+        FileSystem::createLink('invalid_link', 'non_existing_dir/invalid_target');
+    }
+
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error reading symbolic link invalid_path
+     */
+    public function testReadSymbolicLinkWithInvalidFileLink()
+    {
+        FileSystem::readSymbolicLink('invalid_path');
+    }
+
+   /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error writing to non_existing_dir/invalid_path
+     */
+    public function testWriteWithInvalidFilePath()
+    {
+        FileSystem::write('non_existing_dir/invalid_path', 'data');
+    }
+
+    /**
+     * @expectedException        Brick\Std\Io\IoException
+     * @expectedExceptionMessage Error reading from non_existing_dir/invalid_path
+     */
+    public function testReadWithInvalidFilePath()
+    {
+        FileSystem::read('non_existing_dir/invalid_path');
+    }
+
     public function testCopy()
     {
         $this->file_put_contents('a', 'Hello World');
