@@ -42,14 +42,10 @@ class CsvJsonFileIterator implements \Iterator
      */
     public function __construct($file)
     {
-        if (is_resource($file)) {
-            $this->handle = $file;
-        } else {
-            $this->handle = @ fopen($file, 'rb');
+        $this->handle = (is_resource($file) ? $file : @ fopen($file, 'rb'));
 
-            if ($this->handle === false) {
-                throw new \InvalidArgumentException('Cannot open file for reading: ' . $file);
-            }
+        if ($this->handle === false) {
+            throw new \InvalidArgumentException('Cannot open file for reading: ' . $file);
         }
 
         $this->current = $this->readRow();
