@@ -55,7 +55,7 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
     {
         $hash = spl_object_hash($object);
 
-        return $this->data[$hash] ?? null;
+        return isset($this->data[$hash]) ? $this->data[$hash] : null;
     }
 
     /**

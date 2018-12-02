@@ -49,7 +49,7 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
     {
         $values = $this->storage->get($object);
 
-        return $values ?? [];
+        return isset($values) ? $values : [];
     }
 
     /**
