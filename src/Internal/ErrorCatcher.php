@@ -24,7 +24,7 @@ final class ErrorCatcher
      */
     public static function run(callable $function)
     {
-        set_error_handler(function($severity, $message, $file, $line) {
+        set_error_handler(static function($severity, $message, $file, $line) {
             throw new \ErrorException($message, 0, $severity, $file, $line);
         });
 
