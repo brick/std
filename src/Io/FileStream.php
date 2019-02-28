@@ -14,6 +14,13 @@ class FileStream
     private $handle;
 
     /**
+     * Whether the stream is closed.
+     *
+     * @var bool
+     */
+    private $closed = false;
+
+    /**
      * FileStream constructor.
      *
      * @param string        $filename
@@ -49,7 +56,11 @@ class FileStream
      */
     public function __destruct()
     {
-        @ fclose($this->handle);
+        try {
+            $this->close();
+        } catch (IoException $e) {
+            // Fail silently. Destructor must not throw an exception.
+        }
     }
 
     /**
@@ -59,6 +70,10 @@ class FileStream
      */
     public function eof() : bool
     {
+        if ($this->closed) {
+            throw new IoException('The stream is closed.');
+        }
+
         try {
             return ErrorCatcher::run(function() {
                 return feof($this->handle);
@@ -80,6 +95,10 @@ class FileStream
      */
     public function gets(?int $maxLength = null) : string
     {
+        if ($this->closed) {
+            throw new IoException('The stream is closed.');
+        }
+
         try {
             $data = ErrorCatcher::run(function() use ($maxLength) {
                 if ($maxLength === null) {
@@ -110,6 +129,10 @@ class FileStream
      */
     public function read(int $maxLength) : string
     {
+        if ($this->closed) {
+            throw new IoException('The stream is closed.');
+        }
+
         try {
             $data = ErrorCatcher::run(function() use ($maxLength) {
                 return fread($this->handle, $maxLength);
@@ -136,6 +159,10 @@ class FileStream
      */
     public function write(string $data) : void
     {
+        if ($this->closed) {
+            throw new IoException('The stream is closed.');
+        }
+
         try {
             $result = ErrorCatcher::run(function() use ($data) {
                 return fwrite($this->handle, $data);
@@ -147,5 +174,31 @@ class FileStream
         if ($result === false) {
             throw new IoException('Failed to write to stream.');
         }
+    }
+
+    /**
+     * @return void
+     *
+     * @throws IoException If an error occurs.
+     */
+    public function close() : void
+    {
+        if ($this->closed) {
+            throw new IoException('The stream has already been closed.');
+        }
+
+        try {
+            $result = ErrorCatcher::run(function() {
+                return fclose($this->handle);
+            });
+        } catch (\ErrorException $e) {
+            throw new IoException($e->getMessage(), 0, $e);
+        }
+
+        if ($result === false) {
+            throw new IoException('Failed to close the stream.');
+        }
+
+        $this->closed = true;
     }
 }
