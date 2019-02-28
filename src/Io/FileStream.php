@@ -177,6 +177,60 @@ class FileStream
     }
 
     /**
+     * Obtains an advisory lock.
+     *
+     * @param bool $exclusive
+     *
+     * @return void
+     *
+     * @throws IoException If an error occurs.
+     */
+    public function lock(bool $exclusive) : void
+    {
+        if ($this->closed) {
+            throw new IoException('The stream is closed.');
+        }
+
+        try {
+            $result = ErrorCatcher::run(function() use ($exclusive) {
+                return flock($this->handle, $exclusive ? LOCK_EX : LOCK_SH);
+            });
+        } catch (\ErrorException $e) {
+            throw new IoException($e->getMessage(), 0, $e);
+        }
+
+        if ($result === false) {
+            throw new IoException('Failed to obtain a lock.');
+        }
+    }
+
+    /**
+     * Releases an advisory lock.
+     *
+     * @return void
+     *
+     * @throws IoException
+     */
+    public function unlock() : void
+    {
+        if ($this->closed) {
+            throw new IoException('The stream is closed.');
+        }
+
+        try {
+            $result = ErrorCatcher::run(function() {
+                return flock($this->handle, LOCK_UN);
+            });
+        } catch (\ErrorException $e) {
+            throw new IoException($e->getMessage(), 0, $e);
+        }
+
+        if ($result === false) {
+            throw new IoException('Failed to release the lock.');
+        }
+    }
+
+    /**
      * @return void
      *
      * @throws IoException If an error occurs.
