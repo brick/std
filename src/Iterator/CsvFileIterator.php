@@ -6,8 +6,11 @@ namespace Brick\Std\Iterator;
 
 /**
  * Iterator to read CSV files.
+ *
+ * Supports CSV files with & without header rows.
+ * Skips empty lines, apart from the header row which must be the first line in the file.
  */
-class CsvFileIterator implements \Iterator
+class CsvFileIterator implements \IteratorAggregate
 {
     /**
      * The file pointer resource.
@@ -15,6 +18,18 @@ class CsvFileIterator implements \Iterator
      * @var resource
      */
     private $handle;
+
+    /**
+     * Whether the first row contains column names.
+     *
+     * - When true, rows will be returned as associative arrays of column name to value; every row must have the same
+     *   number of columns, or an exception is thrown; empty rows are skipped.
+     * - When false, rows will be returned as numeric arrays; rows are allowed to have different numbers of columns;
+     *   empty rows are returned as empty arrays.
+     *
+     * @var bool
+     */
+    private $headerRow;
 
     /**
      * The field delimiter (one character only).
@@ -38,35 +53,10 @@ class CsvFileIterator implements \Iterator
     private $escape;
 
     /**
-     * The key of the current element (0-based).
-     *
-     * @var int
-     */
-    private $key;
-
-    /**
-     * The current element as a 0-indexed array, or null if end of file / error.
-     *
-     * @var array|null
-     */
-    private $current;
-
-    /**
-     * @var bool
-     */
-    private $headerRow;
-
-    /**
-     * The column names, or null if returning numeric arrays.
-     *
-     * @var array|null
-     */
-    private $columns;
-
-    /**
      * Class constructor.
      *
      * @param string|resource $file      The CSV file path, or an open file pointer.
+     *                                   If a file pointer is given, it must be at the beginning of the file.
      * @param bool            $headerRow Whether the first row contains the column names.
      * @param string          $delimiter The field delimiter character.
      * @param string          $enclosure The field enclosure character.
@@ -90,122 +80,127 @@ class CsvFileIterator implements \Iterator
         $this->delimiter = $delimiter;
         $this->enclosure = $enclosure;
         $this->escape    = $escape;
-
-        $this->init();
     }
 
     /**
-     * @return void
+     * @return \Generator
+     *
+     * @throws \RuntimeException If a header row is configured but the header row is empty.
      */
-    private function init() : void
+    public function getIterator() : \Generator
     {
-        if ($this->headerRow) {
-            $this->columns = $this->readRow();
+        $columnNames = [];
+        $columnCount = 0;
+        $startLine   = 1;
 
-            if ($this->columns === null) {
-                $this->columns = [];
+        if ($this->headerRow) {
+            $columnNames = $this->readRow();
+
+            if ($columnNames === null) {
+                throw new \RuntimeException('Expected header row, found EOF.');
             }
+
+            $this->checkColumnNames($columnNames);
+            $columnCount = count($columnNames);
+
+            if ($columnCount === 0) {
+                throw new \RuntimeException('Empty header line.');
+            }
+
+            $startLine = 2;
         }
 
-        $this->readCurrent();
-        $this->key = 0;
+        for ($line = $startLine; ; $line++) {
+            $row = $this->readRow();
+
+            if ($row === null) { // EOF
+                return;
+            }
+
+            $rowColumnCount = count($row);
+
+            if ($rowColumnCount === 0) {
+                // skip empty lines
+                continue;
+            }
+
+            if ($columnNames) {
+                if ($rowColumnCount !== $columnCount) {
+                    throw new \RuntimeException(sprintf(
+                        'Expected %d columns on line %d, found %d.',
+                        $columnCount,
+                        $line,
+                        $rowColumnCount
+                    ));
+                }
+
+                yield array_combine($columnNames, $row);
+            } else {
+                yield $row;
+            }
+        }
     }
 
     /**
-     * Reads the current row.
+     * Checks column names for empty names & duplicates.
      *
-     * If EOF is reached or an error occurs, NULL is returned.
+     * @param string[] $columnNames
+     *
+     * @return void
+     */
+    private function checkColumnNames(array $columnNames) : void
+    {
+        $processedNames = [];
+
+        foreach ($columnNames as $key => $columnName) {
+            $columnNumber = $key + 1;
+
+            if ($columnName === '') {
+                throw new \RuntimeException(sprintf('Empty column name at column %d.', $columnNumber));
+            }
+
+            if (isset($processedNames[$columnName])) {
+                throw new \RuntimeException(sprintf(
+                    'Duplicate column name at columns %d and %d.',
+                    $processedNames[$columnName],
+                    $columnNumber
+                ));
+            }
+
+            $processedNames[$columnName] = $columnNumber;
+        }
+    }
+
+    /**
+     * Reads one row from the CSV file.
+     *
+     * If EOF is reached, NULL is returned.
      * If the line is empty, an empty array is returned.
      *
      * @return array|null
+     *
+     * @throws \RuntimeException If the file handle is invalid.
      */
     private function readRow() : ?array
     {
         $row = @ fgetcsv($this->handle, 0, $this->delimiter, $this->enclosure, $this->escape);
 
-        if ($row === false || $row === null) {
+        // fgetcsv() returns NULL if an invalid handle is supplied...
+        if ($row === null) {
+            throw new \RuntimeException('Invalid file handle.');
+        }
+
+        // ...or FALSE on other errors, including end of file.
+        if ($row === false) {
             return null;
         }
 
+        // A blank line in a CSV file will be returned as an array comprising a single null field,
+        // and will not be treated as an error.
         if ($row[0] === null) {
             return [];
         }
 
         return $row;
-    }
-
-    /**
-     * Reads the current CSV row.
-     *
-     * @return void
-     */
-    private function readCurrent() : void
-    {
-        $row = $this->readRow();
-
-        if ($this->columns === null || $row === null) {
-            $this->current = $row;
-        } else {
-            $this->current = [];
-
-            foreach ($this->columns as $key => $name) {
-                $this->current[$name] = isset($row[$key]) ? $row[$key] : null;
-            }
-        }
-    }
-
-    /**
-     * Rewinds the Iterator to the first element.
-     *
-     * If the stream does not support seeking, the iterator will be left in the current position.
-     *
-     * @return void
-     */
-    public function rewind() : void
-    {
-        if ($this->key !== 0 && fseek($this->handle, 0) === 0) {
-            $this->init();
-        }
-    }
-
-    /**
-     * Returns whether the current position is valid.
-     *
-     * @return bool
-     */
-    public function valid() : bool
-    {
-        return $this->current !== null;
-    }
-
-    /**
-     * Returns the key of the current element (0-based).
-     *
-     * @return int
-     */
-    public function key() : int
-    {
-        return $this->key;
-    }
-
-    /**
-     * Returns the current element, or null if end of file / error.
-     *
-     * @return array|null
-     */
-    public function current() : ?array
-    {
-        return $this->current;
-    }
-
-    /**
-     * Move forward to next element.
-     *
-     * @return void
-     */
-    public function next() : void
-    {
-        $this->readCurrent();
-        $this->key++;
     }
 }
