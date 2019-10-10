@@ -32,6 +32,26 @@ class CsvFileIterator implements \IteratorAggregate
     private $headerRow;
 
     /**
+     * Whether to allow less columns than the header row. Only relevant when $headerRow === true.
+     *
+     * - when false, an exception is thrown when a row has less columns than the header row
+     * - when true, missing columns are replaced with null values instead
+     *
+     * @var bool
+     */
+    private $allowLessColumns = false;
+
+    /**
+     * Whether to allow more columns than the header row. Only relevant when $headerRow === true.
+     *
+     * - when false, an exception is thrown when a row has more columns than the header row
+     * - when true, extra columns are ignored instead
+     *
+     * @var bool
+     */
+    private $allowMoreColumns = false;
+
+    /**
      * The field delimiter (one character only).
      *
      * @var string
@@ -83,6 +103,30 @@ class CsvFileIterator implements \IteratorAggregate
     }
 
     /**
+     * @return void
+     */
+    public function allowLessColumns() : void
+    {
+        if (! $this->headerRow) {
+            throw new \RuntimeException('This method is only available when using header rows.');
+        }
+
+        $this->allowLessColumns = true;
+    }
+
+    /**
+     * @return void
+     */
+    public function allowMoreColumns() : void
+    {
+        if (! $this->headerRow) {
+            throw new \RuntimeException('This method is only available when using header rows.');
+        }
+
+        $this->allowMoreColumns = true;
+    }
+
+    /**
      * @return \Generator
      *
      * @throws \RuntimeException If a header row is configured but the header row is empty.
@@ -126,12 +170,18 @@ class CsvFileIterator implements \IteratorAggregate
 
             if ($columnNames) {
                 if ($rowColumnCount !== $columnCount) {
-                    throw new \RuntimeException(sprintf(
-                        'Expected %d columns on line %d, found %d.',
-                        $columnCount,
-                        $line,
-                        $rowColumnCount
-                    ));
+                    if ($rowColumnCount < $columnCount && $this->allowLessColumns) {
+                        $row = array_pad($row, $columnCount, null);
+                    } elseif ($rowColumnCount > $columnCount && $this->allowMoreColumns) {
+                        $row = array_slice($row, 0, $columnCount);
+                    } else {
+                        throw new \RuntimeException(sprintf(
+                            'Expected %d columns on line %d, found %d.',
+                            $columnCount,
+                            $line,
+                            $rowColumnCount
+                        ));
+                    }
                 }
 
                 yield array_combine($columnNames, $row);

@@ -33,10 +33,7 @@ class CsvFileIteratorTest extends TestCase
      */
     public function testIterator(string $csv, bool $headerRow, $expected) : void
     {
-        $fp = fopen('php://memory', 'rb+');
-        fwrite($fp, $csv);
-        fseek($fp, 0);
-
+        $fp = $this->stringToResource($csv);
         $iterator = new CsvFileIterator($fp, $headerRow);
 
         if (is_string($expected)) {
@@ -82,5 +79,52 @@ class CsvFileIteratorTest extends TestCase
             ["a\nb,c", false, [["a"], ["b", "c"]]],
             ["a\nb,c", true, 'Expected 1 columns on line 2, found 2.']
         ];
+    }
+
+    /**
+     * @return void
+     */
+    public function testAllowLessColumns() : void
+    {
+        $fp = $this->stringToResource("a,b\nc");
+
+        $iterator = new CsvFileIterator($fp, true);
+        $iterator->allowLessColumns();
+
+        $rows = iterator_to_array($iterator);
+        fclose($fp);
+
+        $this->assertSame([['a' => 'c', 'b' => null]], $rows);
+    }
+
+    /**
+     * @return void
+     */
+    public function testAllowMoreColumns() : void
+    {
+        $fp = $this->stringToResource("a\nb,c");
+
+        $iterator = new CsvFileIterator($fp, true);
+        $iterator->allowMoreColumns();
+
+        $rows = iterator_to_array($iterator);
+        fclose($fp);
+
+        $this->assertSame([['a' => 'b']], $rows);
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return resource
+     */
+    private function stringToResource(string $string)
+    {
+        $fp = fopen('php://memory', 'rb+');
+
+        fwrite($fp, $string);
+        fseek($fp, 0);
+
+        return $fp;
     }
 }
