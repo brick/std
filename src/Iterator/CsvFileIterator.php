@@ -205,13 +205,10 @@ class CsvFileIterator implements \IteratorAggregate
         foreach ($columnNames as $key => $columnName) {
             $columnNumber = $key + 1;
 
-            if ($columnName === '') {
-                throw new \RuntimeException(sprintf('Empty column name at column %d.', $columnNumber));
-            }
-
             if (isset($processedNames[$columnName])) {
                 throw new \RuntimeException(sprintf(
-                    'Duplicate column name at columns %d and %d.',
+                    'Duplicate column name "%s" at columns %d and %d.',
+                    $columnName,
                     $processedNames[$columnName],
                     $columnNumber
                 ));
