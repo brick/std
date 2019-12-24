@@ -31,7 +31,7 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      *
      * @return bool True if this storage contains the object, false otherwise.
      */
-    public function has($object) : bool
+    public function has(object $object) : bool
     {
         return $this->storage->has($object);
     }
@@ -45,7 +45,7 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      *
      * @return array The values associated with the object.
      */
-    public function get($object) : array
+    public function get(object $object) : array
     {
         $values = $this->storage->get($object);
 
@@ -60,7 +60,7 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      *
      * @return void
      */
-    public function add($object, $value) : void
+    public function add(object $object, $value) : void
     {
         $values = $this->get($object);
         $values[] = $value;
@@ -76,7 +76,7 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      *
      * @return void
      */
-    public function remove($object) : void
+    public function remove(object $object) : void
     {
         $this->storage->remove($object);
     }

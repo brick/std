@@ -43,7 +43,7 @@ composer require brick/std
 Requirements
 ------------
 
-This library requires PHP 7.1 or later.
+This library requires PHP 7.2 or later.
 
 Overview
 --------

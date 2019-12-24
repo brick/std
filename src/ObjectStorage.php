@@ -35,7 +35,7 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return bool True if this storage contains the object, false otherwise.
      */
-    public function has($object) : bool
+    public function has(object $object) : bool
     {
         $hash = spl_object_hash($object);
 
@@ -51,7 +51,7 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return mixed The stored data.
      */
-    public function get($object)
+    public function get(object $object)
     {
         $hash = spl_object_hash($object);
 
@@ -70,7 +70,7 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return void
      */
-    public function set($object, $data = null) : void
+    public function set(object $object, $data = null) : void
     {
         $hash = spl_object_hash($object);
 
@@ -87,7 +87,7 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return void
      */
-    public function remove($object) : void
+    public function remove(object $object) : void
     {
         $hash = spl_object_hash($object);
 
