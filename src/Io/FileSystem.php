@@ -423,7 +423,7 @@ final class FileSystem
      *
      * @throws IoException If an error occurs.
      */
-    public static function read(string $path, int $offset = 0, int $maxLength = null) : string
+    public static function read(string $path, int $offset = 0, ?int $maxLength = null) : string
     {
         $exception = null;
 

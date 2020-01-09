@@ -21,7 +21,7 @@ class Curl
      *
      * @param string|null $url
      */
-    public function __construct(string $url = null)
+    public function __construct(?string $url = null)
     {
         $this->curl = ($url === null) ? curl_init() : curl_init($url);
     }
@@ -69,11 +69,11 @@ class Curl
      * If opt is given, its value is returned. If opt is not recognized, false is returned.
      * Otherwise, an associative array of values is returned.
      *
-     * @param int $opt One of the CURLINFO_* constants.
+     * @param int|null $opt One of the CURLINFO_* constants, or null to return all.
      *
      * @return mixed
      */
-    public function getInfo(int $opt = null)
+    public function getInfo(?int $opt = null)
     {
         if ($opt === null) {
             return curl_getinfo($this->curl);
