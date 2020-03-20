@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Brick\Std\Tests\Curl;
 
 use Brick\Std\Curl\Curl;
+use Brick\Std\Curl\CurlException;
 use PHPUnit\Framework\TestCase;
 
 class CurlTest extends TestCase
@@ -74,7 +75,7 @@ class CurlTest extends TestCase
     {
         $curl = new Curl();
 
-        $this->assertInternalType('array', $curl->getVersion());
+        $this->assertIsArray($curl->getVersion());
         $this->assertContains('version_number', $curl->getVersion());
     }
 
@@ -85,13 +86,12 @@ class CurlTest extends TestCase
         $this->assertSame('<?php', substr($curl->execute(), 0, 5));
     }
 
-    /**
-     * @expectedException        Brick\Std\Curl\CurlException
-     * @expectedExceptionMessage cURL request failed: No URL set!.
-     */
     public function testExecuteShouldThrowCurlException()
     {
         $curl = new Curl();
+
+        $this->expectException(CurlException::class);
+        $this->expectDeprecationMessage('cURL request failed: No URL set!');
         $curl->execute();
     }
 }

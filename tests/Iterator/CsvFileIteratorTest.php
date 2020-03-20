@@ -13,12 +13,10 @@ use PHPUnit\Framework\TestCase;
  */
 class CsvFileIteratorTest extends TestCase
 {
-    /**
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage Cannot open file for reading: NonExistentFile
-     */
     public function testConstructorWithNonExistentFile()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectDeprecationMessage('Cannot open file for reading: NonExistentFile');
         new CsvFileIterator('NonExistentFile');
     }
 

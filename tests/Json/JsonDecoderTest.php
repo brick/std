@@ -42,7 +42,6 @@ class JsonDecoderTest extends TestCase
 
     /**
      * @dataProvider providerDecodeInvalidJson
-     * @expectedException \Brick\Std\Json\JsonException
      *
      * @param string $json
      *
@@ -51,6 +50,8 @@ class JsonDecoderTest extends TestCase
     public function testDecodeInvalidJson(string $json) : void
     {
         $decoder = new JsonDecoder();
+
+        $this->expectException(JsonException::class);
         $decoder->decode($json);
     }
 
@@ -133,7 +134,6 @@ class JsonDecoderTest extends TestCase
 
     /**
      * @dataProvider providerInvalidMaxDepth
-     * @expectedException \InvalidArgumentException
      *
      * @param int $maxDepth
      *
@@ -142,6 +142,8 @@ class JsonDecoderTest extends TestCase
     public function testInvalidMaxDepth(int $maxDepth) : void
     {
         $decoder = new JsonDecoder();
+
+        $this->expectException(\InvalidArgumentException::class);
         $decoder->setMaxDepth($maxDepth);
     }
 

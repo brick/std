@@ -13,28 +13,27 @@ use PHPUnit\Framework\TestCase;
  */
 class CsvJsonFileIteratorTest extends TestCase
 {
-    /**
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage Cannot open file for reading: NonExistentFile
-     */
     public function testConstructorWithNonExistentFile()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectDeprecationMessage('Cannot open file for reading: NonExistentFile');
         new CsvJsonFileIterator('NonExistentFile');
     }
 
-    /**
-     * @expectedException        \RuntimeException
-     * @expectedExceptionMessage Syntax error
-     */
     public function testReadRowShouldThrowRuntimeException()
     {
         $fp = fopen('php://memory', 'rb+');
         fwrite($fp, 'this,is,');
         fseek($fp, 0);
 
-        $iterator = new CsvJsonFileIterator($fp);
+        $this->expectException(\RuntimeException::class);
+        $this->expectDeprecationMessage('Syntax error');
 
-        fclose($fp);
+        try {
+            new CsvJsonFileIterator($fp);
+        } finally {
+            fclose($fp);
+        }
     }
 
     /**

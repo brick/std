@@ -43,7 +43,6 @@ class FixedArrayTest extends TestCase
 
     /**
      * @dataProvider providerFromInvalidArrayThrowsException
-     * @expectedException \InvalidArgumentException
      *
      * @param array $source      The source array.
      * @param bool  $saveIndexes Whether to use the save indexes functionality.
@@ -52,6 +51,7 @@ class FixedArrayTest extends TestCase
      */
     public function testFromInvalidArrayThrowsException(array $source, bool $saveIndexes) : void
     {
+        $this->expectException(\InvalidArgumentException::class);
         FixedArray::fromArray($source);
     }
 
