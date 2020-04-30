@@ -43,7 +43,7 @@ class ObjectArrayStorageTest extends TestCase
     {
         $this->assertCount($count, $storage);
 
-        foreach ($tests as list($object, $isContained, $expectedValue)) {
+        foreach ($tests as [$object, $isContained, $expectedValue]) {
             $this->assertSame($isContained, $storage->has($object));
             $this->assertSame($expectedValue, $storage->get($object));
         }
