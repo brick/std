@@ -12,8 +12,12 @@
   },
   "require-dev": {
     "ext-curl": "*",
+    "ext-json": "*",
     "phpunit/phpunit": "^8.1",
     "php-coveralls/php-coveralls": "^2.2"
+  },
+  "suggest": {
+    "ext-json": "Needed to use JsonEncoder and JsonDecoder"
   },
   "autoload": {
     "psr-4": {
