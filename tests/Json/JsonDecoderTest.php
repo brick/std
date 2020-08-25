@@ -114,7 +114,7 @@ class JsonDecoderTest extends TestCase
         $expected = 1.2345678912345678E+53;
         $actual = $decoder->decode($json);
 
-        $this->assertTrue(is_float($actual));
+        $this->assertIsFloat($actual);
         $this->assertEquals($expected, $actual);
     }
 
