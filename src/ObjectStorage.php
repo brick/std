@@ -55,11 +55,7 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
     {
         $hash = spl_object_hash($object);
 
-        if (isset($this->data[$hash])) {
-            return $this->data[$hash];
-        }
-
-        return null;
+        return isset($this->data[$hash]) ? $this->data[$hash] : null;
     }
 
     /**
@@ -142,11 +138,11 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
     {
         $hash = spl_object_hash($object);
 
-        if (isset($this->objects[$hash])) {
-            return $this->data[$hash];
+        if (! isset($this->objects[$hash])) {
+            throw new \UnexpectedValueException('Object not found.');
         }
 
-        throw new \UnexpectedValueException('Object not found.');
+        return $this->data[$hash];
     }
 
     /**
