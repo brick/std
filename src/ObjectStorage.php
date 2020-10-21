@@ -18,20 +18,20 @@ namespace Brick\Std;
 class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
 {
     /**
-     * The objects contained in the storage, indexed by object hash.
+     * The objects contained in the storage, as a map of object id to object.
      *
-     * @psalm-var array<string, K>
+     * @psalm-var array<int, K>
      *
-     * @var array<string, object>
+     * @var array<int, object>
      */
     private $objects = [];
 
     /**
-     * The data in the storage, indexed by object hash.
+     * The data in the storage, as a map of object id to datum.
      *
-     * @psalm-var array<string, V>
+     * @psalm-var array<int, V>
      *
-     * @var array<string, mixed>
+     * @var array<int, mixed>
      */
     private $data = [];
 
@@ -46,9 +46,9 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function has(object $object) : bool
     {
-        $hash = spl_object_hash($object);
+        $id = spl_object_id($object);
 
-        return isset($this->objects[$hash]);
+        return isset($this->objects[$id]);
     }
 
     /**
@@ -65,10 +65,10 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function get(object $object)
     {
-        $hash = spl_object_hash($object);
+        $id = spl_object_id($object);
 
-        if (isset($this->data[$hash])) {
-            return $this->data[$hash];
+        if (isset($this->data[$id])) {
+            return $this->data[$id];
         }
 
         return null;
@@ -87,10 +87,10 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function set(object $object, $data = null) : void
     {
-        $hash = spl_object_hash($object);
+        $id = spl_object_id($object);
 
-        $this->objects[$hash] = $object;
-        $this->data[$hash] = $data;
+        $this->objects[$id] = $object;
+        $this->data[$id] = $data;
     }
 
     /**
@@ -106,10 +106,10 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function remove(object $object) : void
     {
-        $hash = spl_object_hash($object);
+        $id = spl_object_id($object);
 
-        unset($this->objects[$hash]);
-        unset($this->data[$hash]);
+        unset($this->objects[$id]);
+        unset($this->data[$id]);
     }
 
     /**
@@ -147,8 +147,8 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function getIterator() : \Traversable
     {
-        foreach ($this->objects as $hash => $object) {
-            yield $object => $this->data[$hash];
+        foreach ($this->objects as $id => $object) {
+            yield $object => $this->data[$id];
         }
     }
 
@@ -164,10 +164,10 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function offsetGet($object)
     {
-        $hash = spl_object_hash($object);
+        $id = spl_object_id($object);
 
-        if (isset($this->objects[$hash])) {
-            return $this->data[$hash];
+        if (isset($this->objects[$id])) {
+            return $this->data[$id];
         }
 
         throw new \UnexpectedValueException('Object not found.');
@@ -184,10 +184,10 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function offsetSet($object, $value) : void
     {
-        $hash = spl_object_hash($object);
+        $id = spl_object_id($object);
 
-        $this->objects[$hash] = $object;
-        $this->data[$hash] = $value;
+        $this->objects[$id] = $object;
+        $this->data[$id] = $value;
     }
 
     /**
@@ -199,10 +199,10 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function offsetUnset($object) : void
     {
-        $hash = spl_object_hash($object);
+        $id = spl_object_id($object);
 
-        unset($this->objects[$hash]);
-        unset($this->data[$hash]);
+        unset($this->objects[$id]);
+        unset($this->data[$id]);
     }
 
     /**
@@ -214,8 +214,8 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function offsetExists($object) : bool
     {
-        $hash = spl_object_hash($object);
+        $id = spl_object_id($object);
 
-        return isset($this->objects[$hash]);
+        return isset($this->objects[$id]);
     }
 }
