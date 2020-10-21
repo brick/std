@@ -11,25 +11,34 @@ namespace Brick\Std;
  *
  * In this respect, this class is different from the SplObjectStorage class,
  * which exhibits a different behaviour due to backwards compatibility reasons.
+ *
+ * @template K of object
+ * @template V
  */
 class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
 {
     /**
      * The objects contained in the storage, indexed by object hash.
      *
-     * @var array
+     * @psalm-var array<string, K>
+     *
+     * @var array<string, object>
      */
     private $objects = [];
 
     /**
      * The data in the storage, indexed by object hash.
      *
-     * @var array
+     * @psalm-var array<string, V>
+     *
+     * @var array<string, mixed>
      */
     private $data = [];
 
     /**
      * Returns whether this storage contains the given object.
+     *
+     * @psalm-param K $object
      *
      * @param object $object The object to test.
      *
@@ -46,6 +55,9 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      * Returns the data associated to the given object.
      *
      * If the given object is not in the storage, or has no associated data, NULL is returned.
+     *
+     * @psalm-param K $object
+     * @psalm-return V
      *
      * @param object $object The object.
      *
@@ -65,6 +77,9 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * Stores an object with associated data.
      *
+     * @psalm-param K $object
+     * @psalm-param V $data
+     *
      * @param object $object The object.
      * @param mixed  $data   The data to store.
      *
@@ -82,6 +97,8 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      * Removes the given object from this storage, along with associated data.
      *
      * If this storage does not contain the given object, this method does nothing.
+     *
+     * @psalm-param K $object
      *
      * @param object $object The object to remove.
      *
@@ -110,6 +127,8 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * Returns the objects contained in this storage.
      *
+     * @psalm-return V[]
+     *
      * @return object[]
      */
     public function getObjects() : array
@@ -122,6 +141,8 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * This method is part of the IteratorAggregate interface.
      *
+     * @psalm-return \Traversable<K, V>
+     *
      * @return \Traversable
      */
     public function getIterator() : \Traversable
@@ -132,6 +153,9 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
     }
 
     /**
+     * @psalm-param K $object
+     * @psalm-return V
+     *
      * @param object $object
      *
      * @return mixed
@@ -150,6 +174,9 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
     }
 
     /**
+     * @psalm-param K $object
+     * @psalm-param V $value
+     *
      * @param object $object
      * @param mixed  $value
      *
@@ -164,6 +191,8 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
     }
 
     /**
+     * @psalm-param K $object
+     *
      * @param object $object
      *
      * @return void
@@ -177,6 +206,8 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
     }
 
     /**
+     * @psalm-param K $object
+     *
      * @param object $object
      *
      * @return bool
