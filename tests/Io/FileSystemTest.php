@@ -123,6 +123,8 @@ class FileSystemTest extends FileSystemTestCase
     {
         FileSystem::createDirectories('temp_directory');
         FileSystem::createDirectories('temp_directory');
+
+        self::addToAssertionCount(1);
     }
 
     public function testCreateLinkWithInvalidFileLink()
@@ -171,7 +173,7 @@ class FileSystemTest extends FileSystemTestCase
 
         FileSystem::move('a', 'b');
 
-        $this->assertFileNotExists('a');
+        $this->assertFileDoesNotExist('a');
         $this->assertFileExists('b');
         $this->assertFileContains('b', 'Hello World');
     }
@@ -182,7 +184,7 @@ class FileSystemTest extends FileSystemTestCase
 
         FileSystem::delete('a');
 
-        $this->assertFileNotExists('a');
+        $this->assertFileDoesNotExist('a');
     }
 
     public function testDeleteDirectory()
@@ -191,7 +193,7 @@ class FileSystemTest extends FileSystemTestCase
 
         FileSystem::delete('a');
 
-        $this->assertFileNotExists('a');
+        $this->assertFileDoesNotExist('a');
     }
 
     public function testCreateDirectory()

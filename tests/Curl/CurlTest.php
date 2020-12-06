@@ -19,37 +19,12 @@ class CurlTest extends TestCase
 
     public function testGetInfo()
     {
-        $expectedArray = [
-            'url' => '',
-            'content_type' => null,
-            'http_code' => 0,
-            'header_size' => 0,
-            'request_size' => 0,
-            'filetime' => 0,
-            'ssl_verify_result' => 0,
-            'redirect_count' => 0,
-            'total_time' => 0.0,
-            'namelookup_time' => 0.0,
-            'connect_time' => 0.0,
-            'pretransfer_time' => 0.0,
-            'size_upload' => 0.0,
-            'size_download' => 0.0,
-            'speed_download' => 0.0,
-            'speed_upload' => 0.0,
-            'download_content_length' => -1.0,
-            'upload_content_length' => -1.0,
-            'starttransfer_time' => 0.0,
-            'redirect_time' => 0.0,
-            'redirect_url' => '',
-            'primary_ip' => '',
-            'certinfo' => [],
-            'primary_port' => 0,
-            'local_ip' => '',
-            'local_port' => 0,
-        ];
         $curl = new Curl();
 
-        $this->assertSame($expectedArray, $curl->getInfo());
+        $info = $curl->getInfo();
+
+        self::assertSame('', $info['url']);
+        self::assertSame(0, $info['http_code']);
     }
 
     public function testSetOption()
@@ -75,8 +50,7 @@ class CurlTest extends TestCase
     {
         $curl = new Curl();
 
-        $this->assertIsArray($curl->getVersion());
-        $this->assertContains('version_number', $curl->getVersion());
+        $this->assertArrayHasKey('version_number', $curl->getVersion());
     }
 
     public function testExecute()
