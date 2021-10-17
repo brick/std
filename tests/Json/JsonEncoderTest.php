@@ -385,10 +385,10 @@ class JsonEncoderTest extends TestCase
      */
     public function testInvalidMaxDepth(int $maxDepth) : void
     {
-        $decoder = new JsonEncoder();
+        $encoder = new JsonEncoder();
 
         $this->expectException(\InvalidArgumentException::class);
-        $decoder->setMaxDepth($maxDepth);
+        $encoder->setMaxDepth($maxDepth);
     }
 
     /**
@@ -413,14 +413,14 @@ class JsonEncoderTest extends TestCase
      */
     public function testMaxDepth($value, int $maxDepth, bool $expectException) : void
     {
-        $decoder = new JsonEncoder();
-        $decoder->setMaxDepth($maxDepth);
+        $encoder = new JsonEncoder();
+        $encoder->setMaxDepth($maxDepth);
 
         if ($expectException) {
             $this->expectException(JsonException::class);
         }
 
-        $decoder->encode($value);
+        $encoder->encode($value);
 
         if (! $expectException) {
             $this->addToAssertionCount(1); // no assertion here
