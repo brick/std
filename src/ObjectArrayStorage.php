@@ -58,7 +58,7 @@ final class ObjectArrayStorage implements \Countable, \IteratorAggregate
      *
      * @return void
      */
-    public function add(object $object, $value) : void
+    public function add(object $object, mixed $value) : void
     {
         $values = $this->get($object);
         $values[] = $value;

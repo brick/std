@@ -22,7 +22,7 @@ class JsonDecoderTest extends TestCase
      * @return void
      */
     #[DataProvider('providerDecode')]
-    public function testDecode(string $json, $expected) : void
+    public function testDecode(string $json, mixed $expected) : void
     {
         $decoder = new JsonDecoder();
         $this->assertSame($expected, $decoder->decode($json));

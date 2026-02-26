@@ -18,7 +18,7 @@ final class JsonEncoder extends Common
      *
      * @throws JsonException If the data cannot be encoded.
      */
-    public function encode($data) : string
+    public function encode(mixed $data) : string
     {
         $result = json_encode($data, $this->options, $this->maxDepth);
 
