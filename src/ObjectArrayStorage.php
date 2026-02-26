@@ -11,10 +11,8 @@ final class ObjectArrayStorage implements \Countable, \IteratorAggregate
 {
     /**
      * The underlying storage.
-     *
-     * @var ObjectStorage
      */
-    private $storage;
+    private ObjectStorage $storage;
 
     /**
      * Class constructor.

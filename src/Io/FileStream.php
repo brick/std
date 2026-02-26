@@ -15,10 +15,8 @@ final class FileStream
 
     /**
      * Whether the stream is closed.
-     *
-     * @var bool
      */
-    private $closed = false;
+    private bool $closed = false;
 
     /**
      * FileStream constructor.

@@ -11,10 +11,8 @@ final class JsonDecoder extends Common
 {
     /**
      * Whether to decode objects as associative arrays.
-     *
-     * @var bool
      */
-    private $decodeObjectAsArray = false;
+    private bool $decodeObjectAsArray = false;
 
     /**
      * Decodes data in JSON format.

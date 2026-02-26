@@ -24,7 +24,7 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
      *
      * @var array<int, object>
      */
-    private $objects = [];
+    private array $objects = [];
 
     /**
      * The data in the storage, as a map of object id to datum.
@@ -33,7 +33,7 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
      *
      * @var array<int, mixed>
      */
-    private $data = [];
+    private array $data = [];
 
     /**
      * Returns whether this storage contains the given object.

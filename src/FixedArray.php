@@ -11,10 +11,7 @@ namespace Brick\Std;
  */
 final class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
 {
-    /**
-     * @var \SplFixedArray
-     */
-    private $splFixedArray;
+    private \SplFixedArray $splFixedArray;
 
     /**
      * Class constructor.

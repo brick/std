@@ -13,24 +13,18 @@ final class BufferedWriter
 {
     /**
      * The file stream to write to.
-     *
-     * @var FileStream
      */
-    private $stream;
+    private FileStream $stream;
 
     /**
      * The buffer size, in bytes.
-     *
-     * @var int
      */
-    private $size;
+    private int $size;
 
     /**
      * The buffer contents.
-     *
-     * @var string
      */
-    private $buffer = '';
+    private string $buffer = '';
 
     /**
      * BufferedWriter constructor.

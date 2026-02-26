@@ -11,17 +11,13 @@ abstract class Common
 {
     /**
      * The maximum encoding/decoding depth.
-     *
-     * @var int
      */
-    protected $maxDepth = 512;
+    protected int $maxDepth = 512;
 
     /**
      * The options bitmask.
-     *
-     * @var int
      */
-    protected $options = 0;
+    protected int $options = 0;
 
     /**
      * Sets the max recursion depth. Defaults to `512`.

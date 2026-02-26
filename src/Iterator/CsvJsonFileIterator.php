@@ -21,17 +21,13 @@ final class CsvJsonFileIterator implements \Iterator
 
     /**
      * The current line.
-     *
-     * @var int
      */
-    private $line = 1;
+    private int $line = 1;
 
     /**
      * The current element as a 0-indexed array, or null if end of file / error.
-     *
-     * @var array|null
      */
-    private $current;
+    private ?array $current;
 
     /**
      * Class constructor.

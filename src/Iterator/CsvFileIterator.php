@@ -26,51 +26,39 @@ final class CsvFileIterator implements \IteratorAggregate
      *   number of columns, or an exception is thrown; empty rows are skipped.
      * - When false, rows will be returned as numeric arrays; rows are allowed to have different numbers of columns;
      *   empty rows are returned as empty arrays.
-     *
-     * @var bool
      */
-    private $headerRow;
+    private bool $headerRow;
 
     /**
      * Whether to allow less columns than the header row. Only relevant when $headerRow === true.
      *
      * - when false, an exception is thrown when a row has less columns than the header row
      * - when true, missing columns are replaced with null values instead
-     *
-     * @var bool
      */
-    private $allowLessColumns = false;
+    private bool $allowLessColumns = false;
 
     /**
      * Whether to allow more columns than the header row. Only relevant when $headerRow === true.
      *
      * - when false, an exception is thrown when a row has more columns than the header row
      * - when true, extra columns are ignored instead
-     *
-     * @var bool
      */
-    private $allowMoreColumns = false;
+    private bool $allowMoreColumns = false;
 
     /**
      * The field delimiter (one character only).
-     *
-     * @var string
      */
-    private $delimiter;
+    private string $delimiter;
 
     /**
      * The field enclosure character (one character only).
-     *
-     * @var string
      */
-    private $enclosure;
+    private string $enclosure;
 
     /**
      * The escape character (one character only).
-     *
-     * @var string
      */
-    private $escape;
+    private string $escape;
 
     /**
      * Class constructor.
