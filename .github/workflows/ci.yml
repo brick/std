@@ -49,3 +49,10 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{ matrix.php-version == env.COVERAGE_PHP_VERSION }}
+
+  coding-standard:
+    name: Coding Standard
+    uses: brick/coding-standard/.github/workflows/coding-standard.yml@v4
+    with:
+      php-version: "8.2"
+      working-directory: "tools/ecs"
