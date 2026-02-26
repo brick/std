@@ -7,7 +7,7 @@ namespace Brick\Std\Curl;
 /**
  * An object wrapper for cURL.
  */
-class Curl
+final class Curl
 {
     /**
      * The cURL handle.

@@ -10,7 +10,7 @@ namespace Brick\Std\Iterator;
  * This allows to support types outside of string.
  * Iterator keys are line numbers.
  */
-class CsvJsonFileIterator implements \Iterator
+final class CsvJsonFileIterator implements \Iterator
 {
     /**
      * The file pointer resource.

@@ -7,7 +7,7 @@ namespace Brick\Std\Curl;
 /**
  * Exception thrown when a Curl request fails.
  */
-class CurlException extends \RuntimeException
+final class CurlException extends \RuntimeException
 {
     /**
      * @param string $error

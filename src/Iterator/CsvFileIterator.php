@@ -10,7 +10,7 @@ namespace Brick\Std\Iterator;
  * Supports CSV files with & without header rows.
  * Skips empty lines, apart from the header row which must be the first line in the file.
  */
-class CsvFileIterator implements \IteratorAggregate
+final class CsvFileIterator implements \IteratorAggregate
 {
     /**
      * The file pointer resource.

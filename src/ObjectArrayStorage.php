@@ -7,7 +7,7 @@ namespace Brick\Std;
 /**
  * Associates an array of values to an object.
  */
-class ObjectArrayStorage implements \Countable, \IteratorAggregate
+final class ObjectArrayStorage implements \Countable, \IteratorAggregate
 {
     /**
      * The underlying storage.

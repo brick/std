@@ -15,7 +15,7 @@ namespace Brick\Std;
  * @template K of object
  * @template V
  */
-class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
+final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
 {
     /**
      * The objects contained in the storage, as a map of object id to object.

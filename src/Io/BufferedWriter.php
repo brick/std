@@ -9,7 +9,7 @@ namespace Brick\Std\Io;
  *
  * Do not forget to call flush() after all write()s have been performed.
  */
-class BufferedWriter
+final class BufferedWriter
 {
     /**
      * The file stream to write to.

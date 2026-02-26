@@ -6,7 +6,7 @@ namespace Brick\Std\Io;
 
 use Brick\Std\Internal\ErrorCatcher;
 
-class FileStream
+final class FileStream
 {
     /**
      * @var resource

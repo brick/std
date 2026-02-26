@@ -9,7 +9,7 @@ namespace Brick\Std;
  *
  * This class internally wraps SplFixedArray.
  */
-class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
+final class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
 {
     /**
      * @var \SplFixedArray
