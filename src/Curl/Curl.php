@@ -27,14 +27,6 @@ final class Curl
     }
 
     /**
-     * Class destructor.
-     */
-    public function __destruct()
-    {
-        curl_close($this->curl);
-    }
-
-    /**
      * Clone handler.
      *
      * @return void
