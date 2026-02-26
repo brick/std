@@ -58,7 +58,7 @@ class FileStream
     {
         try {
             $this->close();
-        } catch (IoException $e) {
+        } catch (IoException) {
             // Fail silently. Destructor must not throw an exception.
         }
     }
