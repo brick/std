@@ -81,7 +81,7 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
      *
      * @return void
      */
-    public function set(object $object, $data = null) : void
+    public function set(object $object, mixed $data = null) : void
     {
         $id = spl_object_id($object);
 

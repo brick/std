@@ -80,7 +80,7 @@ final class Curl
      *
      * @return void
      */
-    public function setOption(int $option, $value) : void
+    public function setOption(int $option, mixed $value) : void
     {
         curl_setopt($this->curl, $option, $value);
     }

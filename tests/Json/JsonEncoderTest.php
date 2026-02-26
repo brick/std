@@ -22,7 +22,7 @@ class JsonEncoderTest extends TestCase
      * @return void
      */
     #[DataProvider('providerEncode')]
-    public function testEncode($value, string $expected) : void
+    public function testEncode(mixed $value, string $expected) : void
     {
         $encoder = new JsonEncoder();
         $this->assertSame($expected, $encoder->encode($value));
@@ -46,7 +46,7 @@ class JsonEncoderTest extends TestCase
      * @return void
      */
     #[DataProvider('providerEncodeUnsupportedType')]
-    public function testEncodeUnsupportedType($value) : void
+    public function testEncodeUnsupportedType(mixed $value) : void
     {
         $encoder = new JsonEncoder();
 
@@ -72,7 +72,7 @@ class JsonEncoderTest extends TestCase
      * @return void
      */
     #[DataProvider('providerEscapeTags')]
-    public function testEscapeTags($value, bool $escapeTags, string $expected) : void
+    public function testEscapeTags(mixed $value, bool $escapeTags, string $expected) : void
     {
         $encoder = new JsonEncoder();
         $encoder->escapeTags($escapeTags);
@@ -99,7 +99,7 @@ class JsonEncoderTest extends TestCase
      * @return void
      */
     #[DataProvider('providerEscapeAmpersands')]
-    public function testEscapeAmpersands($value, bool $escapeAmpersands, string $expected) : void
+    public function testEscapeAmpersands(mixed $value, bool $escapeAmpersands, string $expected) : void
     {
         $encoder = new JsonEncoder();
         $encoder->escapeAmpersands($escapeAmpersands);
@@ -126,7 +126,7 @@ class JsonEncoderTest extends TestCase
      * @return void
      */
     #[DataProvider('providerEscapeApostrophes')]
-    public function testEscapeApostrophes($value, bool $escapeApostrophes, string $expected) : void
+    public function testEscapeApostrophes(mixed $value, bool $escapeApostrophes, string $expected) : void
     {
         $encoder = new JsonEncoder();
         $encoder->escapeApostrophes($escapeApostrophes);
@@ -153,7 +153,7 @@ class JsonEncoderTest extends TestCase
      * @return void
      */
     #[DataProvider('providerEscapeQuotes')]
-    public function testEscapeQuotes($value, bool $escapeQuotes, string $expected) : void
+    public function testEscapeQuotes(mixed $value, bool $escapeQuotes, string $expected) : void
     {
         $encoder = new JsonEncoder();
         $encoder->escapeQuotes($escapeQuotes);
@@ -180,7 +180,7 @@ class JsonEncoderTest extends TestCase
      * @return void
      */
     #[DataProvider('providerForceObject')]
-    public function testForceObject($value, bool $forceObject, string $expected) : void
+    public function testForceObject(mixed $value, bool $forceObject, string $expected) : void
     {
         $encoder = new JsonEncoder();
         $encoder->forceObject($forceObject);
@@ -207,7 +207,7 @@ class JsonEncoderTest extends TestCase
      * @return void
      */
     #[DataProvider('providerEncodeNumericStringsAsNumbers')]
-    public function testEncodeNumericStringsAsNumbers($value, bool $encodeNumeric, string $expected) : void
+    public function testEncodeNumericStringsAsNumbers(mixed $value, bool $encodeNumeric, string $expected) : void
     {
         $encoder = new JsonEncoder();
         $encoder->encodeNumericStringsAsNumbers($encodeNumeric);
@@ -234,7 +234,7 @@ class JsonEncoderTest extends TestCase
      * @return void
      */
     #[DataProvider('providerPrettyPrint')]
-    public function testPrettyPrint($value, bool $prettyPrint, string $expected) : void
+    public function testPrettyPrint(mixed $value, bool $prettyPrint, string $expected) : void
     {
         $encoder = new JsonEncoder();
         $encoder->prettyPrint($prettyPrint);
@@ -261,7 +261,7 @@ class JsonEncoderTest extends TestCase
      * @return void
      */
     #[DataProvider('providerEscapeSlashes')]
-    public function testEscapeSlashes($value, bool $escapeSlashes, string $expected) : void
+    public function testEscapeSlashes(mixed $value, bool $escapeSlashes, string $expected) : void
     {
         $encoder = new JsonEncoder();
         $encoder->escapeSlashes($escapeSlashes);
@@ -288,7 +288,7 @@ class JsonEncoderTest extends TestCase
      * @return void
      */
     #[DataProvider('providerEscapeUnicode')]
-    public function testEscapeUnicode($value, bool $escapeUnicode, string $expected) : void
+    public function testEscapeUnicode(mixed $value, bool $escapeUnicode, string $expected) : void
     {
         $encoder = new JsonEncoder();
         $encoder->escapeUnicode($escapeUnicode);
@@ -315,7 +315,7 @@ class JsonEncoderTest extends TestCase
      * @return void
      */
     #[DataProvider('providerEscapeLineTerminators')]
-    public function testEscapeLineTerminators($value, bool $escapeLineTerminators, string $expected) : void
+    public function testEscapeLineTerminators(mixed $value, bool $escapeLineTerminators, string $expected) : void
     {
         $encoder = new JsonEncoder();
         $encoder->escapeUnicode(false);
@@ -345,7 +345,7 @@ class JsonEncoderTest extends TestCase
      * @return void
      */
     #[DataProvider('providerPreserveZeroFraction')]
-    public function testPreserveZeroFraction($value, bool $preserveZero, string $expected) : void
+    public function testPreserveZeroFraction(mixed $value, bool $preserveZero, string $expected) : void
     {
         $encoder = new JsonEncoder();
         $encoder->preserveZeroFraction($preserveZero);
@@ -397,7 +397,7 @@ class JsonEncoderTest extends TestCase
      * @return void
      */
     #[DataProvider('providerMaxDepth')]
-    public function testMaxDepth($value, int $maxDepth, bool $expectException) : void
+    public function testMaxDepth(mixed $value, int $maxDepth, bool $expectException) : void
     {
         $encoder = new JsonEncoder();
         $encoder->setMaxDepth($maxDepth);
