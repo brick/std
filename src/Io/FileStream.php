@@ -75,9 +75,7 @@ class FileStream
         }
 
         try {
-            return ErrorCatcher::run(function() {
-                return feof($this->handle);
-            });
+            return ErrorCatcher::run(fn() => feof($this->handle));
         } catch (\ErrorException $e) {
             throw new IoException($e->getMessage(), 0, $e);
         }
@@ -134,9 +132,7 @@ class FileStream
         }
 
         try {
-            $data = ErrorCatcher::run(function() use ($maxLength) {
-                return fread($this->handle, $maxLength);
-            });
+            $data = ErrorCatcher::run(fn() => fread($this->handle, $maxLength));
         } catch (\ErrorException $e) {
             throw new IoException($e->getMessage(), 0, $e);
         }
@@ -164,9 +160,7 @@ class FileStream
         }
 
         try {
-            $result = ErrorCatcher::run(function() use ($data) {
-                return fwrite($this->handle, $data);
-            });
+            $result = ErrorCatcher::run(fn() => fwrite($this->handle, $data));
         } catch (\ErrorException $e) {
             throw new IoException($e->getMessage(), 0, $e);
         }
@@ -192,9 +186,7 @@ class FileStream
         }
 
         try {
-            $result = ErrorCatcher::run(function() use ($exclusive) {
-                return flock($this->handle, $exclusive ? LOCK_EX : LOCK_SH);
-            });
+            $result = ErrorCatcher::run(fn() => flock($this->handle, $exclusive ? LOCK_EX : LOCK_SH));
         } catch (\ErrorException $e) {
             throw new IoException($e->getMessage(), 0, $e);
         }
@@ -218,9 +210,7 @@ class FileStream
         }
 
         try {
-            $result = ErrorCatcher::run(function() {
-                return flock($this->handle, LOCK_UN);
-            });
+            $result = ErrorCatcher::run(fn() => flock($this->handle, LOCK_UN));
         } catch (\ErrorException $e) {
             throw new IoException($e->getMessage(), 0, $e);
         }
@@ -242,9 +232,7 @@ class FileStream
         }
 
         try {
-            $result = ErrorCatcher::run(function() {
-                return fclose($this->handle);
-            });
+            $result = ErrorCatcher::run(fn() => fclose($this->handle));
         } catch (\ErrorException $e) {
             throw new IoException($e->getMessage(), 0, $e);
         }
