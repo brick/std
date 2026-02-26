@@ -6,6 +6,7 @@ namespace Brick\Std\Tests\Iterator;
 
 use Brick\Std\Iterator\CsvJsonFileIterator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -16,7 +17,7 @@ class CsvJsonFileIteratorTest extends TestCase
     public function testConstructorWithNonExistentFile()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectDeprecationMessage('Cannot open file for reading: NonExistentFile');
+        $this->expectExceptionMessage('Cannot open file for reading: NonExistentFile');
         new CsvJsonFileIterator('NonExistentFile');
     }
 
@@ -27,7 +28,7 @@ class CsvJsonFileIteratorTest extends TestCase
         fseek($fp, 0);
 
         $this->expectException(\RuntimeException::class);
-        $this->expectDeprecationMessage('Syntax error');
+        $this->expectExceptionMessage('Syntax error');
 
         try {
             new CsvJsonFileIterator($fp);
@@ -37,13 +38,12 @@ class CsvJsonFileIteratorTest extends TestCase
     }
 
     /**
-     * @dataProvider providerIterator
-     *
      * @param string $csv      The CSV input.
      * @param array  $expected The expected output.
      *
      * @return void
      */
+    #[DataProvider('providerIterator')]
     public function testIterator(string $csv, array $expected) : void
     {
         $fp = fopen('php://memory', 'rb+');
@@ -59,7 +59,7 @@ class CsvJsonFileIteratorTest extends TestCase
     /**
      * @return array
      */
-    public function providerIterator() : array
+    public static function providerIterator() : array
     {
         return [
             ['', []],

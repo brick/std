@@ -7,6 +7,7 @@ namespace Brick\Std\Tests\Json;
 use Brick\Std\Json\JsonDecoder;
 use Brick\Std\Json\JsonException;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -15,13 +16,12 @@ use PHPUnit\Framework\TestCase;
 class JsonDecoderTest extends TestCase
 {
     /**
-     * @dataProvider providerDecode
-     *
      * @param string $json
      * @param mixed  $expected
      *
      * @return void
      */
+    #[DataProvider('providerDecode')]
     public function testDecode(string $json, $expected) : void
     {
         $decoder = new JsonDecoder();
@@ -31,7 +31,7 @@ class JsonDecoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerDecode() : array
+    public static function providerDecode() : array
     {
         return [
             ['123', 123],
@@ -41,12 +41,11 @@ class JsonDecoderTest extends TestCase
     }
 
     /**
-     * @dataProvider providerDecodeInvalidJson
-     *
      * @param string $json
      *
      * @return void
      */
+    #[DataProvider('providerDecodeInvalidJson')]
     public function testDecodeInvalidJson(string $json) : void
     {
         $decoder = new JsonDecoder();
@@ -58,7 +57,7 @@ class JsonDecoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerDecodeInvalidJson() : array
+    public static function providerDecodeInvalidJson() : array
     {
         return [
             [''],
@@ -133,12 +132,11 @@ class JsonDecoderTest extends TestCase
     }
 
     /**
-     * @dataProvider providerInvalidMaxDepth
-     *
      * @param int $maxDepth
      *
      * @return void
      */
+    #[DataProvider('providerInvalidMaxDepth')]
     public function testInvalidMaxDepth(int $maxDepth) : void
     {
         $decoder = new JsonDecoder();
@@ -150,7 +148,7 @@ class JsonDecoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerInvalidMaxDepth() : array
+    public static function providerInvalidMaxDepth() : array
     {
         return [
             [-1],
@@ -159,14 +157,13 @@ class JsonDecoderTest extends TestCase
     }
 
     /**
-     * @dataProvider providerMaxDepth
-     *
      * @param string $json            The JSON string to encode.
      * @param int    $maxDepth        The max depth to configure.
      * @param bool   $expectException Whether decode() should throw an exception.
      *
      * @return void
      */
+    #[DataProvider('providerMaxDepth')]
     public function testMaxDepth(string $json, int $maxDepth, bool $expectException) : void
     {
         $decoder = new JsonDecoder();
@@ -186,7 +183,7 @@ class JsonDecoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerMaxDepth() : array
+    public static function providerMaxDepth() : array
     {
         return [
             ['123', 0, false],

@@ -6,6 +6,7 @@ namespace Brick\Std\Tests;
 
 use Brick\Std\ObjectArrayStorage;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -65,12 +66,11 @@ class ObjectArrayStorageTest extends TestCase
     }
 
     /**
-     * @depends testEmptyStorage
-     *
      * @param ObjectArrayStorage $storage
      *
      * @return ObjectArrayStorage
      */
+    #[Depends('testEmptyStorage')]
     public function testAddFirstObject(ObjectArrayStorage $storage) : ObjectArrayStorage
     {
         $storage->add(self::$a, 'x');
@@ -84,12 +84,11 @@ class ObjectArrayStorageTest extends TestCase
     }
 
     /**
-     * @depends testAddFirstObject
-     *
      * @param ObjectArrayStorage $storage
      *
      * @return ObjectArrayStorage
      */
+    #[Depends('testAddFirstObject')]
     public function testAddSecondObject(ObjectArrayStorage $storage) : ObjectArrayStorage
     {
         $storage->add(self::$b, 'y');
@@ -103,12 +102,11 @@ class ObjectArrayStorageTest extends TestCase
     }
 
     /**
-     * @depends testAddSecondObject
-     *
      * @param ObjectArrayStorage $storage
      *
      * @return ObjectArrayStorage
      */
+    #[Depends('testAddSecondObject')]
     public function testRemoveUnknownObjectDoesNothing(ObjectArrayStorage $storage) : ObjectArrayStorage
     {
         $storage->remove(new \stdClass());
@@ -122,13 +120,12 @@ class ObjectArrayStorageTest extends TestCase
     }
 
     /**
-     * @depends testRemoveUnknownObjectDoesNothing
-     *
      * @param ObjectArrayStorage $storage
      *
      * @return ObjectArrayStorage
      */
-    public function testAddValueToFirstObject (ObjectArrayStorage $storage) : ObjectArrayStorage
+    #[Depends('testRemoveUnknownObjectDoesNothing')]
+    public function testAddValueToFirstObject(ObjectArrayStorage $storage) : ObjectArrayStorage
     {
         $storage->add(self::$a, 'z');
 
@@ -141,13 +138,12 @@ class ObjectArrayStorageTest extends TestCase
     }
 
     /**
-     * @depends testAddValueToFirstObject
-     *
      * @param ObjectArrayStorage $storage
      *
      * @return ObjectArrayStorage
      */
-    public function testRemoveSecondObject (ObjectArrayStorage $storage) : ObjectArrayStorage
+    #[Depends('testAddValueToFirstObject')]
+    public function testRemoveSecondObject(ObjectArrayStorage $storage) : ObjectArrayStorage
     {
         $storage->remove(self::$b);
 
@@ -160,13 +156,12 @@ class ObjectArrayStorageTest extends TestCase
     }
 
     /**
-     * @depends testRemoveSecondObject
-     *
      * @param ObjectArrayStorage $storage
      *
      * @return void
      */
-    public function testRemoveFirstObject (ObjectArrayStorage $storage) : void
+    #[Depends('testRemoveSecondObject')]
+    public function testRemoveFirstObject(ObjectArrayStorage $storage) : void
     {
         $storage->remove(self::$a);
 

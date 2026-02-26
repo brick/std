@@ -6,6 +6,7 @@ namespace Brick\Std\Tests\Iterator;
 
 use Brick\Std\Iterator\CsvFileIterator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -16,19 +17,18 @@ class CsvFileIteratorTest extends TestCase
     public function testConstructorWithNonExistentFile()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectDeprecationMessage('Cannot open file for reading: NonExistentFile');
+        $this->expectExceptionMessage('Cannot open file for reading: NonExistentFile');
         new CsvFileIterator('NonExistentFile');
     }
 
     /**
-     * @dataProvider providerIterator
-     *
      * @param string       $csv       The CSV input.
      * @param bool         $headerRow Whether to use the first row as column headers.
      * @param array|string $expected  The expected output, or an expected exception message.
      *
      * @return void
      */
+    #[DataProvider('providerIterator')]
     public function testIterator(string $csv, bool $headerRow, $expected) : void
     {
         $fp = $this->stringToResource($csv);
@@ -53,7 +53,7 @@ class CsvFileIteratorTest extends TestCase
     /**
      * @return array
      */
-    public function providerIterator() : array
+    public static function providerIterator() : array
     {
         return [
             ["", false, []],

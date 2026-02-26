@@ -6,6 +6,7 @@ namespace Brick\Std\Tests;
 
 use Brick\Std\ObjectStorage;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -75,12 +76,11 @@ class ObjectStorageTest extends TestCase
     }
 
     /**
-     * @depends testEmptyStorage
-     *
      * @param ObjectStorage $storage
      *
      * @return ObjectStorage
      */
+    #[Depends('testEmptyStorage')]
     public function testSetFirstObject(ObjectStorage $storage) : ObjectStorage
     {
         $storage->set(self::$a, 'x');
@@ -94,12 +94,11 @@ class ObjectStorageTest extends TestCase
     }
 
     /**
-     * @depends testSetFirstObject
-     *
      * @param ObjectStorage $storage
      *
      * @return ObjectStorage
      */
+    #[Depends('testSetFirstObject')]
     public function testSetSecondObject(ObjectStorage $storage) : ObjectStorage
     {
         $storage[self::$b] = 'y';
@@ -131,12 +130,11 @@ class ObjectStorageTest extends TestCase
     }
 
     /**
-     * @depends testSetSecondObject
-     *
      * @param ObjectStorage $storage
      *
      * @return ObjectStorage
      */
+    #[Depends('testSetSecondObject')]
     public function testRemoveUnknownObjectDoesNothing(ObjectStorage $storage) : ObjectStorage
     {
         $storage->remove(new \stdClass());
@@ -150,13 +148,12 @@ class ObjectStorageTest extends TestCase
     }
 
     /**
-     * @depends testRemoveUnknownObjectDoesNothing
-     *
      * @param ObjectStorage $storage
      *
      * @return ObjectStorage
      */
-    public function testOverwriteFirstObjectWithNull (ObjectStorage $storage) : ObjectStorage
+    #[Depends('testRemoveUnknownObjectDoesNothing')]
+    public function testOverwriteFirstObjectWithNull(ObjectStorage $storage) : ObjectStorage
     {
         $storage->set(self::$a, null);
 
@@ -169,13 +166,12 @@ class ObjectStorageTest extends TestCase
     }
 
     /**
-     * @depends testOverwriteFirstObjectWithNull
-     *
      * @param ObjectStorage $storage
      *
      * @return ObjectStorage
      */
-    public function testRemoveSecondObject (ObjectStorage $storage) : ObjectStorage
+    #[Depends('testOverwriteFirstObjectWithNull')]
+    public function testRemoveSecondObject(ObjectStorage $storage) : ObjectStorage
     {
         unset($storage[self::$b]);
 
@@ -188,13 +184,12 @@ class ObjectStorageTest extends TestCase
     }
 
     /**
-     * @depends testRemoveSecondObject
-     *
      * @param ObjectStorage $storage
      *
      * @return void
      */
-    public function testRemoveFirstObject (ObjectStorage $storage) : void
+    #[Depends('testRemoveSecondObject')]
+    public function testRemoveFirstObject(ObjectStorage $storage) : void
     {
         $storage->remove(self::$a);
 

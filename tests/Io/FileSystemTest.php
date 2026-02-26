@@ -46,7 +46,7 @@ class FileSystemTest extends FileSystemTestCase
     public function testGetRealPathWithInvalidPath()
     {
         $this->expectException(IoException::class);
-        $this->expectDeprecationMessage('Error getting real path of invalid_path, check that the path exists');
+        $this->expectExceptionMessage('Error getting real path of invalid_path, check that the path exists');
         FileSystem::getRealPath('invalid_path');
     }
 
@@ -83,7 +83,7 @@ class FileSystemTest extends FileSystemTestCase
         FileSystem::write('temp_lock_file', 'data');
 
         $this->expectException(IoException::class);
-        $this->expectDeprecationMessage('Error copying temp_lock_file to non_existing_dir/temp_lock_file');
+        $this->expectExceptionMessage('Error copying temp_lock_file to non_existing_dir/temp_lock_file');
         FileSystem::copy('temp_lock_file', 'non_existing_dir/temp_lock_file');
     }
 
@@ -92,21 +92,21 @@ class FileSystemTest extends FileSystemTestCase
         FileSystem::write('temp_lock_file', 'data');
 
         $this->expectException(IoException::class);
-        $this->expectDeprecationMessage('Error moving temp_lock_file to non_existing_dir/temp_lock_file');
+        $this->expectExceptionMessage('Error moving temp_lock_file to non_existing_dir/temp_lock_file');
         FileSystem::move('temp_lock_file', 'non_existing_dir/temp_lock_file');
     }
 
     public function testDeleteShouldThrowIOException()
     {
         $this->expectException(IoException::class);
-        $this->expectDeprecationMessage('Error deleting non_existing_dir/temp_lock_file');
+        $this->expectExceptionMessage('Error deleting non_existing_dir/temp_lock_file');
         FileSystem::delete('non_existing_dir/temp_lock_file');
     }
 
     public function testCreateDirectoryShouldThrowIOException()
     {
         $this->expectException(IoException::class);
-        $this->expectDeprecationMessage('Error creating directory non_existing_dir/temp_lock_file');
+        $this->expectExceptionMessage('Error creating directory non_existing_dir/temp_lock_file');
         FileSystem::createDirectory('non_existing_dir/temp_lock_file');
     }
 
@@ -115,7 +115,7 @@ class FileSystemTest extends FileSystemTestCase
         FileSystem::write('new_file', '');
 
         $this->expectException(IoException::class);
-        $this->expectDeprecationMessage('Error creating directories new_file/temp_directory');
+        $this->expectExceptionMessage('Error creating directories new_file/temp_directory');
         FileSystem::createDirectories('new_file/temp_directory');
     }
 
@@ -130,28 +130,28 @@ class FileSystemTest extends FileSystemTestCase
     public function testCreateLinkWithInvalidFileLink()
     {
         $this->expectException(IoException::class);
-        $this->expectDeprecationMessage('Error creating link invalid_link to non_existing_dir/invalid_target');
+        $this->expectExceptionMessage('Error creating link invalid_link to non_existing_dir/invalid_target');
         FileSystem::createLink('invalid_link', 'non_existing_dir/invalid_target');
     }
 
     public function testReadSymbolicLinkWithInvalidFileLink()
     {
         $this->expectException(IoException::class);
-        $this->expectDeprecationMessage('Error reading symbolic link invalid_path');
+        $this->expectExceptionMessage('Error reading symbolic link invalid_path');
         FileSystem::readSymbolicLink('invalid_path');
     }
 
     public function testWriteWithInvalidFilePath()
     {
         $this->expectException(IoException::class);
-        $this->expectDeprecationMessage('Error writing to non_existing_dir/invalid_path');
+        $this->expectExceptionMessage('Error writing to non_existing_dir/invalid_path');
         FileSystem::write('non_existing_dir/invalid_path', 'data');
     }
 
     public function testReadWithInvalidFilePath()
     {
         $this->expectException(IoException::class);
-        $this->expectDeprecationMessage('Error reading from non_existing_dir/invalid_path');
+        $this->expectExceptionMessage('Error reading from non_existing_dir/invalid_path');
         FileSystem::read('non_existing_dir/invalid_path');
     }
 

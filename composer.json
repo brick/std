@@ -13,7 +13,7 @@
   "require-dev": {
     "ext-curl": "*",
     "ext-json": "*",
-    "phpunit/phpunit": "^9.0",
+    "phpunit/phpunit": "^11.5",
     "php-coveralls/php-coveralls": "^2.2"
   },
   "suggest": {

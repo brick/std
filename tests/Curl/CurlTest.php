@@ -65,7 +65,7 @@ class CurlTest extends TestCase
         $curl = new Curl();
 
         $this->expectException(CurlException::class);
-        $this->expectDeprecationMessage('cURL request failed: No URL set!');
+        $this->expectExceptionMessage('cURL request failed: No URL set');
         $curl->execute();
     }
 }

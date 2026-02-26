@@ -7,6 +7,7 @@ namespace Brick\Std\Tests\Json;
 use Brick\Std\Json\JsonEncoder;
 use Brick\Std\Json\JsonException;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -15,13 +16,12 @@ use PHPUnit\Framework\TestCase;
 class JsonEncoderTest extends TestCase
 {
     /**
-     * @dataProvider providerEncode
-     *
      * @param mixed  $value
      * @param string $expected
      *
      * @return void
      */
+    #[DataProvider('providerEncode')]
     public function testEncode($value, string $expected) : void
     {
         $encoder = new JsonEncoder();
@@ -31,7 +31,7 @@ class JsonEncoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerEncode() : array
+    public static function providerEncode() : array
     {
         return [
             [123, '123'],
@@ -41,12 +41,11 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
-     * @dataProvider providerEncodeUnsupportedType
-     *
      * @param mixed $value
      *
      * @return void
      */
+    #[DataProvider('providerEncodeUnsupportedType')]
     public function testEncodeUnsupportedType($value) : void
     {
         $encoder = new JsonEncoder();
@@ -58,7 +57,7 @@ class JsonEncoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerEncodeUnsupportedType() : array
+    public static function providerEncodeUnsupportedType() : array
     {
         return [
             [fopen('php://memory', 'wb')]
@@ -66,14 +65,13 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
-     * @dataProvider providerEscapeTags
-     *
      * @param mixed  $value
      * @param bool   $escapeTags
      * @param string $expected
      *
      * @return void
      */
+    #[DataProvider('providerEscapeTags')]
     public function testEscapeTags($value, bool $escapeTags, string $expected) : void
     {
         $encoder = new JsonEncoder();
@@ -85,7 +83,7 @@ class JsonEncoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerEscapeTags() : array
+    public static function providerEscapeTags() : array
     {
         return [
             ['<test>', false, '"<test>"'],
@@ -94,14 +92,13 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
-     * @dataProvider providerEscapeAmpersands
-     *
      * @param mixed  $value
      * @param bool   $escapeAmpersands
      * @param string $expected
      *
      * @return void
      */
+    #[DataProvider('providerEscapeAmpersands')]
     public function testEscapeAmpersands($value, bool $escapeAmpersands, string $expected) : void
     {
         $encoder = new JsonEncoder();
@@ -113,7 +110,7 @@ class JsonEncoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerEscapeAmpersands() : array
+    public static function providerEscapeAmpersands() : array
     {
         return [
             ['Cats & dogs', false, '"Cats & dogs"'],
@@ -122,14 +119,13 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
-     * @dataProvider providerEscapeApostrophes
-     *
      * @param mixed  $value
      * @param bool   $escapeApostrophes
      * @param string $expected
      *
      * @return void
      */
+    #[DataProvider('providerEscapeApostrophes')]
     public function testEscapeApostrophes($value, bool $escapeApostrophes, string $expected) : void
     {
         $encoder = new JsonEncoder();
@@ -141,7 +137,7 @@ class JsonEncoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerEscapeApostrophes() : array
+    public static function providerEscapeApostrophes() : array
     {
         return [
             ['John\'s car', false, '"John\'s car"'],
@@ -150,14 +146,13 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
-     * @dataProvider providerEscapeQuotes
-     *
      * @param mixed  $value
      * @param bool   $escapeQuotes
      * @param string $expected
      *
      * @return void
      */
+    #[DataProvider('providerEscapeQuotes')]
     public function testEscapeQuotes($value, bool $escapeQuotes, string $expected) : void
     {
         $encoder = new JsonEncoder();
@@ -169,7 +164,7 @@ class JsonEncoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerEscapeQuotes() : array
+    public static function providerEscapeQuotes() : array
     {
         return [
             ['She said "yes"', false, '"She said \"yes\""'],
@@ -178,14 +173,13 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForceObject
-     *
      * @param mixed  $value
      * @param bool   $forceObject
      * @param string $expected
      *
      * @return void
      */
+    #[DataProvider('providerForceObject')]
     public function testForceObject($value, bool $forceObject, string $expected) : void
     {
         $encoder = new JsonEncoder();
@@ -197,7 +191,7 @@ class JsonEncoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerForceObject() : array
+    public static function providerForceObject() : array
     {
         return [
             [['a', 'b'], false, '["a","b"]'],
@@ -206,14 +200,13 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
-     * @dataProvider providerEncodeNumericStringsAsNumbers
-     *
      * @param mixed  $value
      * @param bool   $encodeNumeric
      * @param string $expected
      *
      * @return void
      */
+    #[DataProvider('providerEncodeNumericStringsAsNumbers')]
     public function testEncodeNumericStringsAsNumbers($value, bool $encodeNumeric, string $expected) : void
     {
         $encoder = new JsonEncoder();
@@ -225,7 +218,7 @@ class JsonEncoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerEncodeNumericStringsAsNumbers() : array
+    public static function providerEncodeNumericStringsAsNumbers() : array
     {
         return [
             [['ABC', '123'], false, '["ABC","123"]'],
@@ -234,14 +227,13 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
-     * @dataProvider providerPrettyPrint
-     *
      * @param mixed  $value
      * @param bool   $prettyPrint
      * @param string $expected
      *
      * @return void
      */
+    #[DataProvider('providerPrettyPrint')]
     public function testPrettyPrint($value, bool $prettyPrint, string $expected) : void
     {
         $encoder = new JsonEncoder();
@@ -253,7 +245,7 @@ class JsonEncoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerPrettyPrint() : array
+    public static function providerPrettyPrint() : array
     {
         return [
             [['ABC', '123'], false, '["ABC","123"]'],
@@ -262,14 +254,13 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
-     * @dataProvider providerEscapeSlashes
-     *
      * @param mixed  $value
      * @param bool   $escapeSlashes
      * @param string $expected
      *
      * @return void
      */
+    #[DataProvider('providerEscapeSlashes')]
     public function testEscapeSlashes($value, bool $escapeSlashes, string $expected) : void
     {
         $encoder = new JsonEncoder();
@@ -281,7 +272,7 @@ class JsonEncoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerEscapeSlashes() : array
+    public static function providerEscapeSlashes() : array
     {
         return [
             ['Hello/World', false, '"Hello/World"'],
@@ -290,14 +281,13 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
-     * @dataProvider providerEscapeUnicode
-     *
      * @param mixed  $value
      * @param bool   $escapeUnicode
      * @param string $expected
      *
      * @return void
      */
+    #[DataProvider('providerEscapeUnicode')]
     public function testEscapeUnicode($value, bool $escapeUnicode, string $expected) : void
     {
         $encoder = new JsonEncoder();
@@ -309,7 +299,7 @@ class JsonEncoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerEscapeUnicode() : array
+    public static function providerEscapeUnicode() : array
     {
         return [
             ['Là', false, '"Là"'],
@@ -318,14 +308,13 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
-     * @dataProvider providerEscapeLineTerminators
-     *
      * @param mixed  $value
      * @param bool   $escapeLineTerminators
      * @param string $expected
      *
      * @return void
      */
+    #[DataProvider('providerEscapeLineTerminators')]
     public function testEscapeLineTerminators($value, bool $escapeLineTerminators, string $expected) : void
     {
         $encoder = new JsonEncoder();
@@ -338,7 +327,7 @@ class JsonEncoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerEscapeLineTerminators() : array
+    public static function providerEscapeLineTerminators() : array
     {
         return [
             ["\r\n", false, '"\r\n"'],
@@ -349,14 +338,13 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
-     * @dataProvider providerPreserveZeroFraction
-     *
      * @param mixed  $value
      * @param bool   $preserveZero
      * @param string $expected
      *
      * @return void
      */
+    #[DataProvider('providerPreserveZeroFraction')]
     public function testPreserveZeroFraction($value, bool $preserveZero, string $expected) : void
     {
         $encoder = new JsonEncoder();
@@ -368,7 +356,7 @@ class JsonEncoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerPreserveZeroFraction() : array
+    public static function providerPreserveZeroFraction() : array
     {
         return [
             [1.0, false, '1'],
@@ -377,12 +365,11 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
-     * @dataProvider providerInvalidMaxDepth
-     *
      * @param int $maxDepth
      *
      * @return void
      */
+    #[DataProvider('providerInvalidMaxDepth')]
     public function testInvalidMaxDepth(int $maxDepth) : void
     {
         $encoder = new JsonEncoder();
@@ -394,7 +381,7 @@ class JsonEncoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerInvalidMaxDepth() : array
+    public static function providerInvalidMaxDepth() : array
     {
         return [
             [-1],
@@ -403,14 +390,13 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
-     * @dataProvider providerMaxDepth
-     *
      * @param mixed $value            The value to encode.
      * @param int    $maxDepth        The max depth to configure.
      * @param bool   $expectException Whether encode() should throw an exception.
      *
      * @return void
      */
+    #[DataProvider('providerMaxDepth')]
     public function testMaxDepth($value, int $maxDepth, bool $expectException) : void
     {
         $encoder = new JsonEncoder();
@@ -430,7 +416,7 @@ class JsonEncoderTest extends TestCase
     /**
      * @return array
      */
-    public function providerMaxDepth() : array
+    public static function providerMaxDepth() : array
     {
         $a = new \stdClass(); // depth 1
 
