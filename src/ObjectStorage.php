@@ -67,11 +67,7 @@ class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
     {
         $id = spl_object_id($object);
 
-        if (isset($this->data[$id])) {
-            return $this->data[$id];
-        }
-
-        return null;
+        return $this->data[$id] ?? null;
     }
 
     /**
