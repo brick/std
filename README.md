@@ -6,7 +6,7 @@ Brick\Std
 An attempt at a standard library for PHP.
 
 [![Build Status](https://github.com/brick/std/workflows/CI/badge.svg)](https://github.com/brick/std/actions)
-[![Coverage Status](https://coveralls.io/repos/github/brick/std/badge.svg?branch=master)](https://coveralls.io/github/brick/std?branch=master)
+<a href="https://codecov.io/github/brick/std"><img src="https://codecov.io/github/brick/std/graph/badge.svg"></a>
 [![Latest Stable Version](https://poser.pugx.org/brick/std/v/stable)](https://packagist.org/packages/brick/std)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
