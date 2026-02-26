@@ -158,7 +158,7 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
      *
      * @throws \UnexpectedValueException If the object cannot be found.
      */
-    public function offsetGet($object)
+    public function offsetGet(mixed $object): mixed
     {
         $id = spl_object_id($object);
 
@@ -178,7 +178,7 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
      *
      * @return void
      */
-    public function offsetSet($object, $value) : void
+    public function offsetSet(mixed $object, mixed $value) : void
     {
         $id = spl_object_id($object);
 
@@ -193,7 +193,7 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
      *
      * @return void
      */
-    public function offsetUnset($object) : void
+    public function offsetUnset(mixed $object) : void
     {
         $id = spl_object_id($object);
 
@@ -208,7 +208,7 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
      *
      * @return bool
      */
-    public function offsetExists($object) : bool
+    public function offsetExists(mixed $object) : bool
     {
         $id = spl_object_id($object);
 

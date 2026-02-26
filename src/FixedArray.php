@@ -100,7 +100,7 @@ final class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return bool
      */
-    public function offsetExists($offset) : bool
+    public function offsetExists(mixed $offset) : bool
     {
         return $this->splFixedArray->offsetExists($offset);
     }
@@ -114,7 +114,7 @@ final class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return mixed
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->splFixedArray->offsetGet($offset);
     }
@@ -129,7 +129,7 @@ final class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return void
      */
-    public function offsetSet($offset, $value) : void
+    public function offsetSet(mixed $offset, mixed $value) : void
     {
         $this->splFixedArray->offsetSet($offset, $value);
     }
@@ -143,7 +143,7 @@ final class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return void
      */
-    public function offsetUnset($offset) : void
+    public function offsetUnset(mixed $offset) : void
     {
         $this->splFixedArray->offsetUnset($offset);
     }
