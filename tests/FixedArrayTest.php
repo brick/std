@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Brick\Std\Tests;
 
 use Brick\Std\FixedArray;
-
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+
+use function iterator_to_array;
 
 /**
  * Unit tests for class FixedArray.
@@ -18,52 +20,42 @@ class FixedArrayTest extends TestCase
      * @param array $source      The source array.
      * @param bool  $saveIndexes Whether to use the save indexes functionality.
      * @param array $expected    The expected result array.
-     *
-     * @return void
      */
     #[DataProvider('providerFromArray')]
-    public function testFromArray(array $source, bool $saveIndexes, array $expected) : void
+    public function testFromArray(array $source, bool $saveIndexes, array $expected): void
     {
         $fixedArray = FixedArray::fromArray($source, $saveIndexes);
 
-        $this->assertInstanceOf(FixedArray::class, $fixedArray);
-        $this->assertSame($expected, iterator_to_array($fixedArray));
+        self::assertInstanceOf(FixedArray::class, $fixedArray);
+        self::assertSame($expected, iterator_to_array($fixedArray));
     }
 
-    /**
-     * @return array
-     */
-    public static function providerFromArray() : array
+    public static function providerFromArray(): array
     {
         return [
             [['2' => 'x', 4 => 'y'], false, ['x', 'y']],
-            [[2 => 'x', '4' => 'y'], true, [null, null, 'x', null, 'y']]
+            [[2 => 'x', '4' => 'y'], true, [null, null, 'x', null, 'y']],
         ];
     }
 
     /**
      * @param array $source      The source array.
      * @param bool  $saveIndexes Whether to use the save indexes functionality.
-     *
-     * @return void
      */
     #[DataProvider('providerFromInvalidArrayThrowsException')]
-    public function testFromInvalidArrayThrowsException(array $source, bool $saveIndexes) : void
+    public function testFromInvalidArrayThrowsException(array $source, bool $saveIndexes): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         FixedArray::fromArray($source);
     }
 
-    /**
-     * @return array
-     */
-    public static function providerFromInvalidArrayThrowsException() : array
+    public static function providerFromInvalidArrayThrowsException(): array
     {
         return [
             [['x' => 'y'], false],
             [['x' => 'y'], true],
             [[-1 => 'z'], false],
-            [[-1 => 'z'], true]
+            [[-1 => 'z'], true],
         ];
     }
 
@@ -72,22 +64,17 @@ class FixedArrayTest extends TestCase
      * @param int   $index1   The index of the first entry.
      * @param int   $index2   The index of the second entry.
      * @param array $expected The expected result array.
-     *
-     * @return void
      */
     #[DataProvider('providerSwap')]
-    public function testSwap(array $source, int $index1, int $index2, array $expected) : void
+    public function testSwap(array $source, int $index1, int $index2, array $expected): void
     {
         $fixedArray = FixedArray::fromArray($source);
 
         $fixedArray->swap($index1, $index2);
-        $this->assertSame($expected, iterator_to_array($fixedArray));
+        self::assertSame($expected, iterator_to_array($fixedArray));
     }
 
-    /**
-     * @return array
-     */
-    public static function providerSwap() : array
+    public static function providerSwap(): array
     {
         return [
             [['a', 'b', 'c'], 0, 0, ['a', 'b', 'c']],
@@ -98,7 +85,7 @@ class FixedArrayTest extends TestCase
             [['a', 'b', 'c'], 1, 2, ['a', 'c', 'b']],
             [['a', 'b', 'c'], 2, 0, ['c', 'b', 'a']],
             [['a', 'b', 'c'], 2, 1, ['a', 'c', 'b']],
-            [['a', 'b', 'c'], 2, 2, ['a', 'b', 'c']]
+            [['a', 'b', 'c'], 2, 2, ['a', 'b', 'c']],
         ];
     }
 
@@ -106,22 +93,17 @@ class FixedArrayTest extends TestCase
      * @param array $source   The source array.
      * @param int   $index    The index of the entry to shift.
      * @param array $expected The expected result array.
-     *
-     * @return void
      */
     #[DataProvider('providerShiftUp')]
-    public function testShiftUp(array $source, int $index, array $expected) : void
+    public function testShiftUp(array $source, int $index, array $expected): void
     {
         $fixedArray = FixedArray::fromArray($source);
 
         $fixedArray->shiftUp($index);
-        $this->assertSame($expected, iterator_to_array($fixedArray));
+        self::assertSame($expected, iterator_to_array($fixedArray));
     }
 
-    /**
-     * @return array
-     */
-    public static function providerShiftUp() : array
+    public static function providerShiftUp(): array
     {
         return [
             [['a', 'b', 'c', 'd', 'e'], 0, ['b', 'a', 'c', 'd', 'e']],
@@ -136,22 +118,17 @@ class FixedArrayTest extends TestCase
      * @param array $source   The source array.
      * @param int   $index    The index of the entry to shift.
      * @param array $expected The expected result array.
-     *
-     * @return void
      */
     #[DataProvider('providerShiftDown')]
-    public function testShiftDown(array $source, int $index, array $expected) : void
+    public function testShiftDown(array $source, int $index, array $expected): void
     {
         $fixedArray = FixedArray::fromArray($source);
 
         $fixedArray->shiftDown($index);
-        $this->assertSame($expected, iterator_to_array($fixedArray));
+        self::assertSame($expected, iterator_to_array($fixedArray));
     }
 
-    /**
-     * @return array
-     */
-    public static function providerShiftDown() : array
+    public static function providerShiftDown(): array
     {
         return [
             [['a', 'b', 'c', 'd', 'e'], 0, ['a', 'b', 'c', 'd', 'e']],
@@ -162,64 +139,64 @@ class FixedArrayTest extends TestCase
         ];
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $fixedArray = FixedArray::create(4);
 
-        $this->assertInstanceOf(FixedArray::class, $fixedArray);
-        $this->assertSame(4, $fixedArray->getSize());
+        self::assertInstanceOf(FixedArray::class, $fixedArray);
+        self::assertSame(4, $fixedArray->getSize());
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $expectedArray = [1, 2, 3, 4];
         $fixedArray = FixedArray::fromArray($expectedArray);
         $result = $fixedArray->toArray();
 
-        $this->assertSame($expectedArray, $result);
+        self::assertSame($expectedArray, $result);
     }
 
-    public function testGetSize()
+    public function testGetSize(): void
     {
         $fixedArray = FixedArray::fromArray([1, 2, 3, 4]);
 
-        $this->assertSame(4, $fixedArray->getSize());
+        self::assertSame(4, $fixedArray->getSize());
     }
 
-    public function testSetSize()
+    public function testSetSize(): void
     {
         $fixedArray = FixedArray::fromArray([1, 2, 3, 4]);
         $fixedArray->setSize(5);
 
-        $this->assertSame(5, $fixedArray->getSize());
+        self::assertSame(5, $fixedArray->getSize());
     }
 
     public static function offsetExistsProvider()
     {
         return [
             [
-                [1, 2, 3, 4], 0, true
+                [1, 2, 3, 4], 0, true,
             ],
             [
-                [1, 2, 3, 4], 5, false
+                [1, 2, 3, 4], 5, false,
             ],
         ];
     }
 
     #[DataProvider('offsetExistsProvider')]
-    public function testOffsetExists($array, $index, $expected)
+    public function testOffsetExists($array, $index, $expected): void
     {
         $fixedArray = FixedArray::fromArray($array);
 
-        $this->assertSame($expected, $fixedArray->offsetExists($index));
+        self::assertSame($expected, $fixedArray->offsetExists($index));
     }
 
-    public function testOffsetUnset()
+    public function testOffsetUnset(): void
     {
         $fixedArray = FixedArray::fromArray([1, 2, 3, 4]);
         $fixedArray->offsetUnset(3);
 
-        $this->assertFalse($fixedArray->offsetExists(3));
+        self::assertFalse($fixedArray->offsetExists(3));
     }
 
     /**
@@ -227,22 +204,17 @@ class FixedArrayTest extends TestCase
      * @param int   $index    The index of the entry.
      * @param int   $newIndex The index to shift the entry to.
      * @param array $expected The expected result array.
-     *
-     * @return void
      */
     #[DataProvider('providerShiftTo')]
-    public function testShiftTo(array $source, int $index, int $newIndex, array $expected) : void
+    public function testShiftTo(array $source, int $index, int $newIndex, array $expected): void
     {
         $fixedArray = FixedArray::fromArray($source);
 
         $fixedArray->shiftTo($index, $newIndex);
-        $this->assertSame($expected, iterator_to_array($fixedArray));
+        self::assertSame($expected, iterator_to_array($fixedArray));
     }
 
-    /**
-     * @return array
-     */
-    public static function providerShiftTo() : array
+    public static function providerShiftTo(): array
     {
         return [
             [['a', 'b', 'c', 'd', 'e'], 0, 0, ['a', 'b', 'c', 'd', 'e']],

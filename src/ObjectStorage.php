@@ -4,6 +4,16 @@ declare(strict_types=1);
 
 namespace Brick\Std;
 
+use ArrayAccess;
+use Countable;
+use IteratorAggregate;
+use Traversable;
+use UnexpectedValueException;
+
+use function array_values;
+use function count;
+use function spl_object_id;
+
 /**
  * Provides a map from objects to data.
  *
@@ -15,13 +25,12 @@ namespace Brick\Std;
  * @template K of object
  * @template V
  */
-final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAccess
+final class ObjectStorage implements Countable, IteratorAggregate, ArrayAccess
 {
     /**
      * The objects contained in the storage, as a map of object id to object.
      *
      * @psalm-var array<int, K>
-     *
      * @var array<int, object>
      */
     private array $objects = [];
@@ -30,7 +39,6 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
      * The data in the storage, as a map of object id to datum.
      *
      * @psalm-var array<int, V>
-     *
      * @var array<int, mixed>
      */
     private array $data = [];
@@ -38,13 +46,13 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
     /**
      * Returns whether this storage contains the given object.
      *
-     * @psalm-param K $object
-     *
      * @param object $object The object to test.
      *
      * @return bool True if this storage contains the object, false otherwise.
+     *
+     * @psalm-param K $object
      */
-    public function has(object $object) : bool
+    public function has(object $object): bool
     {
         $id = spl_object_id($object);
 
@@ -56,14 +64,14 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
      *
      * If the given object is not in the storage, or has no associated data, NULL is returned.
      *
-     * @psalm-param K $object
-     * @psalm-return V
-     *
      * @param object $object The object.
      *
      * @return mixed The stored data.
+     *
+     * @psalm-param K $object
+     * @psalm-return V
      */
-    public function get(object $object)
+    public function get(object $object): mixed
     {
         $id = spl_object_id($object);
 
@@ -73,15 +81,13 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
     /**
      * Stores an object with associated data.
      *
-     * @psalm-param K $object
-     * @psalm-param V $data
-     *
      * @param object $object The object.
      * @param mixed  $data   The data to store.
      *
-     * @return void
+     * @psalm-param K $object
+     * @psalm-param V $data
      */
-    public function set(object $object, mixed $data = null) : void
+    public function set(object $object, mixed $data = null): void
     {
         $id = spl_object_id($object);
 
@@ -94,13 +100,11 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
      *
      * If this storage does not contain the given object, this method does nothing.
      *
-     * @psalm-param K $object
-     *
      * @param object $object The object to remove.
      *
-     * @return void
+     * @psalm-param K $object
      */
-    public function remove(object $object) : void
+    public function remove(object $object): void
     {
         $id = spl_object_id($object);
 
@@ -112,10 +116,8 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
      * Returns the number of objects in this storage.
      *
      * This method is part of the Countable interface.
-     *
-     * @return int
      */
-    public function count() : int
+    public function count(): int
     {
         return count($this->objects);
     }
@@ -123,11 +125,11 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
     /**
      * Returns the objects contained in this storage.
      *
-     * @psalm-return V[]
-     *
      * @return object[]
+     *
+     * @psalm-return V[]
      */
-    public function getObjects() : array
+    public function getObjects(): array
     {
         return array_values($this->objects);
     }
@@ -137,11 +139,9 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
      *
      * This method is part of the IteratorAggregate interface.
      *
-     * @psalm-return \Traversable<K, V>
-     *
-     * @return \Traversable
+     * @psalm-return Traversable<K, V>
      */
-    public function getIterator() : \Traversable
+    public function getIterator(): Traversable
     {
         foreach ($this->objects as $id => $object) {
             yield $object => $this->data[$id];
@@ -149,14 +149,12 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
     }
 
     /**
-     * @psalm-param K $object
-     * @psalm-return V
-     *
      * @param object $object
      *
-     * @return mixed
+     * @throws UnexpectedValueException If the object cannot be found.
      *
-     * @throws \UnexpectedValueException If the object cannot be found.
+     * @psalm-param K $object
+     * @psalm-return V
      */
     public function offsetGet(mixed $object): mixed
     {
@@ -166,19 +164,16 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
             return $this->data[$id];
         }
 
-        throw new \UnexpectedValueException('Object not found.');
+        throw new UnexpectedValueException('Object not found.');
     }
 
     /**
+     * @param object $object
+     *
      * @psalm-param K $object
      * @psalm-param V $value
-     *
-     * @param object $object
-     * @param mixed  $value
-     *
-     * @return void
      */
-    public function offsetSet(mixed $object, mixed $value) : void
+    public function offsetSet(mixed $object, mixed $value): void
     {
         $id = spl_object_id($object);
 
@@ -187,13 +182,11 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
     }
 
     /**
-     * @psalm-param K $object
-     *
      * @param object $object
      *
-     * @return void
+     * @psalm-param K $object
      */
-    public function offsetUnset(mixed $object) : void
+    public function offsetUnset(mixed $object): void
     {
         $id = spl_object_id($object);
 
@@ -202,13 +195,11 @@ final class ObjectStorage implements \Countable, \IteratorAggregate, \ArrayAcces
     }
 
     /**
-     * @psalm-param K $object
-     *
      * @param object $object
      *
-     * @return bool
+     * @psalm-param K $object
      */
-    public function offsetExists(mixed $object) : bool
+    public function offsetExists(mixed $object): bool
     {
         $id = spl_object_id($object);
 

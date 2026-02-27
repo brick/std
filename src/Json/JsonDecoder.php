@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Brick\Std\Json;
 
+use function json_decode;
+
+use const JSON_BIGINT_AS_STRING;
+
 /**
  * Decodes data in JSON format.
  */
@@ -23,7 +27,7 @@ final class JsonDecoder extends Common
      *
      * @throws JsonException If the data cannot be decoded.
      */
-    public function decode(string $json)
+    public function decode(string $json): mixed
     {
         // max depth is 0+ for json_encode(), and 1+ for json_decode()
         $result = json_decode($json, $this->decodeObjectAsArray, $this->maxDepth + 1, $this->options);
@@ -35,12 +39,8 @@ final class JsonDecoder extends Common
 
     /**
      * Sets whether to decode objects as associative arrays. Defaults to `false`.
-     *
-     * @param bool $bool
-     *
-     * @return void
      */
-    public function decodeObjectAsArray(bool $bool) : void
+    public function decodeObjectAsArray(bool $bool): void
     {
         $this->decodeObjectAsArray = $bool;
     }
@@ -50,12 +50,8 @@ final class JsonDecoder extends Common
      *
      * * `true` decodes large integers as strings
      * * `false` decodes large integers as floats
-     *
-     * @param bool $bool
-     *
-     * @return void
      */
-    public function decodeBigIntAsString(bool $bool) : void
+    public function decodeBigIntAsString(bool $bool): void
     {
         $this->setOption(JSON_BIGINT_AS_STRING, $bool);
     }

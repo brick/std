@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Brick\Std\Json;
 
+use RuntimeException;
+
 /**
  * Exception thrown when an error occurs during encoding/decoding in JSON format.
  */
-final class JsonException extends \RuntimeException
+final class JsonException extends RuntimeException
 {
 }

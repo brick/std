@@ -6,47 +6,34 @@ namespace Brick\Std\Tests\Json;
 
 use Brick\Std\Json\JsonDecoder;
 use Brick\Std\Json\JsonException;
-
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 /**
  * Tests for class JsonDecoder.
  */
 class JsonDecoderTest extends TestCase
 {
-    /**
-     * @param string $json
-     * @param mixed  $expected
-     *
-     * @return void
-     */
     #[DataProvider('providerDecode')]
-    public function testDecode(string $json, mixed $expected) : void
+    public function testDecode(string $json, mixed $expected): void
     {
         $decoder = new JsonDecoder();
-        $this->assertSame($expected, $decoder->decode($json));
+        self::assertSame($expected, $decoder->decode($json));
     }
 
-    /**
-     * @return array
-     */
-    public static function providerDecode() : array
+    public static function providerDecode(): array
     {
         return [
             ['123', 123],
             ['"ABC"', 'ABC'],
-            ['["a", "b"]', ['a', 'b']]
+            ['["a", "b"]', ['a', 'b']],
         ];
     }
 
-    /**
-     * @param string $json
-     *
-     * @return void
-     */
     #[DataProvider('providerDecodeInvalidJson')]
-    public function testDecodeInvalidJson(string $json) : void
+    public function testDecodeInvalidJson(string $json): void
     {
         $decoder = new JsonDecoder();
 
@@ -54,10 +41,7 @@ class JsonDecoderTest extends TestCase
         $decoder->decode($json);
     }
 
-    /**
-     * @return array
-     */
-    public static function providerDecodeInvalidJson() : array
+    public static function providerDecodeInvalidJson(): array
     {
         return [
             [''],
@@ -66,30 +50,24 @@ class JsonDecoderTest extends TestCase
             [','],
             ['[],'],
             ['123,'],
-            ['"123']
+            ['"123'],
         ];
     }
 
-    /**
-     * @return void
-     */
-    public function testDecodeObjectsAsObjects() : void
+    public function testDecodeObjectsAsObjects(): void
     {
         $decoder = new JsonDecoder();
 
         $json = '{"a": "b", "c": "d"}';
 
-        $expected = new \stdClass;
+        $expected = new stdClass();
         $expected->a = 'b';
         $expected->c = 'd';
 
-        $this->assertEquals($expected, $decoder->decode($json));
+        self::assertEquals($expected, $decoder->decode($json));
     }
 
-    /**
-     * @return void
-     */
-    public function testDecodeObjectAsArray() : void
+    public function testDecodeObjectAsArray(): void
     {
         $decoder = new JsonDecoder();
         $decoder->decodeObjectAsArray(true);
@@ -98,13 +76,10 @@ class JsonDecoderTest extends TestCase
 
         $expected = ['a' => 'b', 'c' => 'd'];
 
-        $this->assertSame($expected, $decoder->decode($json));
+        self::assertSame($expected, $decoder->decode($json));
     }
 
-    /**
-     * @return void
-     */
-    public function testDecodeBigIntAsFloat() : void
+    public function testDecodeBigIntAsFloat(): void
     {
         $decoder = new JsonDecoder();
 
@@ -113,14 +88,11 @@ class JsonDecoderTest extends TestCase
         $expected = 1.2345678912345678E+53;
         $actual = $decoder->decode($json);
 
-        $this->assertIsFloat($actual);
-        $this->assertEquals($expected, $actual);
+        self::assertIsFloat($actual);
+        self::assertSame($expected, $actual);
     }
 
-    /**
-     * @return void
-     */
-    public function testDecodeBigIntAsString() : void
+    public function testDecodeBigIntAsString(): void
     {
         $decoder = new JsonDecoder();
         $decoder->decodeBigIntAsString(true);
@@ -128,31 +100,23 @@ class JsonDecoderTest extends TestCase
         $json = '123456789123456789123456789123456789123456789123456789';
         $expected = $json;
 
-        $this->assertSame($expected, $decoder->decode($json));
+        self::assertSame($expected, $decoder->decode($json));
     }
 
-    /**
-     * @param int $maxDepth
-     *
-     * @return void
-     */
     #[DataProvider('providerInvalidMaxDepth')]
-    public function testInvalidMaxDepth(int $maxDepth) : void
+    public function testInvalidMaxDepth(int $maxDepth): void
     {
         $decoder = new JsonDecoder();
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $decoder->setMaxDepth($maxDepth);
     }
 
-    /**
-     * @return array
-     */
-    public static function providerInvalidMaxDepth() : array
+    public static function providerInvalidMaxDepth(): array
     {
         return [
             [-1],
-            [0x7fffffff]
+            [0x7fffffff],
         ];
     }
 
@@ -160,11 +124,9 @@ class JsonDecoderTest extends TestCase
      * @param string $json            The JSON string to encode.
      * @param int    $maxDepth        The max depth to configure.
      * @param bool   $expectException Whether decode() should throw an exception.
-     *
-     * @return void
      */
     #[DataProvider('providerMaxDepth')]
-    public function testMaxDepth(string $json, int $maxDepth, bool $expectException) : void
+    public function testMaxDepth(string $json, int $maxDepth, bool $expectException): void
     {
         $decoder = new JsonDecoder();
         $decoder->setMaxDepth($maxDepth);
@@ -180,10 +142,7 @@ class JsonDecoderTest extends TestCase
         }
     }
 
-    /**
-     * @return array
-     */
-    public static function providerMaxDepth() : array
+    public static function providerMaxDepth(): array
     {
         return [
             ['123', 0, false],

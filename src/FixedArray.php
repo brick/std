@@ -4,74 +4,59 @@ declare(strict_types=1);
 
 namespace Brick\Std;
 
+use ArrayAccess;
+use Countable;
+use InvalidArgumentException;
+use IteratorAggregate;
+use SplFixedArray;
+use Traversable;
+
 /**
  * An array of fixed length.
  *
  * This class internally wraps SplFixedArray.
  */
-final class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
+final class FixedArray implements Countable, IteratorAggregate, ArrayAccess
 {
-    private \SplFixedArray $splFixedArray;
+    private SplFixedArray $splFixedArray;
 
     /**
      * Class constructor.
-     *
-     * @param \SplFixedArray $fixedArray
      */
-    public function __construct(\SplFixedArray $fixedArray)
+    public function __construct(SplFixedArray $fixedArray)
     {
         $this->splFixedArray = $fixedArray;
     }
 
-    /**
-     * @param int $size
-     *
-     * @return FixedArray
-     */
-    public static function create(int $size = 0) : FixedArray
+    public static function create(int $size = 0): FixedArray
     {
-        return new FixedArray(new \SplFixedArray($size));
+        return new FixedArray(new SplFixedArray($size));
     }
 
     /**
      * Creates a FixedArray from a PHP array.
      *
-     * @param array $array
-     * @param bool  $saveIndexes
-     *
-     * @return FixedArray
-     *
-     * @throws \InvalidArgumentException If the array contains non-numeric or negative indexes.
+     * @throws InvalidArgumentException If the array contains non-numeric or negative indexes.
      */
-    public static function fromArray(array $array, bool $saveIndexes = true) : FixedArray
+    public static function fromArray(array $array, bool $saveIndexes = true): FixedArray
     {
-        return new FixedArray(\SplFixedArray::fromArray($array, $saveIndexes));
+        return new FixedArray(SplFixedArray::fromArray($array, $saveIndexes));
     }
 
-    /**
-     * @return array
-     */
-    public function toArray() : array
+    public function toArray(): array
     {
         return $this->splFixedArray->toArray();
     }
 
     /**
      * Returns the size of the array.
-     *
-     * @return int
      */
-    public function getSize() : int
+    public function getSize(): int
     {
         return $this->splFixedArray->getSize();
     }
 
-    /**
-     * @param int $size
-     *
-     * @return void
-     */
-    public function setSize(int $size) : void
+    public function setSize(int $size): void
     {
         $this->splFixedArray->setSize($size);
     }
@@ -80,10 +65,8 @@ final class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      * Returns the size of the array.
      *
      * This is an alias of getSize(), required by interface Countable.
-     *
-     * @return int
      */
-    public function count() : int
+    public function count(): int
     {
         return $this->splFixedArray->count();
     }
@@ -94,10 +77,8 @@ final class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      * Required by interface ArrayAccess.
      *
      * @param int $offset
-     *
-     * @return bool
      */
-    public function offsetExists(mixed $offset) : bool
+    public function offsetExists(mixed $offset): bool
     {
         return $this->splFixedArray->offsetExists($offset);
     }
@@ -108,8 +89,6 @@ final class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      * Required by interface ArrayAccess.
      *
      * @param int $offset
-     *
-     * @return mixed
      */
     public function offsetGet(mixed $offset): mixed
     {
@@ -121,12 +100,9 @@ final class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * Required by interface ArrayAccess.
      *
-     * @param int   $offset
-     * @param mixed $value
-     *
-     * @return void
+     * @param int $offset
      */
-    public function offsetSet(mixed $offset, mixed $value) : void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->splFixedArray->offsetSet($offset, $value);
     }
@@ -137,10 +113,8 @@ final class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      * Required by interface ArrayAccess.
      *
      * @param int $offset
-     *
-     * @return void
      */
-    public function offsetUnset(mixed $offset) : void
+    public function offsetUnset(mixed $offset): void
     {
         $this->splFixedArray->offsetUnset($offset);
     }
@@ -149,10 +123,8 @@ final class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      * Returns an iterator for this fixed array.
      *
      * Required by interface IteratorAggregate.
-     *
-     * @return \Traversable
      */
-    public function getIterator() : \Traversable
+    public function getIterator(): Traversable
     {
         return $this->splFixedArray;
     }
@@ -162,10 +134,8 @@ final class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @param int $index1 The index of the first entry.
      * @param int $index2 The index of the second entry.
-     *
-     * @return void
      */
-    public function swap(int $index1, int $index2) : void
+    public function swap(int $index1, int $index2): void
     {
         if ($index1 !== $index2) {
             $value = $this[$index1];
@@ -179,12 +149,8 @@ final class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * This will effectively swap this entry with the next entry.
      * If this entry is the last one in the array, this method will do nothing.
-     *
-     * @param int $index
-     *
-     * @return void
      */
-    public function shiftUp(int $index) : void
+    public function shiftUp(int $index): void
     {
         if ($index + 1 === $this->count()) {
             return;
@@ -198,12 +164,8 @@ final class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * This will effectively swap this entry with the previous entry.
      * If the entry is the first one in the array, this method will do nothing.
-     *
-     * @param int $index
-     *
-     * @return void
      */
-    public function shiftDown(int $index) : void
+    public function shiftDown(int $index): void
     {
         if ($index === 0) {
             return;
@@ -217,10 +179,8 @@ final class FixedArray implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @param int $index    The index of the entry.
      * @param int $newIndex The index to shift the entry to.
-     *
-     * @return void
      */
-    public function shiftTo(int $index, int $newIndex) : void
+    public function shiftTo(int $index, int $newIndex): void
     {
         while ($index > $newIndex) {
             $this->shiftDown($index);
