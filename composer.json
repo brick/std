@@ -13,8 +13,7 @@
   "require-dev": {
     "ext-curl": "*",
     "ext-json": "*",
-    "phpunit/phpunit": "^11.5",
-    "php-coveralls/php-coveralls": "^2.2"
+    "phpunit/phpunit": "^11.5"
   },
   "suggest": {
     "ext-json": "Required to use JsonEncoder and JsonDecoder"
