@@ -4,13 +4,27 @@ declare(strict_types=1);
 
 namespace Brick\Std\Iterator;
 
+use Generator;
+use InvalidArgumentException;
+use IteratorAggregate;
+use RuntimeException;
+
+use function array_combine;
+use function array_pad;
+use function array_slice;
+use function count;
+use function fgetcsv;
+use function fopen;
+use function is_resource;
+use function sprintf;
+
 /**
  * Iterator to read CSV files.
  *
  * Supports CSV files with & without header rows.
  * Skips empty lines, apart from the header row which must be the first line in the file.
  */
-final class CsvFileIterator implements \IteratorAggregate
+final class CsvFileIterator implements IteratorAggregate
 {
     /**
      * The file pointer resource.
@@ -63,80 +77,72 @@ final class CsvFileIterator implements \IteratorAggregate
     /**
      * Class constructor.
      *
-     * @param string|resource $file      The CSV file path, or an open file pointer.
+     * @param resource|string $file      The CSV file path, or an open file pointer.
      *                                   If a file pointer is given, it must be at the beginning of the file.
      * @param bool            $headerRow Whether the first row contains the column names.
      * @param string          $delimiter The field delimiter character.
      * @param string          $enclosure The field enclosure character.
      * @param string          $escape    The escape character.
      *
-     * @throws \InvalidArgumentException If the file cannot be opened.
+     * @throws InvalidArgumentException If the file cannot be opened.
      */
     public function __construct($file, bool $headerRow = false, string $delimiter = ',', string $enclosure = '"', string $escape = '\\')
     {
         if (is_resource($file)) {
             $this->handle = $file;
         } else {
-            $this->handle = @ fopen($file, 'rb');
+            $this->handle = @fopen($file, 'rb');
 
             if ($this->handle === false) {
-                throw new \InvalidArgumentException('Cannot open file for reading: ' . $file);
+                throw new InvalidArgumentException('Cannot open file for reading: ' . $file);
             }
         }
 
         $this->headerRow = $headerRow;
         $this->delimiter = $delimiter;
         $this->enclosure = $enclosure;
-        $this->escape    = $escape;
+        $this->escape = $escape;
     }
 
-    /**
-     * @return void
-     */
-    public function allowLessColumns() : void
+    public function allowLessColumns(): void
     {
         if (! $this->headerRow) {
-            throw new \RuntimeException('This method is only available when using header rows.');
+            throw new RuntimeException('This method is only available when using header rows.');
         }
 
         $this->allowLessColumns = true;
     }
 
-    /**
-     * @return void
-     */
-    public function allowMoreColumns() : void
+    public function allowMoreColumns(): void
     {
         if (! $this->headerRow) {
-            throw new \RuntimeException('This method is only available when using header rows.');
+            throw new RuntimeException('This method is only available when using header rows.');
         }
 
         $this->allowMoreColumns = true;
     }
 
     /**
-     * @return \Generator
-     *
-     * @throws \RuntimeException If a header row is configured but the header row is empty.
+     * @throws RuntimeException If a header row is configured but the header row is empty.
      */
-    public function getIterator() : \Generator
+    public function getIterator(): Generator
     {
         $columnNames = [];
         $columnCount = 0;
-        $startLine   = 1;
+        $startLine = 1;
 
         if ($this->headerRow) {
             $columnNames = $this->readRow();
 
             if ($columnNames === null) {
-                throw new \RuntimeException('Expected header row, found EOF.');
+                throw new RuntimeException('Expected header row, found EOF.');
             }
 
             $this->checkColumnNames($columnNames);
             $columnCount = count($columnNames);
 
             if ($columnCount === 0) {
-                throw new \RuntimeException('Empty header line.');
+                throw new RuntimeException('Empty header line.');
             }
 
             $startLine = 2;
@@ -163,11 +169,11 @@ final class CsvFileIterator implements \IteratorAggregate
                     } elseif ($rowColumnCount > $columnCount && $this->allowMoreColumns) {
                         $row = array_slice($row, 0, $columnCount);
                     } else {
-                        throw new \RuntimeException(sprintf(
+                        throw new RuntimeException(sprintf(
                             'Expected %d columns on line %d, found %d.',
                             $columnCount,
                             $line,
-                            $rowColumnCount
+                            $rowColumnCount,
                         ));
                     }
                 }
@@ -183,10 +189,8 @@ final class CsvFileIterator implements \IteratorAggregate
      * Checks column names for empty names & duplicates.
      *
      * @param string[] $columnNames
-     *
-     * @return void
      */
-    private function checkColumnNames(array $columnNames) : void
+    private function checkColumnNames(array $columnNames): void
     {
         $processedNames = [];
 
@@ -194,11 +198,11 @@ final class CsvFileIterator implements \IteratorAggregate
             $columnNumber = $key + 1;
 
             if (isset($processedNames[$columnName])) {
-                throw new \RuntimeException(sprintf(
+                throw new RuntimeException(sprintf(
                     'Duplicate column name "%s" at columns %d and %d.',
                     $columnName,
                     $processedNames[$columnName],
-                    $columnNumber
+                    $columnNumber,
                 ));
             }
 
@@ -212,17 +216,15 @@ final class CsvFileIterator implements \IteratorAggregate
      * If EOF is reached, NULL is returned.
      * If the line is empty, an empty array is returned.
      *
-     * @return array|null
-     *
-     * @throws \RuntimeException If the file handle is invalid.
+     * @throws RuntimeException If the file handle is invalid.
      */
-    private function readRow() : ?array
+    private function readRow(): ?array
     {
-        $row = @ fgetcsv($this->handle, 0, $this->delimiter, $this->enclosure, $this->escape);
+        $row = @fgetcsv($this->handle, 0, $this->delimiter, $this->enclosure, $this->escape);
 
         // fgetcsv() returns NULL if an invalid handle is supplied...
         if ($row === null) {
-            throw new \RuntimeException('Invalid file handle.');
+            throw new RuntimeException('Invalid file handle.');
         }
 
         // ...or FALSE on other errors, including end of file.

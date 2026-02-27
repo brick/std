@@ -5,6 +5,19 @@ declare(strict_types=1);
 namespace Brick\Std\Io;
 
 use Brick\Std\Internal\ErrorCatcher;
+use ErrorException;
+
+use function fclose;
+use function feof;
+use function fgets;
+use function flock;
+use function fopen;
+use function fread;
+use function fwrite;
+
+use const LOCK_EX;
+use const LOCK_SH;
+use const LOCK_UN;
 
 final class FileStream
 {
@@ -21,9 +34,6 @@ final class FileStream
     /**
      * FileStream constructor.
      *
-     * @param string        $filename
-     * @param string        $mode
-     * @param bool          $useIncludePath
      * @param resource|null $context
      *
      * @throws IoException If an error occurs.
@@ -31,14 +41,14 @@ final class FileStream
     public function __construct(string $filename, string $mode, bool $useIncludePath = false, $context = null)
     {
         try {
-            $handle = ErrorCatcher::run(static function() use ($filename, $mode, $useIncludePath, $context) {
+            $handle = ErrorCatcher::run(static function () use ($filename, $mode, $useIncludePath, $context) {
                 if ($context === null) {
                     return fopen($filename, $mode, $useIncludePath);
                 } else {
                     return fopen($filename, $mode, $useIncludePath, $context);
                 }
             });
-        } catch (\ErrorException $e) {
+        } catch (ErrorException $e) {
             throw new IoException($e->getMessage(), 0, $e);
         }
 
@@ -50,31 +60,17 @@ final class FileStream
     }
 
     /**
-     * FileStream destructor.
-     */
-    public function __destruct()
-    {
-        try {
-            $this->close();
-        } catch (IoException) {
-            // Fail silently. Destructor must not throw an exception.
-        }
-    }
-
-    /**
-     * @return bool
-     *
      * @throws IoException If an error occurs.
      */
-    public function eof() : bool
+    public function eof(): bool
     {
         if ($this->closed) {
             throw new IoException('The stream is closed.');
         }
 
         try {
-            return ErrorCatcher::run(fn() => feof($this->handle));
-        } catch (\ErrorException $e) {
+            return ErrorCatcher::run(fn () => feof($this->handle));
+        } catch (ErrorException $e) {
             throw new IoException($e->getMessage(), 0, $e);
         }
     }
@@ -89,21 +85,21 @@ final class FileStream
      *
      * @throws IoException If an error occurs.
      */
-    public function gets(?int $maxLength = null) : string
+    public function gets(?int $maxLength = null): string
     {
         if ($this->closed) {
             throw new IoException('The stream is closed.');
         }
 
         try {
-            $data = ErrorCatcher::run(function() use ($maxLength) {
+            $data = ErrorCatcher::run(function () use ($maxLength) {
                 if ($maxLength === null) {
                     return fgets($this->handle);
                 } else {
                     return fgets($this->handle, $maxLength + 1);
                 }
             });
-        } catch (\ErrorException $e) {
+        } catch (ErrorException $e) {
             throw new IoException($e->getMessage(), 0, $e);
         }
 
@@ -123,15 +119,15 @@ final class FileStream
      *
      * @throws IoException If an error occurs.
      */
-    public function read(int $maxLength) : string
+    public function read(int $maxLength): string
     {
         if ($this->closed) {
             throw new IoException('The stream is closed.');
         }
 
         try {
-            $data = ErrorCatcher::run(fn() => fread($this->handle, $maxLength));
-        } catch (\ErrorException $e) {
+            $data = ErrorCatcher::run(fn () => fread($this->handle, $maxLength));
+        } catch (ErrorException $e) {
             throw new IoException($e->getMessage(), 0, $e);
         }
 
@@ -147,19 +143,17 @@ final class FileStream
      *
      * @param string $data The data to write.
      *
-     * @return void
-     *
      * @throws IoException If an error occurs.
      */
-    public function write(string $data) : void
+    public function write(string $data): void
     {
         if ($this->closed) {
             throw new IoException('The stream is closed.');
         }
 
         try {
-            $result = ErrorCatcher::run(fn() => fwrite($this->handle, $data));
-        } catch (\ErrorException $e) {
+            $result = ErrorCatcher::run(fn () => fwrite($this->handle, $data));
+        } catch (ErrorException $e) {
             throw new IoException($e->getMessage(), 0, $e);
         }
 
@@ -171,21 +165,17 @@ final class FileStream
     /**
      * Obtains an advisory lock.
      *
-     * @param bool $exclusive
-     *
-     * @return void
-     *
      * @throws IoException If an error occurs.
      */
-    public function lock(bool $exclusive) : void
+    public function lock(bool $exclusive): void
     {
         if ($this->closed) {
             throw new IoException('The stream is closed.');
         }
 
         try {
-            $result = ErrorCatcher::run(fn() => flock($this->handle, $exclusive ? LOCK_EX : LOCK_SH));
-        } catch (\ErrorException $e) {
+            $result = ErrorCatcher::run(fn () => flock($this->handle, $exclusive ? LOCK_EX : LOCK_SH));
+        } catch (ErrorException $e) {
             throw new IoException($e->getMessage(), 0, $e);
         }
 
@@ -197,19 +187,17 @@ final class FileStream
     /**
      * Releases an advisory lock.
      *
-     * @return void
-     *
      * @throws IoException
      */
-    public function unlock() : void
+    public function unlock(): void
     {
         if ($this->closed) {
             throw new IoException('The stream is closed.');
         }
 
         try {
-            $result = ErrorCatcher::run(fn() => flock($this->handle, LOCK_UN));
-        } catch (\ErrorException $e) {
+            $result = ErrorCatcher::run(fn () => flock($this->handle, LOCK_UN));
+        } catch (ErrorException $e) {
             throw new IoException($e->getMessage(), 0, $e);
         }
 
@@ -219,19 +207,17 @@ final class FileStream
     }
 
     /**
-     * @return void
-     *
      * @throws IoException If an error occurs.
      */
-    public function close() : void
+    public function close(): void
     {
         if ($this->closed) {
             throw new IoException('The stream has already been closed.');
         }
 
         try {
-            $result = ErrorCatcher::run(fn() => fclose($this->handle));
-        } catch (\ErrorException $e) {
+            $result = ErrorCatcher::run(fn () => fclose($this->handle));
+        } catch (ErrorException $e) {
             throw new IoException($e->getMessage(), 0, $e);
         }
 
@@ -240,5 +226,17 @@ final class FileStream
         }
 
         $this->closed = true;
+    }
+
+    /**
+     * FileStream destructor.
+     */
+    public function __destruct()
+    {
+        try {
+            $this->close();
+        } catch (IoException) {
+            // Fail silently. Destructor must not throw an exception.
+        }
     }
 }

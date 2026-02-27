@@ -5,210 +5,144 @@ declare(strict_types=1);
 namespace Brick\Std\Tests;
 
 use Brick\Std\ObjectStorage;
-
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
+use stdClass;
+use UnexpectedValueException;
+
+use function array_search;
 
 /**
  * Unit tests for class ObjectStorage.
  */
 class ObjectStorageTest extends TestCase
 {
-    /**
-     * @var object
-     */
-    private static $a;
+    private static object $a;
+
+    private static object $b;
 
     /**
-     * @var object
+     * {@inheritDoc}
      */
-    private static $b;
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
-        self::$a = new \stdClass();
-        self::$b = new \stdClass();
+        self::$a = new stdClass();
+        self::$b = new stdClass();
     }
 
-    /**
-     * @param ObjectStorage $storage The storage to test.
-     * @param int           $count   The expected count.
-     * @param array         $tests   An array of arrays as [object, isContained, expectedValue] tests.
-     *
-     * @return void
-     */
-    private function assertStorage(ObjectStorage $storage, int $count, array $tests) : void
-    {
-        $this->assertCount($count, $storage);
-
-        foreach ($tests as [$object, $isContained, $expectedValue]) {
-            $this->assertSame($isContained, $storage->has($object));
-            $this->assertSame($expectedValue, $storage->get($object));
-
-            $this->assertSame($isContained, isset($storage[$object]));
-
-            try {
-                $this->assertSame($expectedValue, $storage[$object]);
-            } catch (\UnexpectedValueException $e) {
-                if ($expectedValue !== null) {
-                    throw $e;
-                }
-            }
-        }
-    }
-
-    /**
-     * @return ObjectStorage
-     */
-    public function testEmptyStorage() : ObjectStorage
+    public function testEmptyStorage(): ObjectStorage
     {
         $storage = new ObjectStorage();
 
         $this->assertStorage($storage, 0, [
             [self::$a, false, null],
-            [self::$b, false, null]
+            [self::$b, false, null],
         ]);
 
         return $storage;
     }
 
-    /**
-     * @param ObjectStorage $storage
-     *
-     * @return ObjectStorage
-     */
     #[Depends('testEmptyStorage')]
-    public function testSetFirstObject(ObjectStorage $storage) : ObjectStorage
+    public function testSetFirstObject(ObjectStorage $storage): ObjectStorage
     {
         $storage->set(self::$a, 'x');
 
         $this->assertStorage($storage, 1, [
             [self::$a, true, 'x'],
-            [self::$b, false, null]
+            [self::$b, false, null],
         ]);
 
         return $storage;
     }
 
-    /**
-     * @param ObjectStorage $storage
-     *
-     * @return ObjectStorage
-     */
     #[Depends('testSetFirstObject')]
-    public function testSetSecondObject(ObjectStorage $storage) : ObjectStorage
+    public function testSetSecondObject(ObjectStorage $storage): ObjectStorage
     {
         $storage[self::$b] = 'y';
 
         $this->assertStorage($storage, 2, [
             [self::$a, true, 'x'],
-            [self::$b, true, 'y']
+            [self::$b, true, 'y'],
         ]);
 
         return $storage;
     }
 
-    public function testGetObjects()
+    public function testGetObjects(): void
     {
         $storage = new ObjectStorage();
 
-        $a = new \stdClass();
-        $b = new \stdClass();
-        $c = new \stdClass();
+        $a = new stdClass();
+        $b = new stdClass();
+        $c = new stdClass();
 
         $objects = [$a, $b, $c];
-        foreach($objects as $value) {
+        foreach ($objects as $value) {
             $storage->set($value, null);
         }
 
         $result = $storage->getObjects();
 
-        $this->assertSame($objects, $result);
+        self::assertSame($objects, $result);
     }
 
-    /**
-     * @param ObjectStorage $storage
-     *
-     * @return ObjectStorage
-     */
     #[Depends('testSetSecondObject')]
-    public function testRemoveUnknownObjectDoesNothing(ObjectStorage $storage) : ObjectStorage
+    public function testRemoveUnknownObjectDoesNothing(ObjectStorage $storage): ObjectStorage
     {
-        $storage->remove(new \stdClass());
+        $storage->remove(new stdClass());
 
         $this->assertStorage($storage, 2, [
             [self::$a, true, 'x'],
-            [self::$b, true, 'y']
+            [self::$b, true, 'y'],
         ]);
 
         return $storage;
     }
 
-    /**
-     * @param ObjectStorage $storage
-     *
-     * @return ObjectStorage
-     */
     #[Depends('testRemoveUnknownObjectDoesNothing')]
-    public function testOverwriteFirstObjectWithNull(ObjectStorage $storage) : ObjectStorage
+    public function testOverwriteFirstObjectWithNull(ObjectStorage $storage): ObjectStorage
     {
         $storage->set(self::$a, null);
 
         $this->assertStorage($storage, 2, [
             [self::$a, true, null],
-            [self::$b, true, 'y']
+            [self::$b, true, 'y'],
         ]);
 
         return $storage;
     }
 
-    /**
-     * @param ObjectStorage $storage
-     *
-     * @return ObjectStorage
-     */
     #[Depends('testOverwriteFirstObjectWithNull')]
-    public function testRemoveSecondObject(ObjectStorage $storage) : ObjectStorage
+    public function testRemoveSecondObject(ObjectStorage $storage): ObjectStorage
     {
         unset($storage[self::$b]);
 
         $this->assertStorage($storage, 1, [
             [self::$a, true, null],
-            [self::$b, false, null]
+            [self::$b, false, null],
         ]);
 
         return $storage;
     }
 
-    /**
-     * @param ObjectStorage $storage
-     *
-     * @return void
-     */
     #[Depends('testRemoveSecondObject')]
-    public function testRemoveFirstObject(ObjectStorage $storage) : void
+    public function testRemoveFirstObject(ObjectStorage $storage): void
     {
         $storage->remove(self::$a);
 
         $this->assertStorage($storage, 0, [
             [self::$a, false, null],
-            [self::$b, false, null]
+            [self::$b, false, null],
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testIterator() : void
+    public function testIterator(): void
     {
         $storage = new ObjectStorage();
 
-        $a = new \stdClass();
-        $b = new \stdClass();
-        $c = new \stdClass();
+        $a = new stdClass();
+        $b = new stdClass();
+        $c = new stdClass();
 
         $objects = [$a, $b, $c];
         $values = ['x', 'y', 'z'];
@@ -218,12 +152,37 @@ class ObjectStorageTest extends TestCase
         }
 
         foreach ($storage as $object => $value) {
-            $this->assertInstanceOf(\stdClass::class, $object);
+            self::assertInstanceOf(stdClass::class, $object);
 
             $key = array_search($object, $objects, true);
-            $this->assertNotSame(false, $key);
+            self::assertNotSame(false, $key);
 
-            $this->assertSame($value, $values[$key]);
+            self::assertSame($value, $values[$key]);
+        }
+    }
+
+    /**
+     * @param ObjectStorage $storage The storage to test.
+     * @param int           $count   The expected count.
+     * @param array         $tests   An array of arrays as [object, isContained, expectedValue] tests.
+     */
+    private function assertStorage(ObjectStorage $storage, int $count, array $tests): void
+    {
+        self::assertCount($count, $storage);
+
+        foreach ($tests as [$object, $isContained, $expectedValue]) {
+            self::assertSame($isContained, $storage->has($object));
+            self::assertSame($expectedValue, $storage->get($object));
+
+            self::assertSame($isContained, isset($storage[$object]));
+
+            try {
+                self::assertSame($expectedValue, $storage[$object]);
+            } catch (UnexpectedValueException $e) {
+                if ($expectedValue !== null) {
+                    throw $e;
+                }
+            }
         }
     }
 }
