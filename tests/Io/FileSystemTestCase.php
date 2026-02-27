@@ -5,6 +5,16 @@ declare(strict_types=1);
 namespace Brick\Std\Tests\Io;
 
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
+
+use function file_get_contents;
+use function file_put_contents;
+use function is_dir;
+use function is_file;
+use function is_link;
+use function mkdir;
+use function symlink;
+use function touch;
 
 /**
  * Base class for FileSystemTest.
@@ -14,103 +24,60 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class FileSystemTestCase extends TestCase
 {
-    /**
-     * @param string $path
-     * @param string $expected
-     *
-     * @return void
-     */
-    protected function assertFileContains(string $path, string $expected) : void
+    protected function assertFileContains(string $path, string $expected): void
     {
-        $actual = @ file_get_contents($path);
-        $this->assertSame($expected, $actual);
+        $actual = @file_get_contents($path);
+        self::assertSame($expected, $actual);
     }
 
-    /**
-     * @param string $path
-     *
-     * @return void
-     */
-    protected function assertIsFile(string $path) : void
+    protected function assertIsFile(string $path): void
     {
-        $this->assertTrue(@ is_file($path));
+        self::assertTrue(@is_file($path));
     }
 
-    /**
-     * @param string $path
-     *
-     * @return void
-     */
-    protected function assertIsDirectory(string $path) : void
+    protected function assertIsDirectory(string $path): void
     {
-        $this->assertTrue(@ is_dir($path));
+        self::assertTrue(@is_dir($path));
     }
 
-    /**
-     * @param string $path
-     *
-     * @return void
-     */
-    protected function assertIsSymbolicLink(string $path) : void
+    protected function assertIsSymbolicLink(string $path): void
     {
-        $this->assertTrue(@ is_link($path));
+        self::assertTrue(@is_link($path));
     }
 
-    /**
-     * @param string $path
-     * @param string $data
-     *
-     * @return void
-     */
-    protected function file_put_contents(string $path, string $data) : void
+    protected function file_put_contents(string $path, string $data): void
     {
-        $result = @ file_put_contents($path, $data);
+        $result = @file_put_contents($path, $data);
 
         if ($result === false) {
-            throw new \RuntimeException('Could not write ' . $path);
+            throw new RuntimeException('Could not write ' . $path);
         }
     }
 
-    /**
-     * @param string $path
-     *
-     * @return void
-     */
-    protected function mkdir(string $path) : void
+    protected function mkdir(string $path): void
     {
-        $result = @ mkdir($path);
+        $result = @mkdir($path);
 
         if ($result !== true) {
-            throw new \RuntimeException('Could not create directory ' . $path);
+            throw new RuntimeException('Could not create directory ' . $path);
         }
     }
 
-    /**
-     * @param string $target
-     * @param string $link
-     *
-     * @return void
-     */
-    protected function symlink(string $target, string $link) : void
+    protected function symlink(string $target, string $link): void
     {
         $result = symlink($target, $link);
 
         if ($result !== true) {
-            throw new \RuntimeException('Could not create symlink ' . $link);
+            throw new RuntimeException('Could not create symlink ' . $link);
         }
     }
 
-    /**
-     * @param string $path
-     *
-     * @return void
-     */
-    protected function touch(string $path) : void
+    protected function touch(string $path): void
     {
-        $result = @ touch($path);
+        $result = @touch($path);
 
         if ($result !== true) {
-            throw new \RuntimeException('Could not touch ' . $path);
+            throw new RuntimeException('Could not touch ' . $path);
         }
     }
 }

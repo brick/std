@@ -8,12 +8,12 @@
   ],
   "license": "MIT",
   "require": {
-    "php": "^7.3 || ^8.0"
+    "php": "^8.2"
   },
   "require-dev": {
     "ext-curl": "*",
     "ext-json": "*",
-    "phpunit/phpunit": "^9.0"
+    "phpunit/phpunit": "^11.5"
   },
   "suggest": {
     "ext-json": "Required to use JsonEncoder and JsonDecoder"

@@ -5,6 +5,26 @@ declare(strict_types=1);
 namespace Brick\Std\Io;
 
 use Brick\Std\Internal\ErrorCatcher;
+use ErrorException;
+
+use function copy;
+use function file_exists;
+use function file_get_contents;
+use function file_put_contents;
+use function is_dir;
+use function is_file;
+use function is_link;
+use function link;
+use function mkdir;
+use function readlink;
+use function realpath;
+use function rename;
+use function rmdir;
+use function symlink;
+use function unlink;
+
+use const FILE_APPEND;
+use const LOCK_EX;
 
 final class FileSystem
 {
@@ -17,23 +37,19 @@ final class FileSystem
      * @param string $source      The source path.
      * @param string $destination The destination path.
      *
-     * @return void
-     *
      * @throws IoException If an error occurs.
      */
-    public static function copy(string $source, string $destination) : void
+    public static function copy(string $source, string $destination): void
     {
         $exception = null;
 
         try {
-            $success = ErrorCatcher::run(static function() use ($source, $destination) {
-                return copy($source, $destination);
-            });
+            $success = ErrorCatcher::run(static fn () => copy($source, $destination));
 
             if ($success === true) {
                 return;
             }
-        } catch (\ErrorException $e) {
+        } catch (ErrorException $e) {
             $exception = $e;
         }
 
@@ -49,23 +65,19 @@ final class FileSystem
      * @param string $source      The source path.
      * @param string $destination The destination path.
      *
-     * @return void
-     *
      * @throws IoException If an error occurs.
      */
-    public static function move(string $source, string $destination) : void
+    public static function move(string $source, string $destination): void
     {
         $exception = null;
 
         try {
-            $success = ErrorCatcher::run(static function() use ($source, $destination) {
-                return rename($source, $destination);
-            });
+            $success = ErrorCatcher::run(static fn () => rename($source, $destination));
 
             if ($success === true) {
                 return;
             }
-        } catch (\ErrorException $e) {
+        } catch (ErrorException $e) {
             $exception = $e;
         }
 
@@ -77,18 +89,14 @@ final class FileSystem
      *
      * If the target is a directory, it must be empty.
      *
-     * @param string $path
-     *
-     * @return void
-     *
      * @throws IoException If an error occurs.
      */
-    public static function delete(string $path) : void
+    public static function delete(string $path): void
     {
         $exception = null;
 
         try {
-            $success = ErrorCatcher::run(static function() use ($path) {
+            $success = ErrorCatcher::run(static function () use ($path) {
                 if (is_dir($path)) {
                     return rmdir($path);
                 }
@@ -99,7 +107,7 @@ final class FileSystem
             if ($success === true) {
                 return;
             }
-        } catch (\ErrorException $e) {
+        } catch (ErrorException $e) {
             $exception = $e;
         }
 
@@ -114,23 +122,19 @@ final class FileSystem
      * @param string $path The directory path.
      * @param int    $mode The access mode. The mode is 0777 by default, which means the widest possible access.
      *
-     * @return void
-     *
      * @throws IoException If an error occurs.
      */
-    public static function createDirectory(string $path, int $mode = 0777) : void
+    public static function createDirectory(string $path, int $mode = 0777): void
     {
         $exception = null;
 
         try {
-            $success = ErrorCatcher::run(static function() use ($path, $mode) {
-                return mkdir($path, $mode);
-            });
+            $success = ErrorCatcher::run(static fn () => mkdir($path, $mode));
 
             if ($success === true) {
                 return;
             }
-        } catch (\ErrorException $e) {
+        } catch (ErrorException $e) {
             $exception = $e;
         }
 
@@ -146,23 +150,19 @@ final class FileSystem
      * @param string $path The directory path.
      * @param int    $mode The access mode. The mode is 0777 by default, which means the widest possible access.
      *
-     * @return void
-     *
      * @throws IoException If an error occurs.
      */
-    public static function createDirectories(string $path, int $mode = 0777) : void
+    public static function createDirectories(string $path, int $mode = 0777): void
     {
         $exception = null;
 
         try {
-            $success = ErrorCatcher::run(static function() use ($path, $mode) {
-                return mkdir($path, $mode, true);
-            });
+            $success = ErrorCatcher::run(static fn () => mkdir($path, $mode, true));
 
             if ($success === true) {
                 return;
             }
-        } catch (\ErrorException $e) {
+        } catch (ErrorException $e) {
             $exception = $e;
         }
 
@@ -178,17 +178,13 @@ final class FileSystem
      *
      * @param string $path The file path.
      *
-     * @return bool
-     *
      * @throws IoException If an error occurs.
      */
-    public static function exists(string $path) : bool
+    public static function exists(string $path): bool
     {
         try {
-            return ErrorCatcher::run(static function() use ($path) {
-                return file_exists($path);
-            });
-        } catch (\ErrorException $e) {
+            return ErrorCatcher::run(static fn () => file_exists($path));
+        } catch (ErrorException $e) {
             throw new IoException('Error checking if ' . $path . ' exists', 0, $e);
         }
     }
@@ -198,17 +194,13 @@ final class FileSystem
      *
      * @param string $path The file path path.
      *
-     * @return bool
-     *
      * @throws IoException If an error occurs.
      */
-    public static function isFile(string $path) : bool
+    public static function isFile(string $path): bool
     {
         try {
-            return ErrorCatcher::run(static function() use ($path) {
-                return is_file($path);
-            });
-        } catch (\ErrorException $e) {
+            return ErrorCatcher::run(static fn () => is_file($path));
+        } catch (ErrorException $e) {
             throw new IoException('Error checking if ' . $path . ' is a file', 0, $e);
         }
     }
@@ -218,17 +210,13 @@ final class FileSystem
      *
      * @param string $path The file path.
      *
-     * @return bool
-     *
      * @throws IoException If an error occurs.
      */
-    public static function isDirectory(string $path) : bool
+    public static function isDirectory(string $path): bool
     {
         try {
-            return ErrorCatcher::run(static function() use ($path) {
-                return is_dir($path);
-            });
-        } catch (\ErrorException $e) {
+            return ErrorCatcher::run(static fn () => is_dir($path));
+        } catch (ErrorException $e) {
             throw new IoException('Error checking if ' . $path . ' is a directory', 0, $e);
         }
     }
@@ -238,17 +226,13 @@ final class FileSystem
      *
      * @param string $path The file path.
      *
-     * @return bool
-     *
      * @throws IoException If an error occurs.
      */
-    public static function isSymbolicLink(string $path) : bool
+    public static function isSymbolicLink(string $path): bool
     {
         try {
-            return ErrorCatcher::run(static function() use ($path) {
-                return is_link($path);
-            });
-        } catch (\ErrorException $e) {
+            return ErrorCatcher::run(static fn () => is_link($path));
+        } catch (ErrorException $e) {
             throw new IoException('Error checking if ' . $path . ' is a symbolic link', 0, $e);
         }
     }
@@ -259,23 +243,19 @@ final class FileSystem
      * @param string $link   The path of the symbolic link to create.
      * @param string $target The target of the symbolic link.
      *
-     * @return void
-     *
      * @throws IoException If an error occurs.
      */
-    public static function createSymbolicLink(string $link, string $target) : void
+    public static function createSymbolicLink(string $link, string $target): void
     {
         $exception = null;
 
         try {
-            $success = ErrorCatcher::run(static function() use ($link, $target) {
-                return symlink($target, $link);
-            });
+            $success = ErrorCatcher::run(static fn () => symlink($target, $link));
 
             if ($success === true) {
                 return;
             }
-        } catch (\ErrorException $e) {
+        } catch (ErrorException $e) {
             $exception = $e;
         }
 
@@ -288,23 +268,19 @@ final class FileSystem
      * @param string $link   The path of the symbolic link to create.
      * @param string $target The path of an existing file.
      *
-     * @return void
-     *
      * @throws IoException If an error occurs.
      */
-    public static function createLink(string $link, string $target) : void
+    public static function createLink(string $link, string $target): void
     {
         $exception = null;
 
         try {
-            $success = ErrorCatcher::run(static function() use ($link, $target) {
-                return link($target, $link);
-            });
+            $success = ErrorCatcher::run(static fn () => link($target, $link));
 
             if ($success === true) {
                 return;
             }
-        } catch (\ErrorException $e) {
+        } catch (ErrorException $e) {
             $exception = $e;
         }
 
@@ -320,19 +296,17 @@ final class FileSystem
      *
      * @throws IoException If an error occurs.
      */
-    public static function readSymbolicLink(string $path) : string
+    public static function readSymbolicLink(string $path): string
     {
         $exception = null;
 
         try {
-            $result = ErrorCatcher::run(static function() use ($path) {
-                return readlink($path);
-            });
+            $result = ErrorCatcher::run(static fn () => readlink($path));
 
             if ($result !== false) {
                 return $result;
             }
-        } catch (\ErrorException $e) {
+        } catch (ErrorException $e) {
             $exception = $e;
         }
 
@@ -348,19 +322,17 @@ final class FileSystem
      *
      * @throws IoException If an error occurs.
      */
-    public static function getRealPath(string $path) : string
+    public static function getRealPath(string $path): string
     {
         $exception = null;
 
         try {
-            $result = ErrorCatcher::run(static function() use ($path) {
-                return realpath($path);
-            });
+            $result = ErrorCatcher::run(static fn () => realpath($path));
 
             if ($result !== false) {
                 return $result;
             }
-        } catch (\ErrorException $e) {
+        } catch (ErrorException $e) {
             $exception = $e;
         }
 
@@ -372,8 +344,8 @@ final class FileSystem
      *
      * If the file already exists, it will be overwritten, unless `$append` is set to `true`.
      *
-     * @param string          $path  The path to the file.
-     * @param string|resource $data  The data to write, as a string or a stream resource.
+     * @param string          $path   The path to the file.
+     * @param resource|string $data   The data to write, as a string or a stream resource.
      * @param bool            $append Whether to append if the file already exists. Defaults to false (overwrite).
      * @param bool            $lock   Whether to acquire an exclusive lock on the file. Defaults to false.
      *
@@ -381,7 +353,7 @@ final class FileSystem
      *
      * @throws IoException If an error occurs.
      */
-    public static function write(string $path, $data, bool $append = false, bool $lock = false) : int
+    public static function write(string $path, $data, bool $append = false, bool $lock = false): int
     {
         $flags = 0;
 
@@ -395,14 +367,12 @@ final class FileSystem
         $exception = null;
 
         try {
-            $result = ErrorCatcher::run(static function() use ($path, $data, $flags) {
-                return file_put_contents($path, $data, $flags);
-            });
+            $result = ErrorCatcher::run(static fn () => file_put_contents($path, $data, $flags));
 
             if ($result !== false) {
                 return $result;
             }
-        } catch (\ErrorException $e) {
+        } catch (ErrorException $e) {
             $exception = $e;
         }
 
@@ -423,12 +393,12 @@ final class FileSystem
      *
      * @throws IoException If an error occurs.
      */
-    public static function read(string $path, int $offset = 0, ?int $maxLength = null) : string
+    public static function read(string $path, int $offset = 0, ?int $maxLength = null): string
     {
         $exception = null;
 
         try {
-            $result = ErrorCatcher::run(static function() use ($path, $offset, $maxLength) {
+            $result = ErrorCatcher::run(static function () use ($path, $offset, $maxLength) {
                 if ($maxLength === null) {
                     return file_get_contents($path, false, null, $offset);
                 }
@@ -439,7 +409,7 @@ final class FileSystem
             if ($result !== false) {
                 return $result;
             }
-        } catch (\ErrorException $e) {
+        } catch (ErrorException $e) {
             $exception = $e;
         }
 

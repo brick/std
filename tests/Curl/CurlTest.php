@@ -8,16 +8,22 @@ use Brick\Std\Curl\Curl;
 use Brick\Std\Curl\CurlException;
 use PHPUnit\Framework\TestCase;
 
+use function substr;
+
+use const CURLINFO_EFFECTIVE_URL;
+use const CURLINFO_HTTP_CODE;
+use const CURLOPT_URL;
+
 class CurlTest extends TestCase
 {
-    public function testGetInfoWithSpecificOption()
+    public function testGetInfoWithSpecificOption(): void
     {
         $curl = new Curl();
 
-        $this->assertSame(0, $curl->getInfo(CURLINFO_HTTP_CODE));
+        self::assertSame(0, $curl->getInfo(CURLINFO_HTTP_CODE));
     }
 
-    public function testGetInfo()
+    public function testGetInfo(): void
     {
         $curl = new Curl();
 
@@ -27,15 +33,15 @@ class CurlTest extends TestCase
         self::assertSame(0, $info['http_code']);
     }
 
-    public function testSetOption()
+    public function testSetOption(): void
     {
         $curl = new Curl();
         $curl->setOption(CURLOPT_URL, 'http://example.com');
 
-        $this->assertSame('http://example.com', $curl->getInfo(CURLINFO_EFFECTIVE_URL));
+        self::assertSame('http://example.com', $curl->getInfo(CURLINFO_EFFECTIVE_URL));
     }
 
-    public function testSetOptions()
+    public function testSetOptions(): void
     {
         $curlOpts = [
             CURLOPT_URL => 'http://example.com',
@@ -43,29 +49,29 @@ class CurlTest extends TestCase
         $curl = new Curl();
         $curl->setOptions($curlOpts);
 
-        $this->assertSame('http://example.com', $curl->getInfo(CURLINFO_EFFECTIVE_URL));
+        self::assertSame('http://example.com', $curl->getInfo(CURLINFO_EFFECTIVE_URL));
     }
 
-    public function testGetVersion()
+    public function testGetVersion(): void
     {
         $curl = new Curl();
 
-        $this->assertArrayHasKey('version_number', $curl->getVersion());
+        self::assertArrayHasKey('version_number', $curl->getVersion());
     }
 
-    public function testExecute()
+    public function testExecute(): void
     {
         $curl = new Curl('file://' . __FILE__);
 
-        $this->assertSame('<?php', substr($curl->execute(), 0, 5));
+        self::assertSame('<?php', substr($curl->execute(), 0, 5));
     }
 
-    public function testExecuteShouldThrowCurlException()
+    public function testExecuteShouldThrowCurlException(): void
     {
         $curl = new Curl();
 
         $this->expectException(CurlException::class);
-        $this->expectDeprecationMessage('cURL request failed: No URL set!');
+        $this->expectExceptionMessage('cURL request failed: No URL set');
         $curl->execute();
     }
 }

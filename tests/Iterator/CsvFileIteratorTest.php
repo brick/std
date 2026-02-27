@@ -5,37 +5,44 @@ declare(strict_types=1);
 namespace Brick\Std\Tests\Iterator;
 
 use Brick\Std\Iterator\CsvFileIterator;
-
+use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
+
+use function fclose;
+use function fopen;
+use function fseek;
+use function fwrite;
+use function is_array;
+use function is_string;
+use function iterator_to_array;
 
 /**
  * Unit tests for class CsvFileIterator.
  */
 class CsvFileIteratorTest extends TestCase
 {
-    public function testConstructorWithNonExistentFile()
+    public function testConstructorWithNonExistentFile(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectDeprecationMessage('Cannot open file for reading: NonExistentFile');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot open file for reading: NonExistentFile');
         new CsvFileIterator('NonExistentFile');
     }
 
     /**
-     * @dataProvider providerIterator
-     *
      * @param string       $csv       The CSV input.
      * @param bool         $headerRow Whether to use the first row as column headers.
      * @param array|string $expected  The expected output, or an expected exception message.
-     *
-     * @return void
      */
-    public function testIterator(string $csv, bool $headerRow, $expected) : void
+    #[DataProvider('providerIterator')]
+    public function testIterator(string $csv, bool $headerRow, $expected): void
     {
         $fp = $this->stringToResource($csv);
         $iterator = new CsvFileIterator($fp, $headerRow);
 
         if (is_string($expected)) {
-            $this->expectException(\RuntimeException::class);
+            $this->expectException(RuntimeException::class);
             $this->expectExceptionMessage($expected);
         }
 
@@ -46,43 +53,37 @@ class CsvFileIteratorTest extends TestCase
         }
 
         if (is_array($expected)) {
-            $this->assertSame($expected, $rows);
+            self::assertSame($expected, $rows);
         }
     }
 
-    /**
-     * @return array
-     */
-    public function providerIterator() : array
+    public static function providerIterator(): array
     {
         return [
-            ["", false, []],
-            ["", true, 'Expected header row, found EOF.'],
-            [" ", false, [[" "]]],
-            [" ", true, []],
+            ['', false, []],
+            ['', true, 'Expected header row, found EOF.'],
+            [' ', false, [[' ']]],
+            [' ', true, []],
             ["\n\r\n", false, []],
             ["\n", true, 'Empty header line.'],
-            ["a", false, [["a"]]],
-            ["a", true, []],
-            ["a\n", false, [["a"]]],
+            ['a', false, [['a']]],
+            ['a', true, []],
+            ["a\n", false, [['a']]],
             ["a\n", true, []],
-            ["a\nb", false, [["a"], ["b"]]],
-            ["a\nb", true, [["a" => "b"]]],
-            ["a\n\nb", false, [["a"], ["b"]]],
-            ["a\n\nb", true, [["a" => "b"]]],
-            ["a,b", false, [["a", "b"]]],
-            ["a,b", true, []],
-            ["a,b\nc", false, [["a", "b"],["c"]]],
+            ["a\nb", false, [['a'], ['b']]],
+            ["a\nb", true, [['a' => 'b']]],
+            ["a\n\nb", false, [['a'], ['b']]],
+            ["a\n\nb", true, [['a' => 'b']]],
+            ['a,b', false, [['a', 'b']]],
+            ['a,b', true, []],
+            ["a,b\nc", false, [['a', 'b'], ['c']]],
             ["a,b\nc", true, 'Expected 2 columns on line 2, found 1.'],
-            ["a\nb,c", false, [["a"], ["b", "c"]]],
-            ["a\nb,c", true, 'Expected 1 columns on line 2, found 2.']
+            ["a\nb,c", false, [['a'], ['b', 'c']]],
+            ["a\nb,c", true, 'Expected 1 columns on line 2, found 2.'],
         ];
     }
 
-    /**
-     * @return void
-     */
-    public function testAllowLessColumns() : void
+    public function testAllowLessColumns(): void
     {
         $fp = $this->stringToResource("a,b\nc");
 
@@ -92,13 +93,10 @@ class CsvFileIteratorTest extends TestCase
         $rows = iterator_to_array($iterator);
         fclose($fp);
 
-        $this->assertSame([['a' => 'c', 'b' => null]], $rows);
+        self::assertSame([['a' => 'c', 'b' => null]], $rows);
     }
 
-    /**
-     * @return void
-     */
-    public function testAllowMoreColumns() : void
+    public function testAllowMoreColumns(): void
     {
         $fp = $this->stringToResource("a\nb,c");
 
@@ -108,12 +106,10 @@ class CsvFileIteratorTest extends TestCase
         $rows = iterator_to_array($iterator);
         fclose($fp);
 
-        $this->assertSame([['a' => 'b']], $rows);
+        self::assertSame([['a' => 'b']], $rows);
     }
 
     /**
-     * @param string $string
-     *
      * @return resource
      */
     private function stringToResource(string $string)

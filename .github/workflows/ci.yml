@@ -16,12 +16,10 @@ jobs:
       fail-fast: false
       matrix:
         php-version:
-          - "7.3"
-          - "7.4"
-          - "8.0"
-          - "8.1"
           - "8.2"
           - "8.3"
+          - "8.4"
+          - "8.5"
 
     steps:
       - name: Checkout
@@ -49,3 +47,10 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: ${{ matrix.php-version == env.COVERAGE_PHP_VERSION }}
+
+  coding-standard:
+    name: Coding Standard
+    uses: brick/coding-standard/.github/workflows/coding-standard.yml@v4
+    with:
+      php-version: "8.2"
+      working-directory: "tools/ecs"

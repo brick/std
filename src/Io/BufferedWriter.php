@@ -4,33 +4,29 @@ declare(strict_types=1);
 
 namespace Brick\Std\Io;
 
+use function strlen;
+
 /**
  * Writes data to a file stream, buffering writes to yield optimal performance.
  *
  * Do not forget to call flush() after all write()s have been performed.
  */
-class BufferedWriter
+final class BufferedWriter
 {
     /**
      * The file stream to write to.
-     *
-     * @var FileStream
      */
-    private $stream;
+    private FileStream $stream;
 
     /**
      * The buffer size, in bytes.
-     *
-     * @var int
      */
-    private $size;
+    private int $size;
 
     /**
      * The buffer contents.
-     *
-     * @var string
      */
-    private $buffer = '';
+    private string $buffer = '';
 
     /**
      * BufferedWriter constructor.
@@ -41,17 +37,13 @@ class BufferedWriter
     public function __construct(FileStream $stream, int $size = 1024 * 1024)
     {
         $this->stream = $stream;
-        $this->size   = $size;
+        $this->size = $size;
     }
 
     /**
-     * @param string $data
-     *
-     * @return void
-     *
      * @throws IoException If an error occurs.
      */
-    public function write(string $data) : void
+    public function write(string $data): void
     {
         $this->buffer .= $data;
 
@@ -61,11 +53,9 @@ class BufferedWriter
     }
 
     /**
-     * @return void
-     *
      * @throws IoException If an error occurs.
      */
-    public function flush() : void
+    public function flush(): void
     {
         $this->stream->write($this->buffer);
         $this->buffer = '';

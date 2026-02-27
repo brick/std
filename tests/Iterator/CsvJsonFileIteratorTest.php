@@ -5,29 +5,37 @@ declare(strict_types=1);
 namespace Brick\Std\Tests\Iterator;
 
 use Brick\Std\Iterator\CsvJsonFileIterator;
-
+use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
+
+use function fclose;
+use function fopen;
+use function fseek;
+use function fwrite;
+use function iterator_to_array;
 
 /**
  * Unit tests for class CsvFileIterator.
  */
 class CsvJsonFileIteratorTest extends TestCase
 {
-    public function testConstructorWithNonExistentFile()
+    public function testConstructorWithNonExistentFile(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectDeprecationMessage('Cannot open file for reading: NonExistentFile');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot open file for reading: NonExistentFile');
         new CsvJsonFileIterator('NonExistentFile');
     }
 
-    public function testReadRowShouldThrowRuntimeException()
+    public function testReadRowShouldThrowRuntimeException(): void
     {
         $fp = fopen('php://memory', 'rb+');
         fwrite($fp, 'this,is,');
         fseek($fp, 0);
 
-        $this->expectException(\RuntimeException::class);
-        $this->expectDeprecationMessage('Syntax error');
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Syntax error');
 
         try {
             new CsvJsonFileIterator($fp);
@@ -37,29 +45,23 @@ class CsvJsonFileIteratorTest extends TestCase
     }
 
     /**
-     * @dataProvider providerIterator
-     *
      * @param string $csv      The CSV input.
      * @param array  $expected The expected output.
-     *
-     * @return void
      */
-    public function testIterator(string $csv, array $expected) : void
+    #[DataProvider('providerIterator')]
+    public function testIterator(string $csv, array $expected): void
     {
         $fp = fopen('php://memory', 'rb+');
         fwrite($fp, $csv);
         fseek($fp, 0);
 
         $iterator = new CsvJsonFileIterator($fp);
-        $this->assertSame($expected, iterator_to_array($iterator));
+        self::assertSame($expected, iterator_to_array($iterator));
 
         fclose($fp);
     }
 
-    /**
-     * @return array
-     */
-    public function providerIterator() : array
+    public static function providerIterator(): array
     {
         return [
             ['', []],
@@ -67,7 +69,7 @@ class CsvJsonFileIteratorTest extends TestCase
             ['"test",null', [1 => ['test', null]]],
             ['"test",null' . "\n", [1 => ['test', null]]],
             ['"test",null' . "\n\n", [1 => ['test', null], 2 => []]],
-            ['"a",1,2.0,false,null' . "\n" . '"b",2,3.0,true,"c"', [1 => ['a', 1, 2.0, false, null], 2 => ['b', 2, 3.0, true, 'c']]]
+            ['"a",1,2.0,false,null' . "\n" . '"b",2,3.0,true,"c"', [1 => ['a', 1, 2.0, false, null], 2 => ['b', 2, 3.0, true, 'c']]],
         ];
     }
 }

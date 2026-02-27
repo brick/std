@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Brick\Std\Internal;
 
+use ErrorException;
+
+use function restore_error_handler;
+use function set_error_handler;
+
 /**
  * Catches PHP errors in a specific code block, and throws exceptions.
  *
@@ -20,12 +25,12 @@ final class ErrorCatcher
      *
      * @return mixed The return value of the function.
      *
-     * @throws \ErrorException If a PHP error occurs.
+     * @throws ErrorException If a PHP error occurs.
      */
-    public static function run(callable $function)
+    public static function run(callable $function): mixed
     {
-        set_error_handler(static function($severity, $message, $file, $line) {
-            throw new \ErrorException($message, 0, $severity, $file, $line);
+        set_error_handler(static function ($severity, $message, $file, $line): void {
+            throw new ErrorException($message, 0, $severity, $file, $line);
         });
 
         try {

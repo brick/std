@@ -4,10 +4,21 @@ declare(strict_types=1);
 
 namespace Brick\Std\Curl;
 
+use function curl_copy_handle;
+use function curl_error;
+use function curl_exec;
+use function curl_getinfo;
+use function curl_init;
+use function curl_setopt;
+use function curl_setopt_array;
+use function curl_version;
+
+use const CURLOPT_RETURNTRANSFER;
+
 /**
  * An object wrapper for cURL.
  */
-class Curl
+final class Curl
 {
     /**
      * The cURL handle.
@@ -18,8 +29,6 @@ class Curl
 
     /**
      * Class constructor.
-     *
-     * @param string|null $url
      */
     public function __construct(?string $url = null)
     {
@@ -27,29 +36,9 @@ class Curl
     }
 
     /**
-     * Class destructor.
-     */
-    public function __destruct()
-    {
-        curl_close($this->curl);
-    }
-
-    /**
-     * Clone handler.
-     *
-     * @return void
-     */
-    public function __clone()
-    {
-        $this->curl = curl_copy_handle($this->curl);
-    }
-
-    /**
-     * @return string
-     *
      * @throws CurlException
      */
-    public function execute() : string
+    public function execute(): string
     {
         // This option must always be set.
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
@@ -70,10 +59,8 @@ class Curl
      * Otherwise, an associative array of values is returned.
      *
      * @param int|null $opt One of the CURLINFO_* constants, or null to return all.
-     *
-     * @return mixed
      */
-    public function getInfo(?int $opt = null)
+    public function getInfo(?int $opt = null): mixed
     {
         if ($opt === null) {
             return curl_getinfo($this->curl);
@@ -82,32 +69,26 @@ class Curl
         return curl_getinfo($this->curl, $opt);
     }
 
-    /**
-     * @param int   $option
-     * @param mixed $value
-     *
-     * @return void
-     */
-    public function setOption(int $option, $value) : void
+    public function setOption(int $option, mixed $value): void
     {
         curl_setopt($this->curl, $option, $value);
     }
 
-    /**
-     * @param array $options
-     *
-     * @return void
-     */
-    public function setOptions(array $options) : void
+    public function setOptions(array $options): void
     {
         curl_setopt_array($this->curl, $options);
     }
 
-    /**
-     * @return array
-     */
-    public static function getVersion() : array
+    public static function getVersion(): array
     {
         return curl_version();
+    }
+
+    /**
+     * Clone handler.
+     */
+    public function __clone()
+    {
+        $this->curl = curl_copy_handle($this->curl);
     }
 }

@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Brick\Std\Json;
 
+use InvalidArgumentException;
+
+use function json_last_error;
+use function json_last_error_msg;
+
+use const JSON_ERROR_NONE;
+
 /**
  * Common functionality for JsonEncoder and JsonDecoder.
  */
@@ -11,17 +18,13 @@ abstract class Common
 {
     /**
      * The maximum encoding/decoding depth.
-     *
-     * @var int
      */
-    protected $maxDepth = 512;
+    protected int $maxDepth = 512;
 
     /**
      * The options bitmask.
-     *
-     * @var int
      */
-    protected $options = 0;
+    protected int $options = 0;
 
     /**
      * Sets the max recursion depth. Defaults to `512`.
@@ -29,16 +32,12 @@ abstract class Common
      * Every nested array or object adds one level of recursion.
      * If the max depth is zero, only scalars can be encoded/decoded.
      *
-     * @param int $maxDepth
-     *
-     * @return void
-     *
-     * @throws \InvalidArgumentException If the max depth is out of range.
+     * @throws InvalidArgumentException If the max depth is out of range.
      */
-    public function setMaxDepth(int $maxDepth) : void
+    public function setMaxDepth(int $maxDepth): void
     {
         if ($maxDepth < 0 || $maxDepth >= 0x7fffffff) { // max depth + 1 must not be greater than this limit
-            throw new \InvalidArgumentException('Invalid max depth.');
+            throw new InvalidArgumentException('Invalid max depth.');
         }
 
         $this->maxDepth = $maxDepth;
@@ -46,8 +45,6 @@ abstract class Common
 
     /**
      * Throws an exception if a JSON error has occurred.
-     *
-     * @return void
      *
      * @throws JsonException
      */
@@ -63,15 +60,13 @@ abstract class Common
      *
      * @param int  $option A JSON_* constant.
      * @param bool $bool   The boolean value.
-     *
-     * @return void
      */
-    protected function setOption(int $option, bool $bool) : void
+    protected function setOption(int $option, bool $bool): void
     {
         if ($bool) {
             $this->options |= $option;
         } else {
-            $this->options &= ~ $option;
+            $this->options &= ~$option;
         }
     }
 }

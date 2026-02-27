@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace Brick\Std;
 
+use Countable;
+use IteratorAggregate;
+use Traversable;
+
 /**
  * Associates an array of values to an object.
  */
-class ObjectArrayStorage implements \Countable, \IteratorAggregate
+final class ObjectArrayStorage implements Countable, IteratorAggregate
 {
     /**
      * The underlying storage.
-     *
-     * @var ObjectStorage
      */
-    private $storage;
+    private ObjectStorage $storage;
 
     /**
      * Class constructor.
@@ -31,7 +33,7 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      *
      * @return bool True if this storage contains the object, false otherwise.
      */
-    public function has(object $object) : bool
+    public function has(object $object): bool
     {
         return $this->storage->has($object);
     }
@@ -45,7 +47,7 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      *
      * @return array The values associated with the object.
      */
-    public function get(object $object) : array
+    public function get(object $object): array
     {
         $values = $this->storage->get($object);
 
@@ -57,10 +59,8 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      *
      * @param object $object The object.
      * @param mixed  $value  The value to add.
-     *
-     * @return void
      */
-    public function add(object $object, $value) : void
+    public function add(object $object, mixed $value): void
     {
         $values = $this->get($object);
         $values[] = $value;
@@ -73,10 +73,8 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      * If this storage does not any value for the given object, this method does nothing.
      *
      * @param object $object The object to remove.
-     *
-     * @return void
      */
-    public function remove(object $object) : void
+    public function remove(object $object): void
     {
         $this->storage->remove($object);
     }
@@ -85,10 +83,8 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      * Returns the number of objects in this storage.
      *
      * This method is part of the Countable interface.
-     *
-     * @return int
      */
-    public function count() : int
+    public function count(): int
     {
         return $this->storage->count();
     }
@@ -97,10 +93,8 @@ class ObjectArrayStorage implements \Countable, \IteratorAggregate
      * Returns an iterator for this storage.
      *
      * This method is part of the IteratorAggregate interface.
-     *
-     * @return \Traversable
      */
-    public function getIterator() : \Traversable
+    public function getIterator(): Traversable
     {
         return $this->storage->getIterator();
     }
