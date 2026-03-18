@@ -30,27 +30,23 @@ final class ObjectStorage implements Countable, IteratorAggregate, ArrayAccess
     /**
      * The objects contained in the storage, as a map of object id to object.
      *
-     * @psalm-var array<int, K>
-     * @var array<int, object>
+     * @var array<int, K>
      */
     private array $objects = [];
 
     /**
      * The data in the storage, as a map of object id to datum.
      *
-     * @psalm-var array<int, V>
-     * @var array<int, mixed>
+     * @var array<int, V>
      */
     private array $data = [];
 
     /**
      * Returns whether this storage contains the given object.
      *
-     * @param object $object The object to test.
+     * @param K $object The object to test.
      *
      * @return bool True if this storage contains the object, false otherwise.
-     *
-     * @psalm-param K $object
      */
     public function has(object $object): bool
     {
@@ -64,12 +60,9 @@ final class ObjectStorage implements Countable, IteratorAggregate, ArrayAccess
      *
      * If the given object is not in the storage, or has no associated data, NULL is returned.
      *
-     * @param object $object The object.
+     * @param K $object The object.
      *
-     * @return mixed The stored data.
-     *
-     * @psalm-param K $object
-     * @psalm-return V
+     * @return V The stored data.
      */
     public function get(object $object): mixed
     {
@@ -81,11 +74,8 @@ final class ObjectStorage implements Countable, IteratorAggregate, ArrayAccess
     /**
      * Stores an object with associated data.
      *
-     * @param object $object The object.
-     * @param mixed  $data   The data to store.
-     *
-     * @psalm-param K $object
-     * @psalm-param V $data
+     * @param K $object The object.
+     * @param V $data   The data to store.
      */
     public function set(object $object, mixed $data = null): void
     {
@@ -100,9 +90,7 @@ final class ObjectStorage implements Countable, IteratorAggregate, ArrayAccess
      *
      * If this storage does not contain the given object, this method does nothing.
      *
-     * @param object $object The object to remove.
-     *
-     * @psalm-param K $object
+     * @param K $object The object to remove.
      */
     public function remove(object $object): void
     {
@@ -125,9 +113,7 @@ final class ObjectStorage implements Countable, IteratorAggregate, ArrayAccess
     /**
      * Returns the objects contained in this storage.
      *
-     * @return object[]
-     *
-     * @psalm-return V[]
+     * @return V[]
      */
     public function getObjects(): array
     {
@@ -139,7 +125,7 @@ final class ObjectStorage implements Countable, IteratorAggregate, ArrayAccess
      *
      * This method is part of the IteratorAggregate interface.
      *
-     * @psalm-return Traversable<K, V>
+     * @return Traversable<K, V>
      */
     public function getIterator(): Traversable
     {
@@ -149,12 +135,11 @@ final class ObjectStorage implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
-     * @param object $object
+     * @param K $object
+     *
+     * @return V
      *
      * @throws UnexpectedValueException If the object cannot be found.
-     *
-     * @psalm-param K $object
-     * @psalm-return V
      */
     public function offsetGet(mixed $object): mixed
     {
@@ -168,10 +153,8 @@ final class ObjectStorage implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
-     * @param object $object
-     *
-     * @psalm-param K $object
-     * @psalm-param V $value
+     * @param K $object
+     * @param V $value
      */
     public function offsetSet(mixed $object, mixed $value): void
     {
@@ -182,9 +165,7 @@ final class ObjectStorage implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
-     * @param object $object
-     *
-     * @psalm-param K $object
+     * @param K $object
      */
     public function offsetUnset(mixed $object): void
     {
@@ -195,9 +176,7 @@ final class ObjectStorage implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
-     * @param object $object
-     *
-     * @psalm-param K $object
+     * @param K $object
      */
     public function offsetExists(mixed $object): bool
     {
