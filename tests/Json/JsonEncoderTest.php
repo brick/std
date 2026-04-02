@@ -270,13 +270,11 @@ class JsonEncoderTest extends TestCase
 
         if ($expectException) {
             $this->expectException(JsonException::class);
+        } else {
+            $this->expectNotToPerformAssertions();
         }
 
         $encoder->encode($value);
-
-        if (! $expectException) {
-            $this->addToAssertionCount(1); // no assertion here
-        }
     }
 
     public static function providerMaxDepth(): array

@@ -113,10 +113,10 @@ class FileSystemTest extends FileSystemTestCase
 
     public function testCreateDirectoriesTwice(): void
     {
-        FileSystem::createDirectories('temp_directory');
-        FileSystem::createDirectories('temp_directory');
+        $this->expectNotToPerformAssertions();
 
-        self::addToAssertionCount(1);
+        FileSystem::createDirectories('temp_directory');
+        FileSystem::createDirectories('temp_directory');
     }
 
     public function testCreateLinkWithInvalidFileLink(): void
